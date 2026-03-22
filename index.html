@@ -181,13 +181,6 @@
 .date-chip.active{
   transform:translateY(-1px);
   box-shadow:0 0 0 2px rgba(37,99,235,.18);
-  color:#18212f !important;
-}
-
-.date-chip.active .top,
-.date-chip.active .bottom,
-.date-chip.active .sub{
-  color:#18212f !important;
 }
 
 .date-chip.today{
@@ -287,12 +280,6 @@
 .date-chip.bad {
   background: #fee2e2;
   border-color: #fca5a5;
-}
-  .date-chip,
-.date-chip .top,
-.date-chip .bottom,
-.date-chip .sub{
-  color:inherit;
 }
   .day-summary{
     margin-top:12px;
@@ -860,25 +847,34 @@ function renderDaySection(){
   const perDayTarget = budget ? budget / totalDays : 0;
   const diff = total - perDayTarget;
   const d = parseLocalDate(iso);
-  const countEntries = entries.length;
 
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
-
   document.getElementById("daySummary").innerHTML = `
-    <strong>${longDate(d)}</strong><br>
-    Antall kjøp: <strong>${countEntries}</strong><br>
-    Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
-    Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
-    Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
-  `;
+const dates = getDatesInCurrentPeriod();
+const dayIndex = dates.indexOf(iso);
+const allowedSoFar = perDayTarget * (dayIndex + 1);
+
+let usedSoFar = 0;
+for (let i = 0; i <= dayIndex; i++) {
+  usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
+}
+
+const cumulativeDiff = usedSoFar - allowedSoFar;
+const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
+
+document.getElementById("daySummary").innerHTML = `
+  <strong>${longDate(d)}</strong><br>
+  Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
+  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
+  Dagsavvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong><br>
+  Samlet til nå: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} kr ${cumulativeDiff > 0 ? "over" : "under"} plan</strong>
+`;
 
   const wrap = document.getElementById("dayEntries");
-
   if (!entries.length){
     wrap.innerHTML = `<div class="empty">Ingen kjøp registrert på denne datoen ennå.</div>`;
     return;
   }
-
   wrap.innerHTML = entries.map(e => `
     <div class="item">
       <div class="item-head">
@@ -898,11 +894,11 @@ function renderDaySection(){
     const entry = expenses.find(e => e.id === btn.dataset.id);
     if (entry) setFormForEdit(entry);
   }));
-
   wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => {
     if (confirm("Fjerne dette kjøpet?")) deleteExpense(btn.dataset.id);
   }));
 }
+
 function updateSummaryOnly(){
   const budget = getBudget();
   const periodExpenses = getCurrentPeriodExpenses();
