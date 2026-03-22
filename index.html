@@ -26,7 +26,7 @@
 
   body{
     margin:0;
-    padding:18px 18px 90px;
+    padding:18px 18px 96px;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     color:var(--text);
     background:linear-gradient(180deg,#edf4ff 0%, var(--bg) 220px);
@@ -47,65 +47,21 @@
   }
 
   .hero-badge{
-    width:64px;
-    height:64px;
-    border-radius:18px;
+    width:64px;height:64px;border-radius:18px;
     background:rgba(255,255,255,.18);
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    display:flex;align-items:center;justify-content:center;
     flex:0 0 auto;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
   }
-
   .hero-badge svg{width:36px;height:36px}
-
   .hero h1{margin:0 0 6px;font-size:30px}
   .hero p{margin:0;opacity:.95}
   .period{margin-top:8px;font-size:14px;opacity:.95}
 
-  .tabs{
-    position:sticky;
-    bottom:12px;
-    z-index:20;
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:10px;
-    background:rgba(255,255,255,.94);
-    backdrop-filter:blur(10px);
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:10px;
-    box-shadow:var(--shadow);
-    margin-top:18px;
-  }
-
-  .tab-btn{
-    width:100%;
-    border:none;
-    border-radius:14px;
-    padding:12px;
-    background:var(--primary-soft);
-    color:var(--primary);
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-  }
-
-  .tab-btn.active{
-    background:var(--primary);
-    color:#fff;
-  }
-
   .tab-panel{display:none}
   .tab-panel.active{display:block}
 
-  .grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-  }
-
+  .grid{display:grid;grid-template-columns:1fr;gap:14px}
   .card{
     background:var(--card);
     border-radius:var(--radius);
@@ -113,17 +69,8 @@
     box-shadow:var(--shadow);
   }
 
-  .section-title{
-    margin:0 0 12px;
-    font-size:18px;
-    font-weight:800;
-  }
-
-  .small-title{
-    margin:0 0 8px;
-    font-size:16px;
-    font-weight:800;
-  }
+  .section-title{margin:0 0 12px;font-size:18px;font-weight:800}
+  .small-title{margin:0 0 8px;font-size:16px;font-weight:800}
 
   label{
     display:block;
@@ -177,7 +124,7 @@
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:10px;
-    margin-top:12px;
+    margin-top:0;
   }
 
   .stat{
@@ -229,45 +176,16 @@
 
   .date-chip .top,
   .date-chip .bottom,
-  .date-chip .sub{
-    color:inherit !important;
-  }
+  .date-chip .sub{color:inherit !important}
 
   .date-chip:hover{transform:translateY(-1px)}
+  .date-chip.active{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(37,99,235,.20)}
+  .date-chip.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.22)}
+  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.22), 0 0 0 2px rgba(37,99,235,.18)}
 
-  .date-chip.active{
-    transform:translateY(-1px);
-    box-shadow:0 0 0 2px rgba(37,99,235,.20);
-  }
-
-  .date-chip.today{
-    box-shadow:inset 0 0 0 2px rgba(37,99,235,.22);
-  }
-
-  .date-chip.active.today{
-    box-shadow:inset 0 0 0 2px rgba(37,99,235,.22), 0 0 0 2px rgba(37,99,235,.18);
-  }
-
-  .date-chip .top{
-    display:block;
-    font-size:12px;
-    opacity:.80;
-    margin-bottom:2px;
-  }
-
-  .date-chip .bottom{
-    display:block;
-    font-size:17px;
-    font-weight:900;
-    line-height:1.1;
-  }
-
-  .date-chip .sub{
-    display:block;
-    font-size:11px;
-    margin-top:3px;
-    opacity:.85;
-  }
+  .date-chip .top{display:block;font-size:12px;opacity:.80;margin-bottom:2px}
+  .date-chip .bottom{display:block;font-size:17px;font-weight:900;line-height:1.1}
+  .date-chip .sub{display:block;font-size:11px;margin-top:3px;opacity:.85}
 
   .date-chip.zero{background:#ecfdf3;border-color:#86efac;color:#166534}
   .date-chip.ok-1{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
@@ -452,19 +370,13 @@
     border-radius:16px;
     padding:12px;
   }
-
   .guide-item strong{display:block;margin-bottom:4px}
 
   .icon-preview{
-    width:72px;
-    height:72px;
-    border-radius:20px;
+    width:72px;height:72px;border-radius:20px;
     background:linear-gradient(135deg,#2563eb,#38bdf8);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    margin-bottom:10px;
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;margin-bottom:10px;
     box-shadow:var(--shadow);
   }
 
@@ -473,6 +385,39 @@
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-top:12px;
+  }
+
+  .tabs{
+    position:sticky;
+    bottom:12px;
+    z-index:20;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(10px);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:10px;
+    box-shadow:var(--shadow);
+    margin-top:18px;
+  }
+
+  .tab-btn{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    padding:12px;
+    background:var(--primary-soft);
+    color:var(--primary);
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  .tab-btn.active{
+    background:var(--primary);
+    color:#fff;
   }
 
   @media (min-width:760px){
@@ -502,72 +447,6 @@
 
   <div id="overviewTab" class="tab-panel active">
     <div class="grid">
-      <div class="card">
-        <h2 class="section-title" data-i18n="status_title">Status</h2>
-
-        <div class="settings-grid">
-          <div>
-            <label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label>
-            <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
-          </div>
-          <div>
-            <label for="startDay" data-i18n="start_day_label">Startdag for perioden</label>
-            <select id="startDay"></select>
-          </div>
-        </div>
-
-        <div class="settings-grid" style="margin-top:10px;">
-          <div>
-            <label for="periodMode" data-i18n="period_mode_label">Periodetype</label>
-            <select id="periodMode">
-              <option value="weeks">Uker</option>
-              <option value="months">Måneder</option>
-            </select>
-          </div>
-          <div>
-            <label for="periodLength" data-i18n="period_length_label">Lengde</label>
-            <select id="periodLength">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="settings-grid" style="margin-top:10px;">
-          <div>
-            <label for="language" data-i18n="language_label">Språk</label>
-            <select id="language">
-              <option value="no">Norsk</option>
-              <option value="en">English</option>
-            </select>
-          </div>
-          <div>
-            <label for="currency" data-i18n="currency_label">Valuta</label>
-            <select id="currency">
-              <option value="NOK">NOK</option>
-              <option value="SEK">SEK</option>
-              <option value="DKK">DKK</option>
-              <option value="EUR">EUR</option>
-              <option value="USD">USD</option>
-              <option value="GBP">GBP</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="stats">
-          <div class="stat"><div class="label" data-i18n="used">Brukt</div><div class="value" id="used">0 kr</div></div>
-          <div class="stat"><div class="label" data-i18n="remaining">Igjen</div><div class="value" id="remaining">0 kr</div></div>
-          <div class="stat"><div class="label" data-i18n="daily_now">Kan bruke per dag nå</div><div class="value" id="dailyNow">0 kr</div></div>
-          <div class="stat"><div class="label" data-i18n="selected_day">Valgt dato</div><div class="value" id="selectedTotal">0 kr</div></div>
-          <div class="stat wide">
-            <div class="label" data-i18n="status_word">Status</div>
-            <div class="status" id="status">Legg inn budsjett og kjøp.</div>
-          </div>
-        </div>
-      </div>
-
       <div class="card">
         <h2 class="section-title" id="formTitle">Legg til kjøp</h2>
 
@@ -603,6 +482,21 @@
         <div class="footer-actions">
           <button id="saveBtn">Legg til kjøp</button>
           <button id="cancelEditBtn" class="secondary" style="display:none;">Avbryt redigering</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title" data-i18n="status_title">Status</h2>
+
+        <div class="stats">
+          <div class="stat"><div class="label" data-i18n="used">Brukt</div><div class="value" id="used">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="remaining">Igjen</div><div class="value" id="remaining">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="daily_now">Kan bruke per dag nå</div><div class="value" id="dailyNow">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="selected_day">Valgt dato</div><div class="value" id="selectedTotal">0 kr</div></div>
+          <div class="stat wide">
+            <div class="label" data-i18n="status_word">Status</div>
+            <div class="status" id="status">Legg inn budsjett og kjøp.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -706,8 +600,63 @@
     </div>
   </div>
 
-  <div id="backupTab" class="tab-panel">
+  <div id="settingsTab" class="tab-panel">
     <div class="card">
+      <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
+
+      <div class="settings-grid">
+        <div>
+          <label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label>
+          <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
+        </div>
+        <div>
+          <label for="startDay" data-i18n="start_day_label">Startdag for perioden</label>
+          <select id="startDay"></select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="periodMode" data-i18n="period_mode_label">Periodetype</label>
+          <select id="periodMode">
+            <option value="weeks">Uker</option>
+            <option value="months">Måneder</option>
+          </select>
+        </div>
+        <div>
+          <label for="periodLength" data-i18n="period_length_label">Lengde</label>
+          <select id="periodLength">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="language" data-i18n="language_label">Språk</label>
+          <select id="language">
+            <option value="no">Norsk</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div>
+          <label for="currency" data-i18n="currency_label">Valuta</label>
+          <select id="currency">
+            <option value="NOK">NOK</option>
+            <option value="SEK">SEK</option>
+            <option value="DKK">DKK</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
       <h2 class="section-title" data-i18n="backup">Backup</h2>
       <p class="backup-note" data-i18n="backup_note">Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.</p>
 
@@ -724,7 +673,7 @@
 
       <div class="day-summary" style="margin-top:14px;">
         <strong data-i18n="backup_contains">Hva backupen inneholder</strong><br>
-        <span data-i18n="backup_contains_text">Alle kjøp, valgt startdag og budsjettinnstilling lagres i én JSON-fil.</span>
+        <span data-i18n="backup_contains_text">Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.</span>
       </div>
     </div>
   </div>
@@ -733,7 +682,7 @@
     <button class="tab-btn active" data-tab="overviewTab" type="button">Oversikt</button>
     <button class="tab-btn" data-tab="historyTab" type="button">Historikk</button>
     <button class="tab-btn" data-tab="shopsTab" type="button">Butikker</button>
-    <button class="tab-btn" data-tab="backupTab" type="button">Backup</button>
+    <button class="tab-btn" data-tab="settingsTab" type="button">Innstillinger</button>
   </div>
 </div>
 
@@ -749,7 +698,7 @@
     <div class="guide-list">
       <div class="guide-item"><strong id="guide1Title">1. Sett budsjett</strong><span id="guide1Text">Legg inn budsjett for perioden din.</span></div>
       <div class="guide-item"><strong id="guide2Title">2. Velg startdag</strong><span id="guide2Text">Bestem hvilken dag perioden skal starte på.</span></div>
-      <div class="guide-item"><strong id="guide3Title">3. Velg periode</strong><span id="guide3Text">Velg uker eller måneder og ønsket lengde.</span></div>
+      <div class="guide-item"><strong id="guide3Title">3. Legg inn kjøp</strong><span id="guide3Text">På hovedsiden kan du registrere kjøp raskt hver dag.</span></div>
     </div>
     <div class="modal-actions">
       <button class="secondary" id="closeGuideBtn">Lukk</button>
@@ -759,20 +708,21 @@
 </div>
 
 <script>
-const STORAGE_KEY = "matbudsjett_v12_expenses";
-const BUDGET_KEY = "matbudsjett_v12_budget";
-const STARTDAY_KEY = "matbudsjett_v12_startday";
-const PERIOD_MODE_KEY = "matbudsjett_v12_period_mode";
-const PERIOD_LENGTH_KEY = "matbudsjett_v12_period_length";
-const LANG_KEY = "matbudsjett_v12_lang";
-const CURRENCY_KEY = "matbudsjett_v12_currency";
-const GUIDE_KEY = "matbudsjett_v12_guide_hidden";
+const STORAGE_KEY = "matbudsjett_v13_expenses";
+const BUDGET_KEY = "matbudsjett_v13_budget";
+const STARTDAY_KEY = "matbudsjett_v13_startday";
+const PERIOD_MODE_KEY = "matbudsjett_v13_period_mode";
+const PERIOD_LENGTH_KEY = "matbudsjett_v13_period_length";
+const LANG_KEY = "matbudsjett_v13_lang";
+const CURRENCY_KEY = "matbudsjett_v13_currency";
+const GUIDE_KEY = "matbudsjett_v13_guide_hidden";
 
 const TEXT = {
   no: {
     appTitle:"Matbudsjett",
     appSubtitle:"Oversikt, historikk, butikker og backup.",
     status_title:"Status",
+    settings:"Innstillinger",
     budget_label:"Budsjett for denne perioden",
     start_day_label:"Startdag for perioden",
     period_mode_label:"Periodetype",
@@ -820,7 +770,7 @@ const TEXT = {
     tab_overview:"Oversikt",
     tab_history:"Historikk",
     tab_stores:"Butikker",
-    tab_backup:"Backup",
+    tab_settings:"Innstillinger",
     no_entries_day:"Ingen kjøp registrert på denne datoen ennå.",
     invalid_amount:"Skriv inn et gyldig beløp.",
     choose_date:"Velg dato.",
@@ -849,12 +799,12 @@ const TEXT = {
     heat_bad:"over plan",
     welcomeTitle:"Velkommen",
     welcomeText:"Her er en rask oppstart så du kommer i gang.",
-    guide1Title:"1. Sett budsjett",
-    guide1Text:"Legg inn budsjett for perioden din.",
-    guide2Title:"2. Velg startdag",
-    guide2Text:"Bestem hvilken dag perioden skal starte på.",
-    guide3Title:"3. Velg periode",
-    guide3Text:"Velg uker eller måneder og ønsket lengde.",
+    guide1Title:"1. Sett opp appen",
+    guide1Text:"Gå til Innstillinger og velg budsjett, periode og språk.",
+    guide2Title:"2. Bruk Oversikt daglig",
+    guide2Text:"På hovedsiden kan du legge inn kjøp med en gang.",
+    guide3Title:"3. Følg utviklingen",
+    guide3Text:"Se historikk, heatmap og butikker for å sammenligne over tid.",
     close:"Lukk",
     dont_show_again:"Ikke vis igjen",
     weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"]
@@ -863,6 +813,7 @@ const TEXT = {
     appTitle:"Food Budget",
     appSubtitle:"Overview, history, stores and backup.",
     status_title:"Status",
+    settings:"Settings",
     budget_label:"Budget for this period",
     start_day_label:"Start day of period",
     period_mode_label:"Period type",
@@ -910,7 +861,7 @@ const TEXT = {
     tab_overview:"Overview",
     tab_history:"History",
     tab_stores:"Stores",
-    tab_backup:"Backup",
+    tab_settings:"Settings",
     no_entries_day:"No purchases registered for this date yet.",
     invalid_amount:"Enter a valid amount.",
     choose_date:"Choose a date.",
@@ -939,12 +890,12 @@ const TEXT = {
     heat_bad:"over plan",
     welcomeTitle:"Welcome",
     welcomeText:"Here is a quick start guide.",
-    guide1Title:"1. Set budget",
-    guide1Text:"Enter the budget for your period.",
-    guide2Title:"2. Choose start day",
-    guide2Text:"Decide which day the period should start.",
-    guide3Title:"3. Choose period",
-    guide3Text:"Choose weeks or months and the length you want.",
+    guide1Title:"1. Set up the app",
+    guide1Text:"Go to Settings and choose budget, period and language.",
+    guide2Title:"2. Use Overview daily",
+    guide2Text:"On the main page you can add purchases quickly.",
+    guide3Title:"3. Follow your progress",
+    guide3Text:"Use history, heatmap and stores to compare over time.",
     close:"Close",
     dont_show_again:"Don't show again",
     weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
@@ -1149,7 +1100,7 @@ function applyUIStrings(){
   document.querySelector('.tab-btn[data-tab="overviewTab"]').textContent = s.tab_overview;
   document.querySelector('.tab-btn[data-tab="historyTab"]').textContent = s.tab_history;
   document.querySelector('.tab-btn[data-tab="shopsTab"]').textContent = s.tab_stores;
-  document.querySelector('.tab-btn[data-tab="backupTab"]').textContent = s.tab_backup;
+  document.querySelector('.tab-btn[data-tab="settingsTab"]').textContent = s.tab_settings;
 
   const w = s.weekdays;
   document.getElementById("wd1").textContent = w[0];
@@ -1682,7 +1633,7 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 12,
+    version: 13,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
