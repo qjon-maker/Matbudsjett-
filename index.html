@@ -194,6 +194,20 @@
     font-weight:900;
     line-height:1.1;
   }
+  .date-chip.zero {
+  background: #e6f9ed;
+  border-color: #86efac;
+}
+
+.date-chip.good {
+  background: #e6f0ff;
+  border-color: #93c5fd;
+}
+
+.date-chip.bad {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
   .day-summary{
     margin-top:12px;
     padding:13px;
@@ -640,7 +654,7 @@ if (total === 0) {
 } else {
   colorClass = "bad";
 }
-    return `<button class="date-chip ${active} ${today}" data-date="${iso}" type="button">
+    return `<button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button">
       <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
       <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
     </button>`;
