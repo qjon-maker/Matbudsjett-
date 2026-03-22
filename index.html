@@ -160,53 +160,107 @@
     scroll-snap-type:x proximity;
     -webkit-overflow-scrolling:touch;
   }
-  .date-chip{
-    min-width:78px;
-    padding:10px 12px;
-    border-radius:16px;
-    border:1px solid var(--line);
-    background:#f8fbff;
-    flex:0 0 auto;
-    text-align:center;
-    cursor:pointer;
-    scroll-snap-align:start;
-  }
-  .date-chip.active{
-    background:var(--primary);
-    color:#fff;
-    border-color:var(--primary);
-  }
-  .date-chip.today{
-    box-shadow:inset 0 0 0 2px rgba(37,99,235,.22);
-  }
-  .date-chip.active.today{
-    box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);
-  }
-  .date-chip .top{
-    display:block;
-    font-size:12px;
-    opacity:.85;
-    margin-bottom:2px;
-  }
-  .date-chip .bottom{
-    display:block;
-    font-size:17px;
-    font-weight:900;
-    line-height:1.1;
-  }
-  .date-chip.zero {
-  background: #e6f9ed;
-  border-color: #86efac;
+ .date-chip{
+  min-width:84px;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:#f8fbff;
+  color:#18212f;
+  flex:0 0 auto;
+  text-align:center;
+  cursor:pointer;
+  scroll-snap-align:start;
+  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
 }
 
-.date-chip.good {
-  background: #e6f0ff;
-  border-color: #93c5fd;
+.date-chip:hover{
+  transform:translateY(-1px);
 }
 
-.date-chip.bad {
-  background: #fee2e2;
-  border-color: #fca5a5;
+.date-chip.active{
+  transform:translateY(-1px);
+  box-shadow:0 0 0 2px rgba(37,99,235,.18);
+}
+
+.date-chip.today{
+  box-shadow:inset 0 0 0 2px rgba(37,99,235,.22);
+}
+
+.date-chip.active.today{
+  box-shadow:
+    inset 0 0 0 2px rgba(37,99,235,.22),
+    0 0 0 2px rgba(37,99,235,.18);
+}
+
+.date-chip .top{
+  display:block;
+  font-size:12px;
+  opacity:.78;
+  margin-bottom:2px;
+}
+
+.date-chip .bottom{
+  display:block;
+  font-size:17px;
+  font-weight:900;
+  line-height:1.1;
+}
+
+.date-chip .sub{
+  display:block;
+  font-size:11px;
+  margin-top:3px;
+  opacity:.82;
+}
+
+/* nullhandel */
+.date-chip.zero{
+  background:#ecfdf3;
+  border-color:#86efac;
+  color:#166534;
+}
+
+/* innenfor, lav belastning */
+.date-chip.ok-1{
+  background:#eff6ff;
+  border-color:#bfdbfe;
+  color:#1d4ed8;
+}
+
+/* innenfor, nærmere grensen */
+.date-chip.ok-2{
+  background:#dbeafe;
+  border-color:#93c5fd;
+  color:#1e40af;
+}
+
+/* over vanlig dagsbudsjett, men fortsatt innenfor totalt */
+.date-chip.warn-1{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:#a16207;
+}
+
+/* ganske presset */
+.date-chip.warn-2{
+  background:#fef3c7;
+  border-color:#fcd34d;
+  color:#92400e;
+}
+
+/* over total plan */
+.date-chip.bad-1{
+  background:#fee2e2;
+  border-color:#fca5a5;
+  color:#b91c1c;
+}
+
+/* langt over total plan */
+.date-chip.bad-2{
+  background:#fecaca;
+  border-color:#f87171;
+  color:#991b1b;
 }
   .date-chip.zero {
   background: #e6f9ed;
@@ -651,10 +705,83 @@ function renderDateStrip(){
   const strip = document.getElementById("dateStrip");
   const todayIso = formatISO(new Date());
   const dates = getDatesInCurrentPeriod();
-  strip.innerHTML = dates.map(iso => {
+  const budget = getBudget();
+  const totalDays = dates.length;
+  const perDay = budget ? budget / totalDays : 0;
+
+  // summer per dag én gang
+  const totalsByDate = {};
+  dates.forEach(d => totalsByDate[d] = 0);
+
+  getCurrentPeriodExpenses().forEach(e => {
+    totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount;
+  });
+
+  let runningUsed = 0;
+
+  strip.innerHTML = dates.map((iso, index) => {
     const d = parseLocalDate(iso);
-const active = iso === selectedDate ? "active" : "";
-const today = iso === todayIso ? "today" : "";
+    const total = totalsByDate[iso] || 0;
+    runningUsed += total;
+
+    const allowedSoFar = perDay * (index + 1);
+    const diff = runningUsed - allowedSoFar; // positiv = over plan
+    const percentOfDay = perDay > 0 ? Math.round((total / perDay) * 100) : 0;
+
+    const active = iso === selectedDate ? "active" : "";
+    const today = iso === todayIso ? "today" : "";
+
+    let colorClass = "";
+    let subText = "";
+
+    if (total === 0) {
+      colorClass = "zero";
+      subText = "0 kr";
+    } else if (diff > perDay * 0.5) {
+      colorClass = "bad-2";
+      subText = `+${Math.round(diff)} kr`;
+    } else if (diff > 0) {
+      colorClass = "bad-1";
+      subText = `+${Math.round(diff)} kr`;
+    } else if (total > perDay * 1.25) {
+      colorClass = "warn-2";
+      subText = `${percentOfDay}%`;
+    } else if (total > perDay) {
+      colorClass = "warn-1";
+      subText = `${percentOfDay}%`;
+    } else if (Math.abs(diff) < perDay * 0.35) {
+      colorClass = "ok-2";
+      subText = `${percentOfDay}%`;
+    } else {
+      colorClass = "ok-1";
+      subText = `${Math.abs(Math.round(diff))} kr under`;
+    }
+
+    return `
+      <button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button" title="${longDate(d)}">
+        <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
+        <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
+        <span class="sub">${subText}</span>
+      </button>
+    `;
+  }).join("");
+
+  strip.querySelectorAll(".date-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDate = btn.dataset.date;
+      document.getElementById("selectedDate").value = selectedDate;
+      if (!editingId) document.getElementById("expense").value = "";
+      renderDateStrip();
+      renderDaySection();
+      updateSummaryOnly();
+    });
+  });
+
+  const activeEl = strip.querySelector(".date-chip.active");
+  if (activeEl) {
+    activeEl.scrollIntoView({ inline:"center", block:"nearest" });
+  }
+}
 
 // alle datoer i perioden
 const dates = getDatesInCurrentPeriod();
@@ -723,11 +850,25 @@ function renderDaySection(){
 
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
   document.getElementById("daySummary").innerHTML = `
-    <strong>${longDate(d)}</strong><br>
-    Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
-    Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
-    Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
-  `;
+const dates = getDatesInCurrentPeriod();
+const dayIndex = dates.indexOf(iso);
+const allowedSoFar = perDayTarget * (dayIndex + 1);
+
+let usedSoFar = 0;
+for (let i = 0; i <= dayIndex; i++) {
+  usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
+}
+
+const cumulativeDiff = usedSoFar - allowedSoFar;
+const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
+
+document.getElementById("daySummary").innerHTML = `
+  <strong>${longDate(d)}</strong><br>
+  Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
+  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
+  Dagsavvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong><br>
+  Samlet til nå: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} kr ${cumulativeDiff > 0 ? "over" : "under"} plan</strong>
+`;
 
   const wrap = document.getElementById("dayEntries");
   if (!entries.length){
