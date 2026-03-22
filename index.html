@@ -518,6 +518,25 @@
 
         <div class="settings-grid" style="margin-top:10px;">
           <div>
+            <label for="periodMode" data-i18n="period_mode_label">Periodetype</label>
+            <select id="periodMode">
+              <option value="weeks">Uker</option>
+              <option value="months">Måneder</option>
+            </select>
+          </div>
+          <div>
+            <label for="periodLength" data-i18n="period_length_label">Lengde</label>
+            <select id="periodLength">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-grid" style="margin-top:10px;">
+          <div>
             <label for="language" data-i18n="language_label">Språk</label>
             <select id="language">
               <option value="no">Norsk</option>
@@ -730,7 +749,7 @@
     <div class="guide-list">
       <div class="guide-item"><strong id="guide1Title">1. Sett budsjett</strong><span id="guide1Text">Legg inn budsjett for perioden din.</span></div>
       <div class="guide-item"><strong id="guide2Title">2. Velg startdag</strong><span id="guide2Text">Bestem hvilken dag perioden skal starte på.</span></div>
-      <div class="guide-item"><strong id="guide3Title">3. Legg inn kjøp</strong><span id="guide3Text">Du kan registrere flere kjøp samme dag.</span></div>
+      <div class="guide-item"><strong id="guide3Title">3. Velg periode</strong><span id="guide3Text">Velg uker eller måneder og ønsket lengde.</span></div>
     </div>
     <div class="modal-actions">
       <button class="secondary" id="closeGuideBtn">Lukk</button>
@@ -740,12 +759,14 @@
 </div>
 
 <script>
-const STORAGE_KEY = "matbudsjett_v11_expenses";
-const BUDGET_KEY = "matbudsjett_v11_budget";
-const STARTDAY_KEY = "matbudsjett_v11_startday";
-const LANG_KEY = "matbudsjett_v11_lang";
-const CURRENCY_KEY = "matbudsjett_v11_currency";
-const GUIDE_KEY = "matbudsjett_v11_guide_hidden";
+const STORAGE_KEY = "matbudsjett_v12_expenses";
+const BUDGET_KEY = "matbudsjett_v12_budget";
+const STARTDAY_KEY = "matbudsjett_v12_startday";
+const PERIOD_MODE_KEY = "matbudsjett_v12_period_mode";
+const PERIOD_LENGTH_KEY = "matbudsjett_v12_period_length";
+const LANG_KEY = "matbudsjett_v12_lang";
+const CURRENCY_KEY = "matbudsjett_v12_currency";
+const GUIDE_KEY = "matbudsjett_v12_guide_hidden";
 
 const TEXT = {
   no: {
@@ -754,6 +775,10 @@ const TEXT = {
     status_title:"Status",
     budget_label:"Budsjett for denne perioden",
     start_day_label:"Startdag for perioden",
+    period_mode_label:"Periodetype",
+    period_length_label:"Lengde",
+    weeks:"Uker",
+    months:"Måneder",
     language_label:"Språk",
     currency_label:"Valuta",
     used:"Brukt",
@@ -791,7 +816,7 @@ const TEXT = {
     import_backup:"Importer backup",
     reset_all:"Nullstill alle data",
     backup_contains:"Hva backupen inneholder",
-    backup_contains_text:"Alle kjøp, valgt startdag og budsjettinnstilling lagres i én JSON-fil.",
+    backup_contains_text:"Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.",
     tab_overview:"Oversikt",
     tab_history:"Historikk",
     tab_stores:"Butikker",
@@ -828,8 +853,8 @@ const TEXT = {
     guide1Text:"Legg inn budsjett for perioden din.",
     guide2Title:"2. Velg startdag",
     guide2Text:"Bestem hvilken dag perioden skal starte på.",
-    guide3Title:"3. Legg inn kjøp",
-    guide3Text:"Du kan registrere flere kjøp samme dag.",
+    guide3Title:"3. Velg periode",
+    guide3Text:"Velg uker eller måneder og ønsket lengde.",
     close:"Lukk",
     dont_show_again:"Ikke vis igjen",
     weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"]
@@ -840,6 +865,10 @@ const TEXT = {
     status_title:"Status",
     budget_label:"Budget for this period",
     start_day_label:"Start day of period",
+    period_mode_label:"Period type",
+    period_length_label:"Length",
+    weeks:"Weeks",
+    months:"Months",
     language_label:"Language",
     currency_label:"Currency",
     used:"Used",
@@ -877,7 +906,7 @@ const TEXT = {
     import_backup:"Import backup",
     reset_all:"Reset all data",
     backup_contains:"What the backup contains",
-    backup_contains_text:"All purchases, chosen start day and budget settings are stored in one JSON file.",
+    backup_contains_text:"All purchases, chosen start day, period type, period length and budget settings are stored in one JSON file.",
     tab_overview:"Overview",
     tab_history:"History",
     tab_stores:"Stores",
@@ -914,8 +943,8 @@ const TEXT = {
     guide1Text:"Enter the budget for your period.",
     guide2Title:"2. Choose start day",
     guide2Text:"Decide which day the period should start.",
-    guide3Title:"3. Add purchases",
-    guide3Text:"You can register multiple purchases on the same day.",
+    guide3Title:"3. Choose period",
+    guide3Text:"Choose weeks or months and the length you want.",
     close:"Close",
     dont_show_again:"Don't show again",
     weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
@@ -939,6 +968,10 @@ function setLang(v){ localStorage.setItem(LANG_KEY, v); }
 function tr(){ return TEXT[getLang()]; }
 function getCurrency(){ return localStorage.getItem(CURRENCY_KEY) || "NOK"; }
 function setCurrency(v){ localStorage.setItem(CURRENCY_KEY, v); }
+function getPeriodMode(){ return localStorage.getItem(PERIOD_MODE_KEY) || "months"; }
+function setPeriodMode(v){ localStorage.setItem(PERIOD_MODE_KEY, v); }
+function getPeriodLength(){ return Number(localStorage.getItem(PERIOD_LENGTH_KEY) || 1); }
+function setPeriodLength(v){ localStorage.setItem(PERIOD_LENGTH_KEY, String(v)); }
 
 function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
 function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
@@ -981,12 +1014,9 @@ function longDate(date){
 
 function periodName(period){
   const locale = getLang() === "no" ? "nb-NO" : "en-GB";
-  const startMonth = period.start.toLocaleDateString(locale, { month:"long" });
-  const endMonth = period.end.toLocaleDateString(locale, { month:"long" });
-  if (startMonth === endMonth){
-    return `${endMonth} ${period.end.getFullYear()}`;
-  }
-  return `${startMonth} / ${endMonth} ${period.end.getFullYear()}`;
+  const startText = period.start.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" });
+  const endText = period.end.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" });
+  return `${startText} – ${endText}`;
 }
 
 function populateStartDay(){
@@ -995,8 +1025,28 @@ function populateStartDay(){
   sel.value = String(getStartDay());
 }
 
+function applyPeriodSelectors(){
+  const modeSel = document.getElementById("periodMode");
+  const lengthSel = document.getElementById("periodLength");
+  modeSel.innerHTML = `
+    <option value="weeks">${tr().weeks}</option>
+    <option value="months">${tr().months}</option>
+  `;
+  lengthSel.innerHTML = `
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  `;
+  modeSel.value = getPeriodMode();
+  lengthSel.value = String(getPeriodLength());
+}
+
 function getPeriod(today = new Date()){
   const startDay = getStartDay();
+  const mode = getPeriodMode();
+  const length = getPeriodLength();
+
   let startYear, startMonth;
   if (today.getDate() >= startDay){
     startYear = today.getFullYear();
@@ -1006,14 +1056,44 @@ function getPeriod(today = new Date()){
     startYear = prev.getFullYear();
     startMonth = prev.getMonth();
   }
+
   const start = new Date(startYear, startMonth, startDay);
-  const end = startDay === 1 ? new Date(startYear, startMonth + 1, 0) : new Date(startYear, startMonth + 1, startDay - 1);
+  let end;
+
+  if (mode === "weeks"){
+    end = new Date(start);
+    end.setDate(end.getDate() + (length * 7) - 1);
+  } else {
+    end = startDay === 1
+      ? new Date(startYear, startMonth + length, 0)
+      : new Date(startYear, startMonth + length, startDay - 1);
+  }
+
   start.setHours(0,0,0,0);
   end.setHours(0,0,0,0);
   return { start, end };
 }
 
-function getPeriodFromStart(startDate){ return getPeriod(startDate); }
+function getPeriodFromStart(startDate){
+  const mode = getPeriodMode();
+  const length = getPeriodLength();
+  const start = new Date(startDate);
+  start.setHours(0,0,0,0);
+  let end;
+
+  if (mode === "weeks"){
+    end = new Date(start);
+    end.setDate(end.getDate() + (length * 7) - 1);
+  } else {
+    const startDay = getStartDay();
+    end = startDay === 1
+      ? new Date(start.getFullYear(), start.getMonth() + length, 0)
+      : new Date(start.getFullYear(), start.getMonth() + length, startDay - 1);
+  }
+
+  end.setHours(0,0,0,0);
+  return { start, end };
+}
 
 function getDatesInRange(start, end){
   const dates = [];
@@ -1060,14 +1140,17 @@ function applyUIStrings(){
   const s = tr();
   document.getElementById("appTitle").innerText = s.appTitle;
   document.getElementById("appSubtitle").innerText = s.appSubtitle;
+
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
     if (s[key]) el.textContent = s[key];
   });
+
   document.querySelector('.tab-btn[data-tab="overviewTab"]').textContent = s.tab_overview;
   document.querySelector('.tab-btn[data-tab="historyTab"]').textContent = s.tab_history;
   document.querySelector('.tab-btn[data-tab="shopsTab"]').textContent = s.tab_stores;
   document.querySelector('.tab-btn[data-tab="backupTab"]').textContent = s.tab_backup;
+
   const w = s.weekdays;
   document.getElementById("wd1").textContent = w[0];
   document.getElementById("wd2").textContent = w[1];
@@ -1076,11 +1159,13 @@ function applyUIStrings(){
   document.getElementById("wd5").textContent = w[4];
   document.getElementById("wd6").textContent = w[5];
   document.getElementById("wd7").textContent = w[6];
+
   document.getElementById("saveBtn").textContent = editingId ? s.save_change : s.add_purchase;
   document.getElementById("cancelEditBtn").textContent = s.cancel_edit;
   document.getElementById("exportBtn").textContent = s.export_backup;
   document.getElementById("importBtn").textContent = s.import_backup;
   document.getElementById("resetBtn").textContent = s.reset_all;
+
   document.getElementById("welcomeTitle").textContent = s.welcomeTitle;
   document.getElementById("welcomeText").textContent = s.welcomeText;
   document.getElementById("guide1Title").textContent = s.guide1Title;
@@ -1091,8 +1176,10 @@ function applyUIStrings(){
   document.getElementById("guide3Text").textContent = s.guide3Text;
   document.getElementById("closeGuideBtn").textContent = s.close;
   document.getElementById("dontShowGuideBtn").textContent = s.dont_show_again;
+
   document.getElementById("language").value = getLang();
   document.getElementById("currency").value = getCurrency();
+  applyPeriodSelectors();
 }
 
 function setFormForAdd(){
@@ -1305,7 +1392,9 @@ function updateSummaryOnly(){
   document.getElementById("used").innerText = formatCurrency(used);
   document.getElementById("remaining").innerText = formatCurrency(remaining);
   document.getElementById("dailyNow").innerText = formatCurrency(dailyNow);
-  document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · ${tr().start_day_label.toLowerCase()} ${getStartDay()}`;
+
+  const modeText = getPeriodMode() === "weeks" ? tr().weeks.toLowerCase() : tr().months.toLowerCase();
+  document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · ${tr().start_day_label.toLowerCase()} ${getStartDay()} · ${getPeriodLength()} ${modeText}`;
 
   const statusEl = document.getElementById("status");
   if (!budget){
@@ -1420,7 +1509,7 @@ function fillHistorySelectors(){
 
   const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start);
   const periodSelect = document.getElementById("historyPeriod");
-  periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)} (${p.label})</option>`).join("");
+  periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)}</option>`).join("");
   if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)){
     selectedHistoryPeriod = periodsForYear[0]?.id || "";
   }
@@ -1593,10 +1682,12 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 11,
+    version: 12,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
+    periodMode: getPeriodMode(),
+    periodLength: getPeriodLength(),
     language: getLang(),
     currency: getCurrency(),
     expenses
@@ -1617,12 +1708,16 @@ function importBackupFromFile(file){
     try{
       const data = JSON.parse(e.target.result);
       if (!data || !Array.isArray(data.expenses)){ alert(tr().invalid_backup); return; }
+
       expenses = data.expenses;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
       localStorage.setItem(BUDGET_KEY, data.budget || "");
       localStorage.setItem(STARTDAY_KEY, data.startDay || "20");
+      localStorage.setItem(PERIOD_MODE_KEY, data.periodMode || "months");
+      localStorage.setItem(PERIOD_LENGTH_KEY, String(data.periodLength || 1));
       localStorage.setItem(LANG_KEY, data.language || "no");
       localStorage.setItem(CURRENCY_KEY, data.currency || "NOK");
+
       document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
       populateStartDay();
       applyUIStrings();
@@ -1646,6 +1741,8 @@ function resetAllData(){
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(BUDGET_KEY);
   localStorage.removeItem(STARTDAY_KEY);
+  localStorage.removeItem(PERIOD_MODE_KEY);
+  localStorage.removeItem(PERIOD_LENGTH_KEY);
   localStorage.removeItem(LANG_KEY);
   localStorage.removeItem(CURRENCY_KEY);
   document.getElementById("budget").value = "";
@@ -1687,7 +1784,12 @@ function maybeShowGuide(){
 
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
 document.getElementById("cancelEditBtn").addEventListener("click", setFormForAdd);
-document.getElementById("budget").addEventListener("input", () => { saveBudget(); updateAll(); });
+
+document.getElementById("budget").addEventListener("input", () => {
+  saveBudget();
+  updateAll();
+});
+
 document.getElementById("startDay").addEventListener("change", () => {
   saveStartDay();
   selectedDate = "";
@@ -1697,26 +1799,50 @@ document.getElementById("startDay").addEventListener("change", () => {
   updateAll();
   setFormForAdd();
 });
+
+document.getElementById("periodMode").addEventListener("change", (e) => {
+  setPeriodMode(e.target.value);
+  selectedDate = "";
+  selectedHistoryPeriod = "";
+  selectedHistoryYear = "";
+  selectedShopYear = "";
+  updateAll();
+});
+
+document.getElementById("periodLength").addEventListener("change", (e) => {
+  setPeriodLength(e.target.value);
+  selectedDate = "";
+  selectedHistoryPeriod = "";
+  selectedHistoryYear = "";
+  selectedShopYear = "";
+  updateAll();
+});
+
 document.getElementById("selectedDate").addEventListener("change", (e) => {
   selectedDate = e.target.value;
   renderDateStrip();
   renderDaySection();
   updateSummaryOnly();
 });
+
 document.getElementById("historyYear").addEventListener("change", (e) => {
   selectedHistoryYear = e.target.value;
   fillHistorySelectors();
   renderHistoryTab();
 });
+
 document.getElementById("historyPeriod").addEventListener("change", (e) => {
   selectedHistoryPeriod = e.target.value;
   renderHistoryTab();
 });
+
 document.getElementById("shopYear").addEventListener("change", (e) => {
   selectedShopYear = e.target.value;
   renderShopTab();
 });
+
 document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
 document.getElementById("importFile").addEventListener("change", (e) => {
@@ -1724,18 +1850,23 @@ document.getElementById("importFile").addEventListener("change", (e) => {
   if (file) importBackupFromFile(file);
   e.target.value = "";
 });
+
 document.getElementById("resetBtn").addEventListener("click", resetAllData);
+
 document.getElementById("language").addEventListener("change", (e) => {
   setLang(e.target.value);
   updateAll();
 });
+
 document.getElementById("currency").addEventListener("change", (e) => {
   setCurrency(e.target.value);
   updateAll();
 });
+
 document.getElementById("closeGuideBtn").addEventListener("click", () => {
   document.getElementById("welcomeModal").classList.remove("show");
 });
+
 document.getElementById("dontShowGuideBtn").addEventListener("click", () => {
   localStorage.setItem(GUIDE_KEY, "1");
   document.getElementById("welcomeModal").classList.remove("show");
@@ -1745,6 +1876,7 @@ document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || ""
 document.getElementById("language").value = getLang();
 document.getElementById("currency").value = getCurrency();
 populateStartDay();
+applyUIStrings();
 ensureSelectedDate();
 setFormForAdd();
 updateAll();
