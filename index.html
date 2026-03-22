@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Matbudsjett</title>
+<title>Matbudsjett v14</title>
 <meta name="theme-color" content="#2563eb" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -24,6 +24,8 @@
 
   *{box-sizing:border-box}
 
+  html{scroll-behavior:smooth}
+
   body{
     margin:0;
     padding:18px 18px 96px;
@@ -33,6 +35,7 @@
   }
 
   .app{max-width:1080px;margin:0 auto}
+  .hidden{display:none !important}
 
   .hero{
     background:linear-gradient(135deg,var(--primary),#38bdf8);
@@ -46,14 +49,18 @@
     align-items:center;
   }
 
-  .hero-badge{
+  .hero-badge,
+  .setup-badge{
     width:64px;height:64px;border-radius:18px;
     background:rgba(255,255,255,.18);
     display:flex;align-items:center;justify-content:center;
     flex:0 0 auto;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
   }
-  .hero-badge svg{width:36px;height:36px}
+
+  .hero-badge svg,
+  .setup-badge svg{width:36px;height:36px}
+
   .hero h1{margin:0 0 6px;font-size:30px}
   .hero p{margin:0;opacity:.95}
   .period{margin-top:8px;font-size:14px;opacity:.95}
@@ -62,6 +69,7 @@
   .tab-panel.active{display:block}
 
   .grid{display:grid;grid-template-columns:1fr;gap:14px}
+
   .card{
     background:var(--card);
     border-radius:var(--radius);
@@ -95,6 +103,8 @@
     color:var(--text);
   }
 
+  input::placeholder{color:#97a4b6}
+
   button{
     background:var(--primary);
     color:#fff;
@@ -106,6 +116,12 @@
     background:var(--primary-soft);
     color:var(--primary);
     border:1px solid #d7e6ff;
+  }
+
+  button.ghost{
+    background:#fff;
+    color:var(--text);
+    border:1px solid var(--line);
   }
 
   button.danger{
@@ -143,13 +159,39 @@
   .stat .value{
     font-size:22px;
     font-weight:900;
+    line-height:1.15;
   }
 
   .wide{grid-column:1/-1}
 
-  .status{margin-top:10px;font-weight:800}
+  .status{
+    margin-top:10px;
+    font-weight:800;
+    line-height:1.4;
+  }
+
   .status.good{color:var(--good)}
   .status.warn{color:var(--warn)}
+
+  .quick-actions{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+    margin-top:10px;
+  }
+
+  .quick-btn{
+    padding:10px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:800;
+  }
+
+  .helper-text{
+    margin-top:10px;
+    font-size:13px;
+    color:var(--muted);
+  }
 
   .date-strip{
     display:flex;
@@ -201,6 +243,7 @@
     border-radius:16px;
     background:#f8fbff;
     border:1px solid var(--line);
+    line-height:1.55;
   }
 
   .list{
@@ -340,53 +383,6 @@
   .heat-bad1{ background:#fee2e2; border-color:#fca5a5; color:#b91c1c; }
   .heat-bad2{ background:#fecaca; border-color:#f87171; color:#991b1b; }
 
-  .modal-backdrop{
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,.45);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:50;
-    padding:18px;
-  }
-
-  .modal-backdrop.show{display:flex}
-
-  .modal{
-    width:min(560px, 100%);
-    background:#fff;
-    border-radius:24px;
-    padding:22px;
-    box-shadow:0 20px 50px rgba(15,23,42,.25);
-  }
-
-  .modal h2{margin:0 0 8px;font-size:24px}
-  .modal p{margin:0 0 12px;color:var(--muted)}
-  .guide-list{display:grid;gap:10px;margin:14px 0}
-  .guide-item{
-    background:#f8fbff;
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:12px;
-  }
-  .guide-item strong{display:block;margin-bottom:4px}
-
-  .icon-preview{
-    width:72px;height:72px;border-radius:20px;
-    background:linear-gradient(135deg,#2563eb,#38bdf8);
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;margin-bottom:10px;
-    box-shadow:var(--shadow);
-  }
-
-  .modal-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:12px;
-  }
-
   .tabs{
     position:sticky;
     bottom:12px;
@@ -420,18 +416,159 @@
     color:#fff;
   }
 
+  .setup-screen{
+    max-width:760px;
+    margin:24px auto 0;
+  }
+
+  .setup-card{
+    background:#fff;
+    border-radius:28px;
+    box-shadow:0 20px 50px rgba(15,23,42,.12);
+    overflow:hidden;
+  }
+
+  .setup-top{
+    background:linear-gradient(135deg,var(--primary),#38bdf8);
+    color:#fff;
+    padding:28px 22px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+  }
+
+  .setup-top h1{margin:0 0 8px;font-size:30px}
+  .setup-top p{margin:0;opacity:.95;line-height:1.5}
+
+  .setup-body{
+    padding:18px;
+  }
+
+  .setup-info{
+    display:grid;
+    gap:10px;
+    margin-bottom:16px;
+  }
+
+  .setup-info-item{
+    background:#f8fbff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+  }
+
+  .setup-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .top-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:14px;
+  }
+
+  .compact{
+    font-size:14px;
+    padding:10px 12px;
+  }
+
   @media (min-width:760px){
-    .grid{grid-template-columns:1.1fr .9fr}
+    .grid{grid-template-columns:1fr 1fr}
     .charts{grid-template-columns:1fr 1fr}
     .heatmap-grid,.heatmap-weekdays{gap:8px}
     .heatmap-day{min-height:62px}
     .heatmap-day .num{font-size:16px}
     .heatmap-day .amt{font-size:10px}
+    .setup-actions{grid-template-columns:1fr 1fr}
   }
 </style>
 </head>
 <body>
-<div class="app">
+
+<div id="setupScreen" class="setup-screen hidden">
+  <div class="setup-card">
+    <div class="setup-top">
+      <div class="setup-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 19h16M7 16V9m5 7V5m5 11v-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1 id="setupTitle">Sett opp appen</h1>
+        <p id="setupText">Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.</p>
+      </div>
+    </div>
+
+    <div class="setup-body">
+      <div class="setup-info">
+        <div class="setup-info-item"><strong id="setupInfo1Title">Rask start</strong><div id="setupInfo1Text">Dette trenger du bare å gjøre første gang.</div></div>
+        <div class="setup-info-item"><strong id="setupInfo2Title">Kan endres senere</strong><div id="setupInfo2Text">Alle valgene kan endres i Innstillinger.</div></div>
+      </div>
+
+      <div class="settings-grid">
+        <div>
+          <label for="setupBudget" id="setupBudgetLabel">Budsjett for denne perioden</label>
+          <input id="setupBudget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
+        </div>
+        <div>
+          <label for="setupStartDay" id="setupStartDayLabel">Startdag for perioden</label>
+          <select id="setupStartDay"></select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="setupPeriodMode" id="setupPeriodModeLabel">Periodetype</label>
+          <select id="setupPeriodMode">
+            <option value="weeks">Uker</option>
+            <option value="months">Måneder</option>
+          </select>
+        </div>
+        <div>
+          <label for="setupPeriodLength" id="setupPeriodLengthLabel">Lengde</label>
+          <select id="setupPeriodLength">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="setupLanguage" id="setupLanguageLabel">Språk</label>
+          <select id="setupLanguage">
+            <option value="no">Norsk</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div>
+          <label for="setupCurrency" id="setupCurrencyLabel">Valuta</label>
+          <select id="setupCurrency">
+            <option value="NOK">NOK</option>
+            <option value="SEK">SEK</option>
+            <option value="DKK">DKK</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button id="startUsingAppBtn" type="button">Start appen</button>
+        <button id="setupUseExistingBtn" class="secondary" type="button">Bruk lagrede innstillinger</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app hidden" id="mainApp">
   <div class="hero">
     <div class="hero-badge" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none">
@@ -446,6 +583,11 @@
   </div>
 
   <div id="overviewTab" class="tab-panel active">
+    <div class="top-actions">
+      <button id="jumpToTodayBtn" class="secondary compact" type="button">I dag</button>
+      <button id="openSettingsBtn" class="ghost compact" type="button">Åpne innstillinger</button>
+    </div>
+
     <div class="grid">
       <div class="card">
         <h2 class="section-title" id="formTitle">Legg til kjøp</h2>
@@ -478,6 +620,15 @@
 
         <label for="expense" data-i18n="amount">Beløp</label>
         <input id="expense" type="number" inputmode="decimal" placeholder="F.eks. 189" />
+
+        <div class="quick-actions">
+          <button class="secondary quick-btn" type="button" data-quick-amount="50">+50</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="100">+100</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="200">+200</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="500">+500</button>
+        </div>
+
+        <div class="helper-text" id="quickHint">Tips: Appen husker sist valgte butikk.</div>
 
         <div class="footer-actions">
           <button id="saveBtn">Legg til kjøp</button>
@@ -669,6 +820,10 @@
         <button id="resetBtn" class="danger" type="button">Nullstill alle data</button>
       </div>
 
+      <div class="single-action">
+        <button id="showSetupAgainBtn" class="ghost" type="button">Vis oppsettsskjerm igjen</button>
+      </div>
+
       <input id="importFile" type="file" accept=".json,application/json" style="display:none;" />
 
       <div class="day-summary" style="margin-top:14px;">
@@ -686,27 +841,6 @@
   </div>
 </div>
 
-<div class="modal-backdrop" id="welcomeModal">
-  <div class="modal">
-    <div class="icon-preview" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" width="40" height="40">
-        <path d="M4 19h16M7 16V9m5 7V5m5 11v-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <h2 id="welcomeTitle">Velkommen</h2>
-    <p id="welcomeText">Her er en rask oppstart så du kommer i gang.</p>
-    <div class="guide-list">
-      <div class="guide-item"><strong id="guide1Title">1. Sett budsjett</strong><span id="guide1Text">Legg inn budsjett for perioden din.</span></div>
-      <div class="guide-item"><strong id="guide2Title">2. Velg startdag</strong><span id="guide2Text">Bestem hvilken dag perioden skal starte på.</span></div>
-      <div class="guide-item"><strong id="guide3Title">3. Legg inn kjøp</strong><span id="guide3Text">På hovedsiden kan du registrere kjøp raskt hver dag.</span></div>
-    </div>
-    <div class="modal-actions">
-      <button class="secondary" id="closeGuideBtn">Lukk</button>
-      <button id="dontShowGuideBtn">Ikke vis igjen</button>
-    </div>
-  </div>
-</div>
-
 <script>
 const STORAGE_KEY = "matbudsjett_v13_expenses";
 const BUDGET_KEY = "matbudsjett_v13_budget";
@@ -715,7 +849,8 @@ const PERIOD_MODE_KEY = "matbudsjett_v13_period_mode";
 const PERIOD_LENGTH_KEY = "matbudsjett_v13_period_length";
 const LANG_KEY = "matbudsjett_v13_lang";
 const CURRENCY_KEY = "matbudsjett_v13_currency";
-const GUIDE_KEY = "matbudsjett_v13_guide_hidden";
+const LAST_STORE_KEY = "matbudsjett_v14_last_store";
+const SETUP_DONE_KEY = "matbudsjett_v14_setup_done";
 
 const TEXT = {
   no: {
@@ -784,8 +919,8 @@ const TEXT = {
     no_purchases_year:"Ingen kjøp registrert for dette året ennå.",
     status_enter_budget:"Legg inn budsjett for perioden.",
     status_over_budget:(amount)=>`Du er over budsjettet med ${amount}.`,
-    status_over_plan:(amount)=>`Du ligger over plan så langt i perioden. Prøv å holde deg rundt ${amount} per dag videre.`,
-    status_within_plan:(amount)=>`Du ligger innenfor plan. Du kan bruke omtrent ${amount} per dag videre.`,
+    status_over_plan:(amount)=>`Du ligger litt foran planen. Skal du hente deg inn, bør du holde deg rundt ${amount} per dag videre.`,
+    status_within_plan:(amount)=>`Du ligger fint an. Du kan bruke omtrent ${amount} per dag videre.`,
     day_entries:(n)=>`Antall kjøp: <strong>${n}</strong>`,
     day_spent:"Brukt denne dagen",
     day_target:"Dagens mål",
@@ -797,17 +932,20 @@ const TEXT = {
     heat_ok:"innenfor",
     heat_warn:"høy dag",
     heat_bad:"over plan",
-    welcomeTitle:"Velkommen",
-    welcomeText:"Her er en rask oppstart så du kommer i gang.",
-    guide1Title:"1. Sett opp appen",
-    guide1Text:"Gå til Innstillinger og velg budsjett, periode og språk.",
-    guide2Title:"2. Bruk Oversikt daglig",
-    guide2Text:"På hovedsiden kan du legge inn kjøp med en gang.",
-    guide3Title:"3. Følg utviklingen",
-    guide3Text:"Se historikk, heatmap og butikker for å sammenligne over tid.",
-    close:"Lukk",
-    dont_show_again:"Ikke vis igjen",
-    weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"]
+    weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
+    quick_hint:"Tips: Appen husker sist valgte butikk.",
+    jump_today:"I dag",
+    open_settings:"Åpne innstillinger",
+    show_setup_again:"Vis oppsettsskjerm igjen",
+    setupTitle:"Sett opp appen",
+    setupText:"Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.",
+    setupInfo1Title:"Rask start",
+    setupInfo1Text:"Dette trenger du bare å gjøre første gang.",
+    setupInfo2Title:"Kan endres senere",
+    setupInfo2Text:"Alle valgene kan endres i Innstillinger.",
+    setupStart:"Start appen",
+    setupUseExisting:"Bruk lagrede innstillinger",
+    setupNeedsBudget:"Legg inn budsjett for å komme i gang."
   },
   en: {
     appTitle:"Food Budget",
@@ -875,8 +1013,8 @@ const TEXT = {
     no_purchases_year:"No purchases registered for this year yet.",
     status_enter_budget:"Enter a budget for the period.",
     status_over_budget:(amount)=>`You are over budget by ${amount}.`,
-    status_over_plan:(amount)=>`You are above plan so far in this period. Try to stay around ${amount} per day going forward.`,
-    status_within_plan:(amount)=>`You are within plan. You can spend about ${amount} per day going forward.`,
+    status_over_plan:(amount)=>`You are a bit ahead of plan. To catch up, try to stay around ${amount} per day from now on.`,
+    status_within_plan:(amount)=>`You are on track. You can spend about ${amount} per day from now on.`,
     day_entries:(n)=>`Number of purchases: <strong>${n}</strong>`,
     day_spent:"Spent this day",
     day_target:"Daily target",
@@ -888,17 +1026,20 @@ const TEXT = {
     heat_ok:"within plan",
     heat_warn:"high day",
     heat_bad:"over plan",
-    welcomeTitle:"Welcome",
-    welcomeText:"Here is a quick start guide.",
-    guide1Title:"1. Set up the app",
-    guide1Text:"Go to Settings and choose budget, period and language.",
-    guide2Title:"2. Use Overview daily",
-    guide2Text:"On the main page you can add purchases quickly.",
-    guide3Title:"3. Follow your progress",
-    guide3Text:"Use history, heatmap and stores to compare over time.",
-    close:"Close",
-    dont_show_again:"Don't show again",
-    weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    quick_hint:"Tip: The app remembers your last selected store.",
+    jump_today:"Today",
+    open_settings:"Open settings",
+    show_setup_again:"Show setup screen again",
+    setupTitle:"Set up the app",
+    setupText:"Choose budget, period, language and currency first. After that you go straight to the overview.",
+    setupInfo1Title:"Quick start",
+    setupInfo1Text:"You only need to do this once.",
+    setupInfo2Title:"Can be changed later",
+    setupInfo2Text:"All settings can be changed later in Settings.",
+    setupStart:"Start app",
+    setupUseExisting:"Use saved settings",
+    setupNeedsBudget:"Enter a budget to get started."
   }
 };
 
@@ -923,10 +1064,15 @@ function getPeriodMode(){ return localStorage.getItem(PERIOD_MODE_KEY) || "month
 function setPeriodMode(v){ localStorage.setItem(PERIOD_MODE_KEY, v); }
 function getPeriodLength(){ return Number(localStorage.getItem(PERIOD_LENGTH_KEY) || 1); }
 function setPeriodLength(v){ localStorage.setItem(PERIOD_LENGTH_KEY, String(v)); }
+function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
+function getBudgetValue(){ return Number(localStorage.getItem(BUDGET_KEY) || 0); }
+function getLastStore(){ return localStorage.getItem(LAST_STORE_KEY) || "Rema 1000"; }
+function setLastStore(v){ localStorage.setItem(LAST_STORE_KEY, v); }
+function isSetupDone(){ return localStorage.getItem(SETUP_DONE_KEY) === "1"; }
+function setSetupDone(v){ localStorage.setItem(SETUP_DONE_KEY, v ? "1" : "0"); }
 
 function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
 function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
-function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
 function saveStartDay(){ localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20"); }
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
 
@@ -939,8 +1085,12 @@ function formatCurrency(value){
       maximumFractionDigits:0
     }).format(Number(value || 0));
   } catch {
-    return Math.round(Number(value || 0)).toLocaleString("no-NO") + " " + currency;
+    return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB") + " " + currency;
   }
+}
+
+function formatNumber(value){
+  return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB");
 }
 
 function formatISO(date){
@@ -970,10 +1120,10 @@ function periodName(period){
   return `${startText} – ${endText}`;
 }
 
-function populateStartDay(){
-  const sel = document.getElementById("startDay");
+function populateStartDaySelect(selectId, selectedValue = getStartDay()){
+  const sel = document.getElementById(selectId);
   sel.innerHTML = Array.from({length:28}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join("");
-  sel.value = String(getStartDay());
+  sel.value = String(selectedValue);
 }
 
 function applyPeriodSelectors(){
@@ -991,6 +1141,27 @@ function applyPeriodSelectors(){
   `;
   modeSel.value = getPeriodMode();
   lengthSel.value = String(getPeriodLength());
+}
+
+function applySetupSelectors(){
+  const modeSel = document.getElementById("setupPeriodMode");
+  const lengthSel = document.getElementById("setupPeriodLength");
+  modeSel.innerHTML = `
+    <option value="weeks">${tr().weeks}</option>
+    <option value="months">${tr().months}</option>
+  `;
+  lengthSel.innerHTML = `
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  `;
+  modeSel.value = getPeriodMode();
+  lengthSel.value = String(getPeriodLength());
+  document.getElementById("setupLanguage").value = getLang();
+  document.getElementById("setupCurrency").value = getCurrency();
+  document.getElementById("setupBudget").value = localStorage.getItem(BUDGET_KEY) || "";
+  populateStartDaySelect("setupStartDay", getStartDay());
 }
 
 function getPeriod(today = new Date()){
@@ -1082,10 +1253,20 @@ function getCurrentPeriodExpenses(){
 }
 
 function getExpensesForDate(iso){
-  return getCurrentPeriodExpenses().filter(e => e.date === iso).sort((a,b) => a.createdAt - b.createdAt);
+  return getCurrentPeriodExpenses()
+    .filter(e => e.date === iso)
+    .sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
 }
 
 function getBudget(){ return Number(document.getElementById("budget").value || 0); }
+
+function syncSettingsInputsFromStorage(){
+  document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
+  document.getElementById("language").value = getLang();
+  document.getElementById("currency").value = getCurrency();
+  populateStartDaySelect("startDay", getStartDay());
+  applyPeriodSelectors();
+}
 
 function applyUIStrings(){
   const s = tr();
@@ -1102,6 +1283,11 @@ function applyUIStrings(){
   document.querySelector('.tab-btn[data-tab="shopsTab"]').textContent = s.tab_stores;
   document.querySelector('.tab-btn[data-tab="settingsTab"]').textContent = s.tab_settings;
 
+  document.getElementById("jumpToTodayBtn").textContent = s.jump_today;
+  document.getElementById("openSettingsBtn").textContent = s.open_settings;
+  document.getElementById("showSetupAgainBtn").textContent = s.show_setup_again;
+  document.getElementById("quickHint").textContent = s.quick_hint;
+
   const w = s.weekdays;
   document.getElementById("wd1").textContent = w[0];
   document.getElementById("wd2").textContent = w[1];
@@ -1117,20 +1303,61 @@ function applyUIStrings(){
   document.getElementById("importBtn").textContent = s.import_backup;
   document.getElementById("resetBtn").textContent = s.reset_all;
 
-  document.getElementById("welcomeTitle").textContent = s.welcomeTitle;
-  document.getElementById("welcomeText").textContent = s.welcomeText;
-  document.getElementById("guide1Title").textContent = s.guide1Title;
-  document.getElementById("guide1Text").textContent = s.guide1Text;
-  document.getElementById("guide2Title").textContent = s.guide2Title;
-  document.getElementById("guide2Text").textContent = s.guide2Text;
-  document.getElementById("guide3Title").textContent = s.guide3Title;
-  document.getElementById("guide3Text").textContent = s.guide3Text;
-  document.getElementById("closeGuideBtn").textContent = s.close;
-  document.getElementById("dontShowGuideBtn").textContent = s.dont_show_again;
+  document.getElementById("setupTitle").textContent = s.setupTitle;
+  document.getElementById("setupText").textContent = s.setupText;
+  document.getElementById("setupInfo1Title").textContent = s.setupInfo1Title;
+  document.getElementById("setupInfo1Text").textContent = s.setupInfo1Text;
+  document.getElementById("setupInfo2Title").textContent = s.setupInfo2Title;
+  document.getElementById("setupInfo2Text").textContent = s.setupInfo2Text;
+  document.getElementById("setupBudgetLabel").textContent = s.budget_label;
+  document.getElementById("setupStartDayLabel").textContent = s.start_day_label;
+  document.getElementById("setupPeriodModeLabel").textContent = s.period_mode_label;
+  document.getElementById("setupPeriodLengthLabel").textContent = s.period_length_label;
+  document.getElementById("setupLanguageLabel").textContent = s.language_label;
+  document.getElementById("setupCurrencyLabel").textContent = s.currency_label;
+  document.getElementById("startUsingAppBtn").textContent = s.setupStart;
+  document.getElementById("setupUseExistingBtn").textContent = s.setupUseExisting;
 
   document.getElementById("language").value = getLang();
   document.getElementById("currency").value = getCurrency();
   applyPeriodSelectors();
+  applySetupSelectors();
+}
+
+function showSetupScreen(){
+  document.getElementById("setupScreen").classList.remove("hidden");
+  document.getElementById("mainApp").classList.add("hidden");
+  applyUIStrings();
+}
+
+function showMainApp(){
+  document.getElementById("setupScreen").classList.add("hidden");
+  document.getElementById("mainApp").classList.remove("hidden");
+  syncSettingsInputsFromStorage();
+  applyUIStrings();
+  ensureSelectedDate();
+  setFormForAdd();
+  updateAll();
+  requestAnimationFrame(() => focusAmountField());
+}
+
+function shouldShowSetupScreen(){
+  return !isSetupDone() || !localStorage.getItem(BUDGET_KEY);
+}
+
+function focusAmountField(){
+  if (document.getElementById("overviewTab").classList.contains("active")){
+    document.getElementById("expense").focus();
+  }
+}
+
+function jumpToToday(){
+  const todayIso = formatISO(new Date());
+  const dates = getDatesInCurrentPeriod();
+  selectedDate = dates.includes(todayIso) ? todayIso : dates[0];
+  document.getElementById("selectedDate").value = selectedDate;
+  renderOverviewOnly();
+  focusAmountField();
 }
 
 function setFormForAdd(){
@@ -1140,7 +1367,7 @@ function setFormForAdd(){
   document.getElementById("cancelEditBtn").style.display = "none";
   document.getElementById("expense").value = "";
   document.getElementById("selectedDate").value = selectedDate;
-  document.getElementById("category").value = "Rema 1000";
+  document.getElementById("category").value = getLastStore();
 }
 
 function setFormForEdit(entry){
@@ -1153,9 +1380,8 @@ function setFormForEdit(entry){
   document.getElementById("category").value = entry.category;
   document.getElementById("expense").value = entry.amount;
   selectedDate = entry.date;
-  renderDateStrip();
-  renderDaySection();
-  updateSummaryOnly();
+  renderOverviewOnly();
+  requestAnimationFrame(() => document.getElementById("expense").focus());
 }
 
 function addOrUpdateExpense(){
@@ -1166,6 +1392,8 @@ function addOrUpdateExpense(){
   if (!date){ alert(tr().choose_date); return; }
   if (!amount || amount <= 0){ alert(tr().invalid_amount); return; }
 
+  setLastStore(category);
+
   if (editingId){
     const idx = expenses.findIndex(e => e.id === editingId);
     if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date };
@@ -1175,15 +1403,17 @@ function addOrUpdateExpense(){
 
   selectedDate = date;
   saveExpenses();
-  updateAll();
+  editingId = null;
+  renderEverything();
   setFormForAdd();
+  requestAnimationFrame(() => focusAmountField());
 }
 
 function deleteExpense(id){
   expenses = expenses.filter(e => e.id !== id);
   saveExpenses();
   if (editingId === id) setFormForAdd();
-  updateAll();
+  renderEverything();
 }
 
 function renderDateStrip(){
@@ -1250,9 +1480,8 @@ function renderDateStrip(){
       selectedDate = btn.dataset.date;
       document.getElementById("selectedDate").value = selectedDate;
       if (!editingId) document.getElementById("expense").value = "";
-      renderDateStrip();
-      renderDaySection();
-      updateSummaryOnly();
+      renderOverviewOnly();
+      focusAmountField();
     });
   });
 
@@ -1290,8 +1519,8 @@ function renderDaySection(){
     ${tr().day_entries(countEntries)}<br>
     ${tr().day_spent}: <strong>${formatCurrency(total)}</strong><br>
     ${tr().day_target}: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
-    ${tr().day_diff}: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")}</strong><br>
-    ${tr().cumulative}: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} ${cumulativeDiff > 0 ? tr().over_plan : tr().under_plan}</strong>
+    ${tr().day_diff}: <strong>${diff > 0 ? "+" : ""}${formatNumber(diff)}</strong><br>
+    ${tr().cumulative}: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${formatNumber(cumulativeDiff)} ${cumulativeDiff > 0 ? tr().over_plan : tr().under_plan}</strong>
   `;
 
   const wrap = document.getElementById("dayEntries");
@@ -1529,9 +1758,8 @@ function renderHistoryHeatmap(selectedPeriod){
       selectedDate = btn.dataset.date;
       setActiveTab("overviewTab");
       document.getElementById("selectedDate").value = selectedDate;
-      renderDateStrip();
-      renderDaySection();
-      updateSummaryOnly();
+      renderOverviewOnly();
+      focusAmountField();
     });
   });
 }
@@ -1551,8 +1779,8 @@ function renderHistoryTab(){
 
   document.getElementById("historyTotal").innerText = formatCurrency(selectedData.total);
   document.getElementById("historyDailyAvg").innerText = formatCurrency(selectedData.avg);
-  document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${Math.round(diffPrev).toLocaleString("no-NO")}`;
-  document.getElementById("historyCount").innerText = selectedData.count.toLocaleString("no-NO");
+  document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${formatNumber(diffPrev)}`;
+  document.getElementById("historyCount").innerText = formatNumber(selectedData.count);
 
   if (historyPeriodChart) historyPeriodChart.destroy();
   historyPeriodChart = buildChart("historyPeriodChart", "bar", periodsForYear.map(p => periodName(p)), periodsForYear.map(p => getPeriodData(p).total));
@@ -1633,7 +1861,7 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 13,
+    version: 14,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
@@ -1641,6 +1869,8 @@ function exportBackup(){
     periodLength: getPeriodLength(),
     language: getLang(),
     currency: getCurrency(),
+    lastStore: getLastStore(),
+    setupDone: isSetupDone(),
     expenses
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -1668,16 +1898,21 @@ function importBackupFromFile(file){
       localStorage.setItem(PERIOD_LENGTH_KEY, String(data.periodLength || 1));
       localStorage.setItem(LANG_KEY, data.language || "no");
       localStorage.setItem(CURRENCY_KEY, data.currency || "NOK");
+      localStorage.setItem(LAST_STORE_KEY, data.lastStore || "Rema 1000");
+      localStorage.setItem(SETUP_DONE_KEY, data.setupDone ? "1" : "0");
 
-      document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
-      populateStartDay();
+      syncSettingsInputsFromStorage();
       applyUIStrings();
       selectedDate = "";
       selectedHistoryPeriod = "";
       selectedHistoryYear = "";
       selectedShopYear = "";
       setFormForAdd();
-      updateAll();
+      renderEverything();
+
+      if (shouldShowSetupScreen()) showSetupScreen();
+      else showMainApp();
+
       alert(tr().import_ok);
     } catch(err){
       alert(tr().import_failed);
@@ -1696,15 +1931,18 @@ function resetAllData(){
   localStorage.removeItem(PERIOD_LENGTH_KEY);
   localStorage.removeItem(LANG_KEY);
   localStorage.removeItem(CURRENCY_KEY);
-  document.getElementById("budget").value = "";
-  populateStartDay();
-  applyUIStrings();
+  localStorage.removeItem(LAST_STORE_KEY);
+  localStorage.removeItem(SETUP_DONE_KEY);
+
   selectedDate = "";
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  setFormForAdd();
-  updateAll();
+  editingId = null;
+
+  syncSettingsInputsFromStorage();
+  applyUIStrings();
+  showSetupScreen();
 }
 
 function setActiveTab(tabId){
@@ -1713,32 +1951,76 @@ function setActiveTab(tabId){
   document.getElementById(tabId).classList.add("active");
   const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
   if (activeBtn) activeBtn.classList.add("active");
+
+  if (tabId === "overviewTab") {
+    renderOverviewOnly();
+    requestAnimationFrame(() => focusAmountField());
+  }
   if (tabId === "historyTab") renderHistoryTab();
   if (tabId === "shopsTab") renderShopTab();
 }
 
-function updateAll(){
+function renderOverviewOnly(){
   ensureSelectedDate();
-  applyUIStrings();
   updateSummaryOnly();
   renderDateStrip();
   renderDaySection();
   renderOverviewCharts();
+}
+
+function renderEverything(){
+  syncSettingsInputsFromStorage();
+  applyUIStrings();
+  renderOverviewOnly();
   renderHistoryTab();
   renderShopTab();
 }
 
-function maybeShowGuide(){
-  if (localStorage.getItem(GUIDE_KEY) === "1") return;
-  document.getElementById("welcomeModal").classList.add("show");
+function saveSetupAndStart(useExisting = false){
+  if (!useExisting){
+    const setupBudget = document.getElementById("setupBudget").value;
+    if (!setupBudget || Number(setupBudget) <= 0){
+      alert(tr().setupNeedsBudget);
+      return;
+    }
+
+    localStorage.setItem(BUDGET_KEY, setupBudget);
+    localStorage.setItem(STARTDAY_KEY, document.getElementById("setupStartDay").value || "20");
+    localStorage.setItem(PERIOD_MODE_KEY, document.getElementById("setupPeriodMode").value || "months");
+    localStorage.setItem(PERIOD_LENGTH_KEY, document.getElementById("setupPeriodLength").value || "1");
+    localStorage.setItem(LANG_KEY, document.getElementById("setupLanguage").value || "no");
+    localStorage.setItem(CURRENCY_KEY, document.getElementById("setupCurrency").value || "NOK");
+  } else {
+    if (!localStorage.getItem(BUDGET_KEY)){
+      alert(tr().setupNeedsBudget);
+      return;
+    }
+  }
+
+  setSetupDone(true);
+  selectedDate = "";
+  selectedHistoryPeriod = "";
+  selectedHistoryYear = "";
+  selectedShopYear = "";
+  showMainApp();
+}
+
+function applyQuickAmount(amountToAdd){
+  const input = document.getElementById("expense");
+  const current = Number(input.value || 0);
+  input.value = current + amountToAdd;
+  input.focus();
 }
 
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
-document.getElementById("cancelEditBtn").addEventListener("click", setFormForAdd);
+document.getElementById("cancelEditBtn").addEventListener("click", () => {
+  setFormForAdd();
+  focusAmountField();
+});
 
 document.getElementById("budget").addEventListener("input", () => {
   saveBudget();
-  updateAll();
+  renderEverything();
 });
 
 document.getElementById("startDay").addEventListener("change", () => {
@@ -1747,7 +2029,7 @@ document.getElementById("startDay").addEventListener("change", () => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  updateAll();
+  renderEverything();
   setFormForAdd();
 });
 
@@ -1757,7 +2039,7 @@ document.getElementById("periodMode").addEventListener("change", (e) => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  updateAll();
+  renderEverything();
 });
 
 document.getElementById("periodLength").addEventListener("change", (e) => {
@@ -1766,14 +2048,17 @@ document.getElementById("periodLength").addEventListener("change", (e) => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  updateAll();
+  renderEverything();
 });
 
 document.getElementById("selectedDate").addEventListener("change", (e) => {
   selectedDate = e.target.value;
-  renderDateStrip();
-  renderDaySection();
-  updateSummaryOnly();
+  renderOverviewOnly();
+  focusAmountField();
+});
+
+document.getElementById("category").addEventListener("change", (e) => {
+  setLastStore(e.target.value);
 });
 
 document.getElementById("historyYear").addEventListener("change", (e) => {
@@ -1806,32 +2091,67 @@ document.getElementById("resetBtn").addEventListener("click", resetAllData);
 
 document.getElementById("language").addEventListener("change", (e) => {
   setLang(e.target.value);
-  updateAll();
+  renderEverything();
 });
 
 document.getElementById("currency").addEventListener("change", (e) => {
   setCurrency(e.target.value);
-  updateAll();
+  renderEverything();
 });
 
-document.getElementById("closeGuideBtn").addEventListener("click", () => {
-  document.getElementById("welcomeModal").classList.remove("show");
+document.getElementById("jumpToTodayBtn").addEventListener("click", jumpToToday);
+document.getElementById("openSettingsBtn").addEventListener("click", () => setActiveTab("settingsTab"));
+document.getElementById("showSetupAgainBtn").addEventListener("click", showSetupScreen);
+
+document.getElementById("startUsingAppBtn").addEventListener("click", () => saveSetupAndStart(false));
+document.getElementById("setupUseExistingBtn").addEventListener("click", () => saveSetupAndStart(true));
+
+document.querySelectorAll("[data-quick-amount]").forEach(btn => {
+  btn.addEventListener("click", () => applyQuickAmount(Number(btn.dataset.quickAmount)));
 });
 
-document.getElementById("dontShowGuideBtn").addEventListener("click", () => {
-  localStorage.setItem(GUIDE_KEY, "1");
-  document.getElementById("welcomeModal").classList.remove("show");
+document.getElementById("expense").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addOrUpdateExpense();
 });
 
-document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
-document.getElementById("language").value = getLang();
-document.getElementById("currency").value = getCurrency();
-populateStartDay();
-applyUIStrings();
-ensureSelectedDate();
-setFormForAdd();
-updateAll();
-maybeShowGuide();
+document.getElementById("setupLanguage").addEventListener("change", (e) => {
+  setLang(e.target.value);
+  applyUIStrings();
+});
+
+document.getElementById("setupCurrency").addEventListener("change", (e) => {
+  setCurrency(e.target.value);
+  applyUIStrings();
+});
+
+document.getElementById("setupPeriodMode").addEventListener("change", (e) => {
+  setPeriodMode(e.target.value);
+  applyUIStrings();
+});
+
+document.getElementById("setupPeriodLength").addEventListener("change", (e) => {
+  setPeriodLength(e.target.value);
+  applyUIStrings();
+});
+
+document.getElementById("setupStartDay").addEventListener("change", (e) => {
+  localStorage.setItem(STARTDAY_KEY, e.target.value || "20");
+});
+
+function boot(){
+  syncSettingsInputsFromStorage();
+  applyUIStrings();
+  populateStartDaySelect("setupStartDay", getStartDay());
+  applySetupSelectors();
+
+  if (shouldShowSetupScreen()) {
+    showSetupScreen();
+  } else {
+    showMainApp();
+  }
+}
+
+boot();
 </script>
 </body>
 </html>
