@@ -31,7 +31,7 @@
     background:linear-gradient(180deg,#edf4ff 0%, var(--bg) 220px);
   }
 
-  .app{max-width:980px;margin:0 auto}
+  .app{max-width:1080px;margin:0 auto}
 
   .hero{
     background:linear-gradient(135deg,var(--primary),#38bdf8);
@@ -345,9 +345,130 @@
     color:var(--muted);
   }
 
+  /* Heatmap */
+  .heatmap-topline{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+
+  .heatmap-month-title{
+    font-size:16px;
+    font-weight:800;
+  }
+
+  .heatmap-legend{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    font-size:12px;
+    color:var(--muted);
+  }
+
+  .heatmap-legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .heatmap-swatch{
+    width:14px;
+    height:14px;
+    border-radius:4px;
+    border:1px solid var(--line);
+  }
+
+  .heatmap-weekdays{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+    margin-bottom:6px;
+  }
+
+  .heatmap-weekday{
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:700;
+  }
+
+  .heatmap-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:6px;
+  }
+
+  .heatmap-day{
+    border-radius:12px;
+    border:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    color:#18212f;
+    background:#f8fbff;
+    min-height:42px;
+    padding:4px;
+  }
+
+  .heatmap-day:hover{
+    transform:translateY(-1px);
+  }
+
+  .heatmap-day .num{
+    font-size:13px;
+    font-weight:900;
+    line-height:1;
+  }
+
+  .heatmap-day .amt{
+    font-size:9px;
+    margin-top:4px;
+    opacity:.8;
+  }
+
+  .heatmap-empty{
+    visibility:hidden;
+  }
+
+  .heat-zero{ background:#ecfdf3; border-color:#86efac; color:#166534; }
+  .heat-ok1{ background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+  .heat-ok2{ background:#dbeafe; border-color:#93c5fd; color:#1e40af; }
+  .heat-warn1{ background:#fffbeb; border-color:#fde68a; color:#a16207; }
+  .heat-warn2{ background:#fef3c7; border-color:#fcd34d; color:#92400e; }
+  .heat-bad1{ background:#fee2e2; border-color:#fca5a5; color:#b91c1c; }
+  .heat-bad2{ background:#fecaca; border-color:#f87171; color:#991b1b; }
+
   @media (min-width:760px){
     .grid{grid-template-columns:1.1fr .9fr}
     .charts{grid-template-columns:1fr 1fr}
+
+    .heatmap-grid{
+      gap:8px;
+    }
+
+    .heatmap-weekdays{
+      gap:8px;
+    }
+
+    .heatmap-day{
+      min-height:62px;
+    }
+
+    .heatmap-day .num{
+      font-size:16px;
+    }
+
+    .heatmap-day .amt{
+      font-size:10px;
+    }
   }
 </style>
 </head>
@@ -483,6 +604,24 @@
     </div>
 
     <div class="card" style="margin-top:14px;">
+      <h2 class="section-title">Heatmap</h2>
+      <div class="heatmap-topline">
+        <div class="heatmap-month-title" id="historyHeatmapTitle"></div>
+        <div id="historyHeatmapLegend" class="heatmap-legend"></div>
+      </div>
+      <div class="heatmap-weekdays">
+        <div class="heatmap-weekday">Man</div>
+        <div class="heatmap-weekday">Tir</div>
+        <div class="heatmap-weekday">Ons</div>
+        <div class="heatmap-weekday">Tor</div>
+        <div class="heatmap-weekday">Fre</div>
+        <div class="heatmap-weekday">Lør</div>
+        <div class="heatmap-weekday">Søn</div>
+      </div>
+      <div id="historyHeatmap" class="heatmap-grid"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
       <h2 class="section-title">Periodeoversikt</h2>
       <div id="periodList" class="list"></div>
     </div>
@@ -539,9 +678,9 @@
 </div>
 
 <script>
-const STORAGE_KEY = "matbudsjett_v7_expenses";
-const BUDGET_KEY = "matbudsjett_v7_budget";
-const STARTDAY_KEY = "matbudsjett_v7_startday";
+const STORAGE_KEY = "matbudsjett_v8_expenses";
+const BUDGET_KEY = "matbudsjett_v8_budget";
+const STARTDAY_KEY = "matbudsjett_v8_startday";
 
 let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let editingId = null;
@@ -931,13 +1070,13 @@ function updateSummaryOnly(){
     statusEl.innerText = "Legg inn budsjett for perioden.";
   } else if (remaining < 0){
     statusEl.className = "status warn";
-    statusEl.innerText = `Du har brukt over budsjettet. Du er ${formatCurrency(Math.abs(remaining))} over.`;
+    statusEl.innerText = `Du er over budsjettet med ${formatCurrency(Math.abs(remaining))}.`;
   } else if (used > idealUsed){
     statusEl.className = "status warn";
-    statusEl.innerText = `Du ligger foran planen. Prøv å holde deg rundt ${formatCurrency(dailyNow)} per dag videre.`;
+    statusEl.innerText = `Du ligger over plan så langt i perioden. Prøv å holde deg rundt ${formatCurrency(dailyNow)} per dag videre.`;
   } else {
     statusEl.className = "status good";
-    statusEl.innerText = `Du ligger bra an. Du kan bruke omtrent ${formatCurrency(dailyNow)} per dag videre.`;
+    statusEl.innerText = `Du ligger innenfor plan. Du kan bruke omtrent ${formatCurrency(dailyNow)} per dag videre.`;
   }
 }
 
@@ -957,6 +1096,7 @@ function renderOverviewCharts(){
     const d = parseLocalDate(iso);
     return `${d.getDate()}.${d.getMonth()+1}`;
   });
+
   const dailyValues = dates.map(iso => dailyTotals[iso] || 0);
 
   if (dailyChart) dailyChart.destroy();
@@ -1057,8 +1197,12 @@ function getPeriodData(period){
 }
 
 function periodName(period){
-  const month = period.end.toLocaleDateString("no-NO", { month:"long" });
-  return `${month} ${period.end.getFullYear()}`;
+  const startMonth = period.start.toLocaleDateString("no-NO", { month:"long" });
+  const endMonth = period.end.toLocaleDateString("no-NO", { month:"long" });
+  if (startMonth === endMonth){
+    return `${endMonth} ${period.end.getFullYear()}`;
+  }
+  return `${startMonth} / ${endMonth} ${period.end.getFullYear()}`;
 }
 
 function fillHistorySelectors(){
@@ -1079,6 +1223,98 @@ function fillHistorySelectors(){
     selectedHistoryPeriod = periodsForYear[0]?.id || "";
   }
   periodSelect.value = selectedHistoryPeriod;
+}
+
+function renderHistoryHeatmap(selectedPeriod){
+  const wrap = document.getElementById("historyHeatmap");
+  const legend = document.getElementById("historyHeatmapLegend");
+  const title = document.getElementById("historyHeatmapTitle");
+  if (!wrap || !selectedPeriod) return;
+
+  title.innerText = periodName(selectedPeriod);
+
+  const dates = getDatesInRange(selectedPeriod.start, selectedPeriod.end);
+  const items = getExpensesInPeriod(selectedPeriod.start, selectedPeriod.end);
+
+  const totalsByDate = {};
+  dates.forEach(d => totalsByDate[d] = 0);
+
+  items.forEach(e => {
+    totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount;
+  });
+
+  const budget = getBudget();
+  const totalDays = dates.length;
+  const perDay = budget ? budget / totalDays : 0;
+
+  legend.innerHTML = `
+    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-zero"></span>0 kr</div>
+    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-ok1"></span>innenfor</div>
+    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-warn1"></span>høy dag</div>
+    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-bad1"></span>over plan</div>
+  `;
+
+  const firstDate = parseLocalDate(dates[0]);
+  const firstWeekday = (firstDate.getDay() + 6) % 7;
+
+  let html = "";
+  for (let i = 0; i < firstWeekday; i++){
+    html += `<div class="heatmap-day heatmap-empty"></div>`;
+  }
+
+  let runningUsed = 0;
+
+  dates.forEach((iso, index) => {
+    const d = parseLocalDate(iso);
+    const total = totalsByDate[iso] || 0;
+    runningUsed += total;
+
+    const allowedSoFar = perDay * (index + 1);
+    const diff = runningUsed - allowedSoFar;
+
+    let heatClass = "heat-ok1";
+
+    if (total === 0){
+      heatClass = "heat-zero";
+    } else if (perDay > 0 && diff > perDay * 0.5){
+      heatClass = "heat-bad2";
+    } else if (diff > 0){
+      heatClass = "heat-bad1";
+    } else if (perDay > 0 && total > perDay * 1.25){
+      heatClass = "heat-warn2";
+    } else if (perDay > 0 && total > perDay){
+      heatClass = "heat-warn1";
+    } else if (perDay > 0 && Math.abs(diff) < perDay * 0.35){
+      heatClass = "heat-ok2";
+    } else {
+      heatClass = "heat-ok1";
+    }
+
+    html += `
+      <button
+        type="button"
+        class="heatmap-day ${heatClass}"
+        data-date="${iso}"
+        title="${longDate(d)} – ${formatCurrency(total)}"
+      >
+        <span class="num">${d.getDate()}</span>
+        <span class="amt">${Math.round(total)}</span>
+      </button>
+    `;
+  });
+
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll(".heatmap-day[data-date]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDate = btn.dataset.date;
+      setActiveTab("overviewTab");
+      document.getElementById("selectedDate").value = selectedDate;
+      renderDateStrip();
+      renderDaySection();
+      updateSummaryOnly();
+    });
+  });
 }
 
 function renderHistoryTab(){
@@ -1133,6 +1369,8 @@ function renderHistoryTab(){
       maintainAspectRatio:false
     }
   });
+
+  renderHistoryHeatmap(selected);
 
   const periodList = document.getElementById("periodList");
   const desc = [...periodsForYear].sort((a,b)=>b.start-a.start);
@@ -1213,7 +1451,7 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 7,
+    version: 8,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
