@@ -620,8 +620,26 @@ function renderDateStrip(){
   const dates = getDatesInCurrentPeriod();
   strip.innerHTML = dates.map(iso => {
     const d = parseLocalDate(iso);
-    const active = iso === selectedDate ? "active" : "";
-    const today = iso === todayIso ? "today" : "";
+const active = iso === selectedDate ? "active" : "";
+const today = iso === todayIso ? "today" : "";
+
+// hent data
+const entries = getExpensesForDate(iso);
+const total = entries.reduce((sum,e)=>sum+e.amount,0);
+
+const budget = getBudget();
+const totalDays = getDatesInCurrentPeriod().length;
+const perDay = budget ? budget / totalDays : 0;
+
+let colorClass = "";
+
+if (total === 0) {
+  colorClass = "zero";
+} else if (total <= perDay) {
+  colorClass = "good";
+} else {
+  colorClass = "bad";
+}
     return `<button class="date-chip ${active} ${today}" data-date="${iso}" type="button">
       <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
       <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
