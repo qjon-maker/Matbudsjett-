@@ -3,44 +3,117 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Matbudsjett v14</title>
+<title>Matbudsjett</title>
 <meta name="theme-color" content="#2563eb" />
+<meta name="description" content="En enkel og fin budsjettapp for matbudsjett." />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="Matbudsjett" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon-192.svg" type="image/svg+xml" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
   :root{
-    --bg:#f4f7fb;
+    --bg:#eff4fb;
     --card:#ffffff;
-    --text:#18212f;
-    --muted:#66758a;
-    --line:#e6edf5;
+    --text:#16202f;
+    --muted:#6b7a90;
+    --line:#e5edf6;
     --primary:#2563eb;
+    --primary-2:#38bdf8;
     --primary-soft:#eef4ff;
     --good:#15803d;
     --warn:#b45309;
     --danger:#b91c1c;
-    --shadow:0 10px 25px rgba(15,23,42,.08);
-    --radius:20px;
+    --shadow:0 12px 30px rgba(15,23,42,.08);
+    --shadow-soft:0 8px 18px rgba(15,23,42,.05);
+    --radius:22px;
   }
 
   *{box-sizing:border-box}
-
   html{scroll-behavior:smooth}
 
   body{
     margin:0;
-    padding:18px 18px 96px;
+    padding:16px 16px 96px;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     color:var(--text);
-    background:linear-gradient(180deg,#edf4ff 0%, var(--bg) 220px);
+    background:
+      radial-gradient(circle at top, rgba(56,189,248,.12), transparent 28%),
+      linear-gradient(180deg,#edf5ff 0%, var(--bg) 220px);
   }
 
-  .app{max-width:1080px;margin:0 auto}
   .hidden{display:none !important}
+  .app{max-width:1120px;margin:0 auto}
+
+  .setup-screen{
+    max-width:760px;
+    margin:28px auto 0;
+  }
+
+  .setup-card{
+    background:#fff;
+    border-radius:30px;
+    overflow:hidden;
+    box-shadow:0 24px 60px rgba(15,23,42,.14);
+    border:1px solid rgba(255,255,255,.55);
+  }
+
+  .setup-top{
+    background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    color:#fff;
+    padding:28px 24px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+  }
+
+  .setup-badge,.hero-badge{
+    width:68px;
+    height:68px;
+    border-radius:20px;
+    flex:0 0 auto;
+    background:rgba(255,255,255,.16);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
+  }
+
+  .setup-top h1,
+  .hero h1{
+    margin:0 0 6px;
+    font-size:30px;
+    letter-spacing:-.03em;
+  }
+
+  .setup-top p,
+  .hero p{
+    margin:0;
+    opacity:.96;
+    line-height:1.45;
+  }
+
+  .setup-body{padding:18px}
+  .setup-info{
+    display:grid;
+    gap:10px;
+    margin-bottom:16px;
+  }
+
+  .setup-info-item{
+    background:#f8fbff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:13px;
+    line-height:1.45;
+  }
 
   .hero{
-    background:linear-gradient(135deg,var(--primary),#38bdf8);
+    background:linear-gradient(135deg,var(--primary),var(--primary-2));
     color:#fff;
-    border-radius:26px;
+    border-radius:28px;
     padding:24px 20px;
     box-shadow:var(--shadow);
     margin-bottom:14px;
@@ -49,49 +122,109 @@
     align-items:center;
   }
 
-  .hero-badge,
-  .setup-badge{
-    width:64px;height:64px;border-radius:18px;
-    background:rgba(255,255,255,.18);
-    display:flex;align-items:center;justify-content:center;
-    flex:0 0 auto;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+  .period{
+    margin-top:8px;
+    font-size:14px;
+    opacity:.95;
   }
 
-  .hero-badge svg,
-  .setup-badge svg{width:36px;height:36px}
+  .pwa-bar{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+    margin-bottom:14px;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:12px 14px;
+    box-shadow:var(--shadow-soft);
+  }
 
-  .hero h1{margin:0 0 6px;font-size:30px}
-  .hero p{margin:0;opacity:.95}
-  .period{margin-top:8px;font-size:14px;opacity:.95}
+  .pwa-info{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+
+  .pwa-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+    background:#f8fbff;
+    border:1px solid var(--line);
+    color:var(--text);
+  }
+
+  .pwa-pill.good{
+    background:#ecfdf3;
+    border-color:#86efac;
+    color:#166534;
+  }
+
+  .pwa-pill.warn{
+    background:#fff7ed;
+    border-color:#fdba74;
+    color:#9a3412;
+  }
+
+  .pwa-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
 
   .tab-panel{display:none}
   .tab-panel.active{display:block}
 
   .grid{display:grid;grid-template-columns:1fr;gap:14px}
-
-  .card{
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:16px;
-    box-shadow:var(--shadow);
+  .charts{display:grid;grid-template-columns:1fr;gap:14px}
+  .settings-grid,.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
-  .section-title{margin:0 0 12px;font-size:18px;font-weight:800}
-  .small-title{margin:0 0 8px;font-size:16px;font-weight:800}
+  .card{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(229,237,246,.95);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow-soft);
+  }
+
+  .section-title{
+    margin:0 0 12px;
+    font-size:18px;
+    font-weight:900;
+    letter-spacing:-.02em;
+  }
+
+  .small-title{
+    margin:0 0 8px;
+    font-size:16px;
+    font-weight:900;
+  }
 
   label{
     display:block;
     font-size:14px;
     color:var(--muted);
     margin:8px 0 6px;
-    font-weight:700;
+    font-weight:800;
   }
 
   input,select,button{
     width:100%;
     border:none;
-    border-radius:14px;
+    border-radius:15px;
     padding:14px;
     font-size:16px;
     font-family:inherit;
@@ -101,73 +234,92 @@
     background:#f8fbff;
     border:1px solid var(--line);
     color:var(--text);
+    outline:none;
   }
 
-  input::placeholder{color:#97a4b6}
+  input:focus,select:focus{
+    border-color:#9fc5ff;
+    box-shadow:0 0 0 4px rgba(37,99,235,.10);
+  }
+
+  input::placeholder{color:#96a5ba}
 
   button{
-    background:var(--primary);
+    background:linear-gradient(135deg,var(--primary),#3478f6);
     color:#fff;
-    font-weight:800;
+    font-weight:900;
     cursor:pointer;
+    box-shadow:0 8px 18px rgba(37,99,235,.18);
   }
+
+  button:hover{transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
 
   button.secondary{
     background:var(--primary-soft);
     color:var(--primary);
     border:1px solid #d7e6ff;
+    box-shadow:none;
   }
 
   button.ghost{
     background:#fff;
     color:var(--text);
     border:1px solid var(--line);
+    box-shadow:none;
   }
 
   button.danger{
     background:#fff1f2;
     color:var(--danger);
     border:1px solid #fecdd3;
+    box-shadow:none;
   }
 
-  .settings-grid,.row{
+  .top-actions{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
+    margin-bottom:14px;
+  }
+
+  .compact{
+    font-size:14px;
+    padding:10px 12px;
   }
 
   .stats{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:10px;
-    margin-top:0;
   }
 
   .stat{
-    background:#f8fbff;
+    background:linear-gradient(180deg,#fbfdff 0%, #f8fbff 100%);
     border:1px solid var(--line);
-    border-radius:16px;
+    border-radius:18px;
     padding:14px;
   }
 
   .stat .label{
     font-size:13px;
     color:var(--muted);
-    margin-bottom:4px;
+    margin-bottom:5px;
   }
 
   .stat .value{
     font-size:22px;
     font-weight:900;
     line-height:1.15;
+    letter-spacing:-.03em;
   }
 
   .wide{grid-column:1/-1}
 
   .status{
     margin-top:10px;
-    font-weight:800;
-    line-height:1.4;
+    font-weight:900;
+    line-height:1.45;
   }
 
   .status.good{color:var(--good)}
@@ -182,9 +334,9 @@
 
   .quick-btn{
     padding:10px;
-    border-radius:12px;
+    border-radius:13px;
     font-size:14px;
-    font-weight:800;
+    font-weight:900;
   }
 
   .helper-text{
@@ -203,9 +355,9 @@
   }
 
   .date-chip{
-    min-width:88px;
+    min-width:90px;
     padding:10px 12px;
-    border-radius:16px;
+    border-radius:17px;
     border:1px solid var(--line);
     background:#f8fbff;
     color:#18212f !important;
@@ -216,14 +368,11 @@
     transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
   }
 
-  .date-chip .top,
-  .date-chip .bottom,
-  .date-chip .sub{color:inherit !important}
-
+  .date-chip .top,.date-chip .bottom,.date-chip .sub{color:inherit !important}
   .date-chip:hover{transform:translateY(-1px)}
-  .date-chip.active{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(37,99,235,.20)}
-  .date-chip.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.22)}
-  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.22), 0 0 0 2px rgba(37,99,235,.18)}
+  .date-chip.active{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(37,99,235,.18)}
+  .date-chip.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.18)}
+  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.18),0 0 0 2px rgba(37,99,235,.18)}
 
   .date-chip .top{display:block;font-size:12px;opacity:.80;margin-bottom:2px}
   .date-chip .bottom{display:block;font-size:17px;font-weight:900;line-height:1.1}
@@ -239,11 +388,11 @@
 
   .day-summary{
     margin-top:12px;
-    padding:13px;
-    border-radius:16px;
+    padding:14px;
+    border-radius:18px;
     background:#f8fbff;
     border:1px solid var(--line);
-    line-height:1.55;
+    line-height:1.6;
   }
 
   .list{
@@ -256,7 +405,7 @@
   .item,.period-row,.shop-row{
     background:#fff;
     border:1px solid var(--line);
-    border-radius:16px;
+    border-radius:18px;
     padding:12px;
   }
 
@@ -277,7 +426,7 @@
     font-size:13px;
   }
 
-  .item-actions,.footer-actions{
+  .item-actions,.footer-actions,.setup-actions{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
@@ -285,12 +434,6 @@
   }
 
   .single-action{margin-top:10px}
-
-  .charts{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-  }
 
   canvas{
     width:100% !important;
@@ -301,7 +444,7 @@
     color:var(--muted);
     background:#f8fbff;
     border:1px dashed var(--line);
-    border-radius:16px;
+    border-radius:18px;
     padding:14px;
     text-align:center;
   }
@@ -311,7 +454,7 @@
     padding:6px 10px;
     border-radius:999px;
     font-size:12px;
-    font-weight:800;
+    font-weight:900;
     background:var(--primary-soft);
     color:var(--primary);
   }
@@ -328,7 +471,7 @@
     flex-wrap:wrap;
   }
 
-  .heatmap-month-title{font-size:16px;font-weight:800}
+  .heatmap-month-title{font-size:16px;font-weight:900}
   .heatmap-legend{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
   .heatmap-legend-item{display:flex;align-items:center;gap:6px}
   .heatmap-swatch{width:14px;height:14px;border-radius:4px;border:1px solid var(--line)}
@@ -344,7 +487,7 @@
     text-align:center;
     font-size:11px;
     color:var(--muted);
-    font-weight:700;
+    font-weight:800;
   }
 
   .heatmap-grid{
@@ -361,7 +504,7 @@
     justify-content:center;
     align-items:center;
     font-size:11px;
-    font-weight:700;
+    font-weight:800;
     cursor:pointer;
     transition:transform .12s ease, box-shadow .12s ease;
     color:#18212f;
@@ -391,9 +534,9 @@
     grid-template-columns:repeat(4,1fr);
     gap:10px;
     background:rgba(255,255,255,.94);
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(14px);
     border:1px solid var(--line);
-    border-radius:20px;
+    border-radius:22px;
     padding:10px;
     box-shadow:var(--shadow);
     margin-top:18px;
@@ -402,78 +545,19 @@
   .tab-btn{
     width:100%;
     border:none;
-    border-radius:14px;
+    border-radius:15px;
     padding:12px;
     background:var(--primary-soft);
     color:var(--primary);
     font-size:15px;
-    font-weight:700;
+    font-weight:800;
     cursor:pointer;
+    box-shadow:none;
   }
 
   .tab-btn.active{
-    background:var(--primary);
+    background:linear-gradient(135deg,var(--primary),#3478f6);
     color:#fff;
-  }
-
-  .setup-screen{
-    max-width:760px;
-    margin:24px auto 0;
-  }
-
-  .setup-card{
-    background:#fff;
-    border-radius:28px;
-    box-shadow:0 20px 50px rgba(15,23,42,.12);
-    overflow:hidden;
-  }
-
-  .setup-top{
-    background:linear-gradient(135deg,var(--primary),#38bdf8);
-    color:#fff;
-    padding:28px 22px;
-    display:flex;
-    gap:16px;
-    align-items:flex-start;
-  }
-
-  .setup-top h1{margin:0 0 8px;font-size:30px}
-  .setup-top p{margin:0;opacity:.95;line-height:1.5}
-
-  .setup-body{
-    padding:18px;
-  }
-
-  .setup-info{
-    display:grid;
-    gap:10px;
-    margin-bottom:16px;
-  }
-
-  .setup-info-item{
-    background:#f8fbff;
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:12px;
-  }
-
-  .setup-actions{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:10px;
-    margin-top:14px;
-  }
-
-  .top-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:14px;
-  }
-
-  .compact{
-    font-size:14px;
-    padding:10px 12px;
   }
 
   @media (min-width:760px){
@@ -483,7 +567,6 @@
     .heatmap-day{min-height:62px}
     .heatmap-day .num{font-size:16px}
     .heatmap-day .amt{font-size:10px}
-    .setup-actions{grid-template-columns:1fr 1fr}
   }
 </style>
 </head>
@@ -493,8 +576,11 @@
   <div class="setup-card">
     <div class="setup-top">
       <div class="setup-badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M4 19h16M7 16V9m5 7V5m5 11v-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 64 64" fill="none">
+          <path d="M18 23h28l-2.6 24.5a5 5 0 0 1-5 4.5H25.6a5 5 0 0 1-5-4.5L18 23Z" fill="rgba(255,255,255,.20)" stroke="white" stroke-width="2.8" stroke-linejoin="round"/>
+          <path d="M24 23c0-4.8 3.4-8 8-8s8 3.2 8 8" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+          <circle cx="44.5" cy="44.5" r="8.5" fill="white"/>
+          <path d="M44.5 39.5v10M41 42.5h5.8c1.2 0 2.2.9 2.2 2s-1 2-2.2 2H42.4c-1.2 0-2.2.9-2.2 2s1 2 2.2 2H48" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       <div>
@@ -571,14 +657,29 @@
 <div class="app hidden" id="mainApp">
   <div class="hero">
     <div class="hero-badge" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M4 19h16M7 16V9m5 7V5m5 11v-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <svg viewBox="0 0 64 64" fill="none">
+        <path d="M18 23h28l-2.6 24.5a5 5 0 0 1-5 4.5H25.6a5 5 0 0 1-5-4.5L18 23Z" fill="rgba(255,255,255,.20)" stroke="white" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M24 23c0-4.8 3.4-8 8-8s8 3.2 8 8" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+        <circle cx="44.5" cy="44.5" r="8.5" fill="white"/>
+        <path d="M44.5 39.5v10M41 42.5h5.8c1.2 0 2.2.9 2.2 2s-1 2-2.2 2H42.4c-1.2 0-2.2.9-2.2 2s1 2 2.2 2H48" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
     <div>
       <h1 id="appTitle">Matbudsjett</h1>
       <p id="appSubtitle">Oversikt, historikk, butikker og backup.</p>
       <div class="period" id="periodText"></div>
+    </div>
+  </div>
+
+  <div id="pwaBar" class="pwa-bar hidden">
+    <div class="pwa-info">
+      <span id="installStatePill" class="pwa-pill">App</span>
+      <span id="networkStatePill" class="pwa-pill">Nett</span>
+      <span id="cacheStatePill" class="pwa-pill">Offline</span>
+    </div>
+    <div class="pwa-actions">
+      <button id="installBtn" type="button" class="secondary hidden" style="width:auto;padding:10px 14px;">Installer</button>
+      <button id="dismissPwaBarBtn" type="button" class="ghost" style="width:auto;padding:10px 14px;">Lukk</button>
     </div>
   </div>
 
@@ -851,6 +952,10 @@ const LANG_KEY = "matbudsjett_v13_lang";
 const CURRENCY_KEY = "matbudsjett_v13_currency";
 const LAST_STORE_KEY = "matbudsjett_v14_last_store";
 const SETUP_DONE_KEY = "matbudsjett_v14_setup_done";
+const PWA_BAR_DISMISSED_KEY = "matbudsjett_v15_pwa_bar_dismissed";
+
+let deferredInstallPrompt = null;
+let swRegistered = false;
 
 const TEXT = {
   no: {
@@ -945,7 +1050,16 @@ const TEXT = {
     setupInfo2Text:"Alle valgene kan endres i Innstillinger.",
     setupStart:"Start appen",
     setupUseExisting:"Bruk lagrede innstillinger",
-    setupNeedsBudget:"Legg inn budsjett for å komme i gang."
+    setupNeedsBudget:"Legg inn budsjett for å komme i gang.",
+    installReady:"Kan installeres",
+    installInstalled:"Installert app",
+    installBrowser:"Kjører i nettleser",
+    networkOnline:"På nett",
+    networkOffline:"Offline",
+    cacheReady:"Offline klar",
+    cacheWaiting:"Offline klargjøres",
+    installBtn:"Installer",
+    dismiss:"Lukk"
   },
   en: {
     appTitle:"Food Budget",
@@ -1039,7 +1153,16 @@ const TEXT = {
     setupInfo2Text:"All settings can be changed later in Settings.",
     setupStart:"Start app",
     setupUseExisting:"Use saved settings",
-    setupNeedsBudget:"Enter a budget to get started."
+    setupNeedsBudget:"Enter a budget to get started.",
+    installReady:"Ready to install",
+    installInstalled:"Installed app",
+    installBrowser:"Running in browser",
+    networkOnline:"Online",
+    networkOffline:"Offline",
+    cacheReady:"Offline ready",
+    cacheWaiting:"Preparing offline",
+    installBtn:"Install",
+    dismiss:"Close"
   }
 };
 
@@ -1065,7 +1188,6 @@ function setPeriodMode(v){ localStorage.setItem(PERIOD_MODE_KEY, v); }
 function getPeriodLength(){ return Number(localStorage.getItem(PERIOD_LENGTH_KEY) || 1); }
 function setPeriodLength(v){ localStorage.setItem(PERIOD_LENGTH_KEY, String(v)); }
 function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
-function getBudgetValue(){ return Number(localStorage.getItem(BUDGET_KEY) || 0); }
 function getLastStore(){ return localStorage.getItem(LAST_STORE_KEY) || "Rema 1000"; }
 function setLastStore(v){ localStorage.setItem(LAST_STORE_KEY, v); }
 function isSetupDone(){ return localStorage.getItem(SETUP_DONE_KEY) === "1"; }
@@ -1268,6 +1390,56 @@ function syncSettingsInputsFromStorage(){
   applyPeriodSelectors();
 }
 
+function isStandaloneMode(){
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function updatePwaBar(){
+  const bar = document.getElementById("pwaBar");
+  const installStatePill = document.getElementById("installStatePill");
+  const networkStatePill = document.getElementById("networkStatePill");
+  const cacheStatePill = document.getElementById("cacheStatePill");
+  const installBtn = document.getElementById("installBtn");
+
+  if (localStorage.getItem(PWA_BAR_DISMISSED_KEY) === "1") {
+    bar.classList.add("hidden");
+    return;
+  }
+
+  bar.classList.remove("hidden");
+
+  if (isStandaloneMode()){
+    installStatePill.textContent = tr().installInstalled;
+    installStatePill.className = "pwa-pill good";
+    installBtn.classList.add("hidden");
+  } else if (deferredInstallPrompt){
+    installStatePill.textContent = tr().installReady;
+    installStatePill.className = "pwa-pill good";
+    installBtn.textContent = tr().installBtn;
+    installBtn.classList.remove("hidden");
+  } else {
+    installStatePill.textContent = tr().installBrowser;
+    installStatePill.className = "pwa-pill";
+    installBtn.classList.add("hidden");
+  }
+
+  if (navigator.onLine){
+    networkStatePill.textContent = tr().networkOnline;
+    networkStatePill.className = "pwa-pill good";
+  } else {
+    networkStatePill.textContent = tr().networkOffline;
+    networkStatePill.className = "pwa-pill warn";
+  }
+
+  if (swRegistered){
+    cacheStatePill.textContent = tr().cacheReady;
+    cacheStatePill.className = "pwa-pill good";
+  } else {
+    cacheStatePill.textContent = tr().cacheWaiting;
+    cacheStatePill.className = "pwa-pill";
+  }
+}
+
 function applyUIStrings(){
   const s = tr();
   document.getElementById("appTitle").innerText = s.appTitle;
@@ -1287,6 +1459,7 @@ function applyUIStrings(){
   document.getElementById("openSettingsBtn").textContent = s.open_settings;
   document.getElementById("showSetupAgainBtn").textContent = s.show_setup_again;
   document.getElementById("quickHint").textContent = s.quick_hint;
+  document.getElementById("dismissPwaBarBtn").textContent = s.dismiss;
 
   const w = s.weekdays;
   document.getElementById("wd1").textContent = w[0];
@@ -1322,6 +1495,7 @@ function applyUIStrings(){
   document.getElementById("currency").value = getCurrency();
   applyPeriodSelectors();
   applySetupSelectors();
+  updatePwaBar();
 }
 
 function showSetupScreen(){
@@ -1404,7 +1578,7 @@ function addOrUpdateExpense(){
   selectedDate = date;
   saveExpenses();
   editingId = null;
-  renderEverything();
+  updateAll();
   setFormForAdd();
   requestAnimationFrame(() => focusAmountField());
 }
@@ -1413,7 +1587,7 @@ function deleteExpense(id){
   expenses = expenses.filter(e => e.id !== id);
   saveExpenses();
   if (editingId === id) setFormForAdd();
-  renderEverything();
+  updateAll();
 }
 
 function renderDateStrip(){
@@ -1549,9 +1723,11 @@ function renderDaySection(){
     if (entry) setFormForEdit(entry);
   }));
 
-  wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => {
-    if (confirm(tr().delete_confirm)) deleteExpense(btn.dataset.id);
-  }));
+  wrap.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (confirm(tr().delete_confirm)) deleteExpense(btn.dataset.id);
+    });
+  });
 }
 
 function updateSummaryOnly(){
@@ -1861,7 +2037,7 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 14,
+    version: 15,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
@@ -1908,7 +2084,7 @@ function importBackupFromFile(file){
       selectedHistoryYear = "";
       selectedShopYear = "";
       setFormForAdd();
-      renderEverything();
+      updateAll();
 
       if (shouldShowSetupScreen()) showSetupScreen();
       else showMainApp();
@@ -1952,12 +2128,9 @@ function setActiveTab(tabId){
   const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
   if (activeBtn) activeBtn.classList.add("active");
 
-  if (tabId === "overviewTab") {
-    renderOverviewOnly();
-    requestAnimationFrame(() => focusAmountField());
-  }
   if (tabId === "historyTab") renderHistoryTab();
   if (tabId === "shopsTab") renderShopTab();
+  if (tabId === "overviewTab") focusAmountField();
 }
 
 function renderOverviewOnly(){
@@ -1968,7 +2141,7 @@ function renderOverviewOnly(){
   renderOverviewCharts();
 }
 
-function renderEverything(){
+function updateAll(){
   syncSettingsInputsFromStorage();
   applyUIStrings();
   renderOverviewOnly();
@@ -2012,6 +2185,40 @@ function applyQuickAmount(amountToAdd){
   input.focus();
 }
 
+async function installApp(){
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  updatePwaBar();
+}
+
+async function registerServiceWorker(){
+  if (!("serviceWorker" in navigator)) return;
+  if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1"){
+    return;
+  }
+
+  try{
+    const reg = await navigator.serviceWorker.register("./sw.js");
+    swRegistered = !!reg;
+    updatePwaBar();
+
+    if (reg.waiting){
+      reg.waiting.postMessage({ type:"SKIP_WAITING" });
+    }
+
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if (event.data?.type === "SW_ACTIVE"){
+        swRegistered = true;
+        updatePwaBar();
+      }
+    });
+  } catch(err){
+    console.error("Service worker registration failed:", err);
+  }
+}
+
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
 document.getElementById("cancelEditBtn").addEventListener("click", () => {
   setFormForAdd();
@@ -2020,7 +2227,7 @@ document.getElementById("cancelEditBtn").addEventListener("click", () => {
 
 document.getElementById("budget").addEventListener("input", () => {
   saveBudget();
-  renderEverything();
+  updateAll();
 });
 
 document.getElementById("startDay").addEventListener("change", () => {
@@ -2029,7 +2236,7 @@ document.getElementById("startDay").addEventListener("change", () => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  renderEverything();
+  updateAll();
   setFormForAdd();
 });
 
@@ -2039,7 +2246,7 @@ document.getElementById("periodMode").addEventListener("change", (e) => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  renderEverything();
+  updateAll();
 });
 
 document.getElementById("periodLength").addEventListener("change", (e) => {
@@ -2048,7 +2255,7 @@ document.getElementById("periodLength").addEventListener("change", (e) => {
   selectedHistoryPeriod = "";
   selectedHistoryYear = "";
   selectedShopYear = "";
-  renderEverything();
+  updateAll();
 });
 
 document.getElementById("selectedDate").addEventListener("change", (e) => {
@@ -2091,12 +2298,12 @@ document.getElementById("resetBtn").addEventListener("click", resetAllData);
 
 document.getElementById("language").addEventListener("change", (e) => {
   setLang(e.target.value);
-  renderEverything();
+  updateAll();
 });
 
 document.getElementById("currency").addEventListener("change", (e) => {
   setCurrency(e.target.value);
-  renderEverything();
+  updateAll();
 });
 
 document.getElementById("jumpToTodayBtn").addEventListener("click", jumpToToday);
@@ -2138,11 +2345,35 @@ document.getElementById("setupStartDay").addEventListener("change", (e) => {
   localStorage.setItem(STARTDAY_KEY, e.target.value || "20");
 });
 
+document.getElementById("installBtn").addEventListener("click", installApp);
+document.getElementById("dismissPwaBarBtn").addEventListener("click", () => {
+  localStorage.setItem(PWA_BAR_DISMISSED_KEY, "1");
+  updatePwaBar();
+});
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  localStorage.removeItem(PWA_BAR_DISMISSED_KEY);
+  updatePwaBar();
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  localStorage.removeItem(PWA_BAR_DISMISSED_KEY);
+  updatePwaBar();
+});
+
+window.addEventListener("online", updatePwaBar);
+window.addEventListener("offline", updatePwaBar);
+
 function boot(){
   syncSettingsInputsFromStorage();
   applyUIStrings();
   populateStartDaySelect("setupStartDay", getStartDay());
   applySetupSelectors();
+  updatePwaBar();
+  registerServiceWorker();
 
   if (shouldShowSetupScreen()) {
     showSetupScreen();
