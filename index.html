@@ -20,7 +20,9 @@
     --shadow:0 10px 25px rgba(15,23,42,.08);
     --radius:20px;
   }
+
   *{box-sizing:border-box}
+
   body{
     margin:0;
     padding:18px 18px 90px;
@@ -28,7 +30,9 @@
     color:var(--text);
     background:linear-gradient(180deg,#edf4ff 0%, var(--bg) 220px);
   }
+
   .app{max-width:980px;margin:0 auto}
+
   .hero{
     background:linear-gradient(135deg,var(--primary),#38bdf8);
     color:#fff;
@@ -37,9 +41,11 @@
     box-shadow:var(--shadow);
     margin-bottom:14px;
   }
+
   .hero h1{margin:0 0 6px;font-size:30px}
   .hero p{margin:0;opacity:.95}
   .period{margin-top:8px;font-size:14px;opacity:.95}
+
   .tabs{
     position:sticky;
     bottom:12px;
@@ -55,6 +61,7 @@
     box-shadow:var(--shadow);
     margin-top:18px;
   }
+
   .tab-btn{
     width:100%;
     border:none;
@@ -66,26 +73,40 @@
     font-weight:700;
     cursor:pointer;
   }
-  .tab-btn.active{background:var(--primary);color:#fff}
+
+  .tab-btn.active{
+    background:var(--primary);
+    color:#fff;
+  }
+
   .tab-panel{display:none}
   .tab-panel.active{display:block}
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
   .card{
     background:var(--card);
     border-radius:var(--radius);
     padding:16px;
     box-shadow:var(--shadow);
   }
+
   .section-title{
     margin:0 0 12px;
     font-size:18px;
     font-weight:800;
   }
+
   .small-title{
     margin:0 0 8px;
     font-size:16px;
     font-weight:800;
   }
+
   label{
     display:block;
     font-size:14px;
@@ -93,6 +114,7 @@
     margin:8px 0 6px;
     font-weight:700;
   }
+
   input,select,button{
     width:100%;
     border:none;
@@ -101,57 +123,69 @@
     font-size:16px;
     font-family:inherit;
   }
+
   input,select{
     background:#f8fbff;
     border:1px solid var(--line);
     color:var(--text);
   }
+
   button{
     background:var(--primary);
     color:#fff;
     font-weight:800;
     cursor:pointer;
   }
+
   button.secondary{
     background:var(--primary-soft);
     color:var(--primary);
     border:1px solid #d7e6ff;
   }
+
   button.danger{
     background:#fff1f2;
     color:var(--danger);
     border:1px solid #fecdd3;
   }
+
   .settings-grid,.row{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
   }
+
   .stats{
     display:grid;
     grid-template-columns:repeat(2,1fr);
     gap:10px;
     margin-top:12px;
   }
+
   .stat{
     background:#f8fbff;
     border:1px solid var(--line);
     border-radius:16px;
     padding:14px;
   }
+
   .stat .label{
     font-size:13px;
     color:var(--muted);
     margin-bottom:4px;
   }
+
   .stat .value{
     font-size:22px;
     font-weight:900;
   }
+
   .wide{grid-column:1/-1}
+
   .status{margin-top:10px;font-weight:800}
   .status.good{color:var(--good)}
   .status.warn{color:var(--warn)}
+
   .date-strip{
     display:flex;
     gap:10px;
@@ -160,127 +194,71 @@
     scroll-snap-type:x proximity;
     -webkit-overflow-scrolling:touch;
   }
- .date-chip{
-  min-width:84px;
-  padding:10px 12px;
-  border-radius:16px;
-  border:1px solid var(--line);
-  background:#f8fbff;
-  color:#18212f;
-  flex:0 0 auto;
-  text-align:center;
-  cursor:pointer;
-  scroll-snap-align:start;
-  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
-}
 
-.date-chip:hover{
-  transform:translateY(-1px);
-}
+  .date-chip{
+    min-width:88px;
+    padding:10px 12px;
+    border-radius:16px;
+    border:1px solid var(--line);
+    background:#f8fbff;
+    color:#18212f !important;
+    flex:0 0 auto;
+    text-align:center;
+    cursor:pointer;
+    scroll-snap-align:start;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+  }
 
-.date-chip.active{
-  transform:translateY(-1px);
-  box-shadow:0 0 0 2px rgba(37,99,235,.18);
-}
+  .date-chip .top,
+  .date-chip .bottom,
+  .date-chip .sub{
+    color:inherit !important;
+  }
 
-.date-chip.today{
-  box-shadow:inset 0 0 0 2px rgba(37,99,235,.22);
-}
+  .date-chip:hover{transform:translateY(-1px)}
 
-.date-chip.active.today{
-  box-shadow:
-    inset 0 0 0 2px rgba(37,99,235,.22),
-    0 0 0 2px rgba(37,99,235,.18);
-}
+  .date-chip.active{
+    transform:translateY(-1px);
+    box-shadow:0 0 0 2px rgba(37,99,235,.20);
+  }
 
-.date-chip .top{
-  display:block;
-  font-size:12px;
-  opacity:.78;
-  margin-bottom:2px;
-}
+  .date-chip.today{
+    box-shadow:inset 0 0 0 2px rgba(37,99,235,.22);
+  }
 
-.date-chip .bottom{
-  display:block;
-  font-size:17px;
-  font-weight:900;
-  line-height:1.1;
-}
+  .date-chip.active.today{
+    box-shadow:inset 0 0 0 2px rgba(37,99,235,.22), 0 0 0 2px rgba(37,99,235,.18);
+  }
 
-.date-chip .sub{
-  display:block;
-  font-size:11px;
-  margin-top:3px;
-  opacity:.82;
-}
+  .date-chip .top{
+    display:block;
+    font-size:12px;
+    opacity:.80;
+    margin-bottom:2px;
+  }
 
-/* nullhandel */
-.date-chip.zero{
-  background:#ecfdf3;
-  border-color:#86efac;
-  color:#166534;
-}
+  .date-chip .bottom{
+    display:block;
+    font-size:17px;
+    font-weight:900;
+    line-height:1.1;
+  }
 
-/* innenfor, lav belastning */
-.date-chip.ok-1{
-  background:#eff6ff;
-  border-color:#bfdbfe;
-  color:#1d4ed8;
-}
+  .date-chip .sub{
+    display:block;
+    font-size:11px;
+    margin-top:3px;
+    opacity:.85;
+  }
 
-/* innenfor, nærmere grensen */
-.date-chip.ok-2{
-  background:#dbeafe;
-  border-color:#93c5fd;
-  color:#1e40af;
-}
+  .date-chip.zero{background:#ecfdf3;border-color:#86efac;color:#166534}
+  .date-chip.ok-1{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+  .date-chip.ok-2{background:#dbeafe;border-color:#93c5fd;color:#1e40af}
+  .date-chip.warn-1{background:#fffbeb;border-color:#fde68a;color:#a16207}
+  .date-chip.warn-2{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+  .date-chip.bad-1{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
+  .date-chip.bad-2{background:#fecaca;border-color:#f87171;color:#991b1b}
 
-/* over vanlig dagsbudsjett, men fortsatt innenfor totalt */
-.date-chip.warn-1{
-  background:#fffbeb;
-  border-color:#fde68a;
-  color:#a16207;
-}
-
-/* ganske presset */
-.date-chip.warn-2{
-  background:#fef3c7;
-  border-color:#fcd34d;
-  color:#92400e;
-}
-
-/* over total plan */
-.date-chip.bad-1{
-  background:#fee2e2;
-  border-color:#fca5a5;
-  color:#b91c1c;
-}
-
-/* langt over total plan */
-.date-chip.bad-2{
-  background:#fecaca;
-  border-color:#f87171;
-  color:#991b1b;
-}
-  .date-chip.zero {
-  background: #e6f9ed;
-  border-color: #86efac;
-}
-
-.date-chip.good {
-  background: #e6f0ff;
-  border-color: #93c5fd;
-}
-
-.date-chip.warn {
-  background: #fff7e6;
-  border-color: #fcd34d;
-}
-
-.date-chip.bad {
-  background: #fee2e2;
-  border-color: #fca5a5;
-}
   .day-summary{
     margin-top:12px;
     padding:13px;
@@ -288,48 +266,58 @@
     background:#f8fbff;
     border:1px solid var(--line);
   }
+
   .list{
     display:flex;
     flex-direction:column;
     gap:10px;
     margin-top:10px;
   }
+
   .item,.period-row,.shop-row{
     background:#fff;
     border:1px solid var(--line);
     border-radius:16px;
     padding:12px;
   }
+
   .item-head{
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
     gap:8px;
   }
+
   .item-amount{
     font-size:18px;
     font-weight:900;
   }
+
   .item-meta,.small{
     color:var(--muted);
     font-size:13px;
   }
+
   .item-actions,.footer-actions{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:10px;
     margin-top:10px;
   }
+
   .single-action{margin-top:10px}
+
   .charts{
     display:grid;
     grid-template-columns:1fr;
     gap:14px;
   }
+
   canvas{
     width:100% !important;
     max-height:300px;
   }
+
   .empty{
     color:var(--muted);
     background:#f8fbff;
@@ -338,6 +326,7 @@
     padding:14px;
     text-align:center;
   }
+
   .pill{
     display:inline-block;
     padding:6px 10px;
@@ -347,12 +336,15 @@
     background:var(--primary-soft);
     color:var(--primary);
   }
+
   .big{font-weight:900}
+
   .backup-note{
     margin-top:8px;
     font-size:13px;
     color:var(--muted);
   }
+
   @media (min-width:760px){
     .grid{grid-template-columns:1.1fr .9fr}
     .charts{grid-template-columns:1fr 1fr}
@@ -547,9 +539,9 @@
 </div>
 
 <script>
-const STORAGE_KEY = "matbudsjett_v5_expenses";
-const BUDGET_KEY = "matbudsjett_v5_budget";
-const STARTDAY_KEY = "matbudsjett_v5_startday";
+const STORAGE_KEY = "matbudsjett_v7_expenses";
+const BUDGET_KEY = "matbudsjett_v7_budget";
+const STARTDAY_KEY = "matbudsjett_v7_startday";
 
 let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let editingId = null;
@@ -563,23 +555,53 @@ let historyPeriodChart = null;
 let historyCategoryChart = null;
 let shopYearChart = null;
 
-function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
-function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
-function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
-function saveStartDay(){ localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20"); }
-function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
-function formatCurrency(value){ return Math.round(Number(value || 0)).toLocaleString("no-NO") + " kr"; }
+function saveExpenses(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+}
+
+function saveBudget(){
+  localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || "");
+}
+
+function getStartDay(){
+  return Number(localStorage.getItem(STARTDAY_KEY) || 20);
+}
+
+function saveStartDay(){
+  localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20");
+}
+
+function uid(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+}
+
+function formatCurrency(value){
+  return Math.round(Number(value || 0)).toLocaleString("no-NO") + " kr";
+}
+
 function formatISO(date){
-  const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,"0"), d = String(date.getDate()).padStart(2,"0");
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,"0");
+  const d = String(date.getDate()).padStart(2,"0");
   return `${y}-${m}-${d}`;
 }
+
 function parseLocalDate(iso){
   const [y,m,d] = iso.split("-").map(Number);
   return new Date(y,m-1,d);
 }
-function shortDate(date){ return date.toLocaleDateString("no-NO", { day:"2-digit", month:"2-digit" }); }
-function longDate(date){ return date.toLocaleDateString("no-NO", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); }
-function daysInMonth(year, monthIndex){ return new Date(year, monthIndex + 1, 0).getDate(); }
+
+function shortDate(date){
+  return date.toLocaleDateString("no-NO", { day:"2-digit", month:"2-digit" });
+}
+
+function longDate(date){
+  return date.toLocaleDateString("no-NO", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+}
+
+function daysInMonth(year, monthIndex){
+  return new Date(year, monthIndex + 1, 0).getDate();
+}
 
 function populateStartDay(){
   const sel = document.getElementById("startDay");
@@ -600,25 +622,23 @@ function getPeriod(today = new Date()){
     startMonth = prev.getMonth();
   }
 
-  const next = new Date(startYear, startMonth + 1, 1);
-  const endDay = Math.min(startDay - 1 || daysInMonth(startYear, startMonth), daysInMonth(next.getFullYear(), next.getMonth()));
-  const start = new Date(startYear, startMonth, Math.min(startDay, daysInMonth(startYear, startMonth)));
-  const end = new Date(next.getFullYear(), next.getMonth(), endDay);
+  const start = new Date(startYear, startMonth, startDay);
+  let end;
+
+  if (startDay === 1){
+    end = new Date(startYear, startMonth + 1, 0);
+  } else {
+    end = new Date(startYear, startMonth + 1, startDay - 1);
+  }
 
   start.setHours(0,0,0,0);
   end.setHours(0,0,0,0);
+
   return { start, end };
 }
 
 function getPeriodFromStart(startDate){
-  const startDay = getStartDay();
-  const start = new Date(startDate.getFullYear(), startDate.getMonth(), Math.min(startDay, daysInMonth(startDate.getFullYear(), startDate.getMonth())));
-  const next = new Date(start.getFullYear(), start.getMonth()+1, 1);
-  const endDay = Math.min(startDay - 1 || daysInMonth(start.getFullYear(), start.getMonth()), daysInMonth(next.getFullYear(), next.getMonth()));
-  const end = new Date(next.getFullYear(), next.getMonth(), endDay);
-  start.setHours(0,0,0,0);
-  end.setHours(0,0,0,0);
-  return { start, end };
+  return getPeriod(startDate);
 }
 
 function getDatesInRange(start, end){
@@ -626,35 +646,50 @@ function getDatesInRange(start, end){
   const current = new Date(start);
   while (current <= end){
     dates.push(formatISO(current));
-    current.setDate(current.getDate()+1);
+    current.setDate(current.getDate() + 1);
   }
   return dates;
 }
+
 function getDatesInCurrentPeriod(){
   const { start, end } = getPeriod();
   return getDatesInRange(start, end);
 }
+
 function ensureSelectedDate(){
   const dates = getDatesInCurrentPeriod();
   const todayIso = formatISO(new Date());
-  if (dates.includes(todayIso)) selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso;
-  else selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0];
+
+  if (dates.includes(todayIso)){
+    selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso;
+  } else {
+    selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0];
+  }
+
   document.getElementById("selectedDate").value = selectedDate;
 }
+
 function getExpensesInPeriod(start, end){
   return expenses.filter(e => {
     const d = parseLocalDate(e.date);
     return d >= start && d <= end;
   });
 }
+
 function getCurrentPeriodExpenses(){
   const { start, end } = getPeriod();
   return getExpensesInPeriod(start, end);
 }
+
 function getExpensesForDate(iso){
-  return getCurrentPeriodExpenses().filter(e => e.date === iso).sort((a,b)=>a.createdAt-b.createdAt);
+  return getCurrentPeriodExpenses()
+    .filter(e => e.date === iso)
+    .sort((a,b) => a.createdAt - b.createdAt);
 }
-function getBudget(){ return Number(document.getElementById("budget").value || 0); }
+
+function getBudget(){
+  return Number(document.getElementById("budget").value || 0);
+}
 
 function setFormForAdd(){
   editingId = null;
@@ -665,6 +700,7 @@ function setFormForAdd(){
   document.getElementById("selectedDate").value = selectedDate;
   document.getElementById("category").value = "Rema 1000";
 }
+
 function setFormForEdit(entry){
   editingId = entry.id;
   document.getElementById("formTitle").innerText = "Rediger kjøp";
@@ -674,26 +710,47 @@ function setFormForEdit(entry){
   document.getElementById("category").value = entry.category;
   document.getElementById("expense").value = entry.amount;
   selectedDate = entry.date;
-  renderDateStrip(); renderDaySection(); updateSummaryOnly();
+  renderDateStrip();
+  renderDaySection();
+  updateSummaryOnly();
 }
+
 function addOrUpdateExpense(){
   const amount = Number(document.getElementById("expense").value);
   const category = document.getElementById("category").value;
   const date = document.getElementById("selectedDate").value;
-  if (!date){ alert("Velg dato."); return; }
-  if (!amount || amount <= 0){ alert("Skriv inn et gyldig beløp."); return; }
+
+  if (!date){
+    alert("Velg dato.");
+    return;
+  }
+
+  if (!amount || amount <= 0){
+    alert("Skriv inn et gyldig beløp.");
+    return;
+  }
 
   if (editingId){
     const idx = expenses.findIndex(e => e.id === editingId);
-    if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date };
+    if (idx !== -1){
+      expenses[idx] = { ...expenses[idx], amount, category, date };
+    }
   } else {
-    expenses.push({ id: uid(), amount, category, date, createdAt: Date.now() });
+    expenses.push({
+      id: uid(),
+      amount,
+      category,
+      date,
+      createdAt: Date.now()
+    });
   }
+
   selectedDate = date;
   saveExpenses();
   updateAll();
   setFormForAdd();
 }
+
 function deleteExpense(id){
   expenses = expenses.filter(e => e.id !== id);
   saveExpenses();
@@ -709,7 +766,6 @@ function renderDateStrip(){
   const totalDays = dates.length;
   const perDay = budget ? budget / totalDays : 0;
 
-  // summer per dag én gang
   const totalsByDate = {};
   dates.forEach(d => totalsByDate[d] = 0);
 
@@ -725,7 +781,7 @@ function renderDateStrip(){
     runningUsed += total;
 
     const allowedSoFar = perDay * (index + 1);
-    const diff = runningUsed - allowedSoFar; // positiv = over plan
+    const diff = runningUsed - allowedSoFar;
     const percentOfDay = perDay > 0 ? Math.round((total / perDay) * 100) : 0;
 
     const active = iso === selectedDate ? "active" : "";
@@ -734,27 +790,27 @@ function renderDateStrip(){
     let colorClass = "";
     let subText = "";
 
-    if (total === 0) {
+    if (total === 0){
       colorClass = "zero";
       subText = "0 kr";
-    } else if (diff > perDay * 0.5) {
+    } else if (perDay > 0 && diff > perDay * 0.5){
       colorClass = "bad-2";
       subText = `+${Math.round(diff)} kr`;
-    } else if (diff > 0) {
+    } else if (diff > 0){
       colorClass = "bad-1";
       subText = `+${Math.round(diff)} kr`;
-    } else if (total > perDay * 1.25) {
+    } else if (perDay > 0 && total > perDay * 1.25){
       colorClass = "warn-2";
       subText = `${percentOfDay}%`;
-    } else if (total > perDay) {
+    } else if (perDay > 0 && total > perDay){
       colorClass = "warn-1";
       subText = `${percentOfDay}%`;
-    } else if (Math.abs(diff) < perDay * 0.35) {
+    } else if (perDay > 0 && Math.abs(diff) < perDay * 0.35){
       colorClass = "ok-2";
       subText = `${percentOfDay}%`;
     } else {
       colorClass = "ok-1";
-      subText = `${Math.abs(Math.round(diff))} kr under`;
+      subText = perDay > 0 ? `${Math.abs(Math.round(diff))} kr under` : formatCurrency(total);
     }
 
     return `
@@ -778,64 +834,9 @@ function renderDateStrip(){
   });
 
   const activeEl = strip.querySelector(".date-chip.active");
-  if (activeEl) {
+  if (activeEl){
     activeEl.scrollIntoView({ inline:"center", block:"nearest" });
   }
-}
-
-// alle datoer i perioden
-const dates = getDatesInCurrentPeriod();
-const index = dates.indexOf(iso);
-
-// hent dagens forbruk
-const entries = getExpensesForDate(iso);
-const total = entries.reduce((sum,e)=>sum+e.amount,0);
-
-// budsjett
-const budget = getBudget();
-const totalDays = dates.length;
-const perDay = budget ? budget / totalDays : 0;
-
-// beregn hvor mye du burde ha brukt til nå
-const allowedSoFar = perDay * (index + 1);
-
-// beregn hva du faktisk har brukt til nå
-let usedSoFar = 0;
-for (let i = 0; i <= index; i++) {
-  const d = dates[i];
-  const dayEntries = getExpensesForDate(d);
-  usedSoFar += dayEntries.reduce((sum,e)=>sum+e.amount,0);
-}
-
-// fargelogikk
-let colorClass = "";
-
-if (total === 0) {
-  colorClass = "zero"; // grønn
-} else if (usedSoFar > allowedSoFar) {
-  colorClass = "bad"; // rød
-} else if (total > perDay) {
-  colorClass = "warn"; // gul/oransje
-} else {
-  colorClass = "good"; // blå
-}
-    return `<button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button">
-      <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
-      <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
-    </button>`;
-  }).join("");
-
-  strip.querySelectorAll(".date-chip").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedDate = btn.dataset.date;
-      document.getElementById("selectedDate").value = selectedDate;
-      if (!editingId) document.getElementById("expense").value = "";
-      renderDateStrip(); renderDaySection(); updateSummaryOnly();
-    });
-  });
-
-  const active = strip.querySelector(".date-chip.active");
-  if (active) active.scrollIntoView({ inline:"center", block:"nearest" });
 }
 
 function renderDaySection(){
@@ -847,34 +848,38 @@ function renderDaySection(){
   const perDayTarget = budget ? budget / totalDays : 0;
   const diff = total - perDayTarget;
   const d = parseLocalDate(iso);
+  const countEntries = entries.length;
+
+  const dates = getDatesInCurrentPeriod();
+  const dayIndex = dates.indexOf(iso);
+  const allowedSoFar = perDayTarget * (dayIndex + 1);
+
+  let usedSoFar = 0;
+  for (let i = 0; i <= dayIndex; i++){
+    usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
+  }
+
+  const cumulativeDiff = usedSoFar - allowedSoFar;
+  const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
 
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
+
   document.getElementById("daySummary").innerHTML = `
-const dates = getDatesInCurrentPeriod();
-const dayIndex = dates.indexOf(iso);
-const allowedSoFar = perDayTarget * (dayIndex + 1);
-
-let usedSoFar = 0;
-for (let i = 0; i <= dayIndex; i++) {
-  usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
-}
-
-const cumulativeDiff = usedSoFar - allowedSoFar;
-const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
-
-document.getElementById("daySummary").innerHTML = `
-  <strong>${longDate(d)}</strong><br>
-  Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
-  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
-  Dagsavvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong><br>
-  Samlet til nå: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} kr ${cumulativeDiff > 0 ? "over" : "under"} plan</strong>
-`;
+    <strong>${longDate(d)}</strong><br>
+    Antall kjøp: <strong>${countEntries}</strong><br>
+    Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
+    Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
+    Dagsavvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong><br>
+    Samlet til nå: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} kr ${cumulativeDiff > 0 ? "over" : "under"} plan</strong>
+  `;
 
   const wrap = document.getElementById("dayEntries");
+
   if (!entries.length){
     wrap.innerHTML = `<div class="empty">Ingen kjøp registrert på denne datoen ennå.</div>`;
     return;
   }
+
   wrap.innerHTML = entries.map(e => `
     <div class="item">
       <div class="item-head">
@@ -894,6 +899,7 @@ document.getElementById("daySummary").innerHTML = `
     const entry = expenses.find(e => e.id === btn.dataset.id);
     if (entry) setFormForEdit(entry);
   }));
+
   wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => {
     if (confirm("Fjerne dette kjøpet?")) deleteExpense(btn.dataset.id);
   }));
@@ -904,7 +910,9 @@ function updateSummaryOnly(){
   const periodExpenses = getCurrentPeriodExpenses();
   const used = periodExpenses.reduce((sum,e)=>sum+e.amount,0);
   const { start, end } = getPeriod();
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
   const totalDays = getDatesInCurrentPeriod().length;
   const daysGone = today < start ? 0 : Math.min(totalDays, Math.floor((today - start) / 86400000) + 1);
   const daysLeft = today > end ? 0 : Math.max(1, Math.floor((end - today) / 86400000) + 1);
@@ -936,12 +944,15 @@ function updateSummaryOnly(){
 function renderOverviewCharts(){
   const periodExpenses = getCurrentPeriodExpenses();
   const dates = getDatesInCurrentPeriod();
-  const dailyTotals = {}; dates.forEach(d => dailyTotals[d] = 0);
+  const dailyTotals = {};
+  dates.forEach(d => dailyTotals[d] = 0);
+
   const categoryTotals = {};
   periodExpenses.forEach(e => {
     dailyTotals[e.date] = (dailyTotals[e.date] || 0) + e.amount;
     categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
   });
+
   const dailyLabels = dates.map(iso => {
     const d = parseLocalDate(iso);
     return `${d.getDate()}.${d.getMonth()+1}`;
@@ -953,8 +964,20 @@ function renderOverviewCharts(){
 
   dailyChart = new Chart(document.getElementById("dailyChart"), {
     type: "line",
-    data: { labels: dailyLabels, datasets: [{ label: "Forbruk", data: dailyValues, tension:0.25, fill:false }] },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
+    data: {
+      labels: dailyLabels,
+      datasets: [{
+        label: "Forbruk",
+        data: dailyValues,
+        tension:0.25,
+        fill:false
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } }
+    }
   });
 
   const categoryLabels = Object.keys(categoryTotals);
@@ -962,8 +985,16 @@ function renderOverviewCharts(){
 
   categoryChart = new Chart(document.getElementById("categoryChart"), {
     type: "pie",
-    data: { labels: categoryLabels.length ? categoryLabels : ["Ingen kjøp ennå"], datasets: [{ data: categoryValues.length ? categoryValues : [1] }] },
-    options: { responsive:true, maintainAspectRatio:false }
+    data: {
+      labels: categoryLabels.length ? categoryLabels : ["Ingen kjøp ennå"],
+      datasets: [{
+        data: categoryValues.length ? categoryValues : [1]
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false
+    }
   });
 }
 
@@ -971,14 +1002,21 @@ function getAllPeriods(){
   if (!expenses.length){
     const nowPeriod = getPeriod();
     return [{
-      id: formatISO(nowPeriod.start), start: nowPeriod.start, end: nowPeriod.end,
-      label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`, year: nowPeriod.end.getFullYear()
+      id: formatISO(nowPeriod.start),
+      start: nowPeriod.start,
+      end: nowPeriod.end,
+      label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`,
+      year: nowPeriod.end.getFullYear()
     }];
   }
+
   const dates = expenses.map(e => parseLocalDate(e.date)).sort((a,b)=>a-b);
   const firstDate = dates[0];
+  const lastDate = dates[dates.length - 1];
+
   const firstPeriod = getPeriod(firstDate);
-  const lastPeriod = getPeriod(dates[dates.length - 1]);
+  const lastPeriod = getPeriod(lastDate);
+
   let currentStart = new Date(firstPeriod.start);
   const periods = [];
 
@@ -994,6 +1032,7 @@ function getAllPeriods(){
     currentStart = new Date(p.end);
     currentStart.setDate(currentStart.getDate() + 1);
   }
+
   return periods;
 }
 
@@ -1002,9 +1041,21 @@ function getPeriodData(period){
   const total = items.reduce((sum,e)=>sum+e.amount,0);
   const days = getDatesInRange(period.start, period.end).length;
   const categoryTotals = {};
-  items.forEach(e => categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount);
-  return { items, total, days, avg: days ? total/days : 0, count: items.length, categoryTotals };
+
+  items.forEach(e => {
+    categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
+  });
+
+  return {
+    items,
+    total,
+    days,
+    avg: days ? total/days : 0,
+    count: items.length,
+    categoryTotals
+  };
 }
+
 function periodName(period){
   const month = period.end.toLocaleDateString("no-NO", { month:"long" });
   return `${month} ${period.end.getFullYear()}`;
@@ -1013,24 +1064,31 @@ function periodName(period){
 function fillHistorySelectors(){
   const periods = getAllPeriods();
   const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
+
   const yearSelect = document.getElementById("historyYear");
   yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
-  if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))) selectedHistoryYear = String(years[0]);
+  if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))){
+    selectedHistoryYear = String(years[0] || new Date().getFullYear());
+  }
   yearSelect.value = selectedHistoryYear;
 
   const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start);
   const periodSelect = document.getElementById("historyPeriod");
   periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)} (${p.label})</option>`).join("");
-  if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)) selectedHistoryPeriod = periodsForYear[0]?.id || "";
+  if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)){
+    selectedHistoryPeriod = periodsForYear[0]?.id || "";
+  }
   periodSelect.value = selectedHistoryPeriod;
 }
 
 function renderHistoryTab(){
   const periods = getAllPeriods();
   fillHistorySelectors();
+
   const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>a.start-b.start);
-  const selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length-1];
+  const selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length - 1];
   if (!selected) return;
+
   const selectedData = getPeriodData(selected);
   const selectedIndex = periods.findIndex(p => p.id === selected.id);
   const prev = selectedIndex > 0 ? periods[selectedIndex - 1] : null;
@@ -1047,9 +1105,16 @@ function renderHistoryTab(){
     type: "bar",
     data: {
       labels: periodsForYear.map(p => periodName(p)),
-      datasets: [{ label: "Totalt", data: periodsForYear.map(p => getPeriodData(p).total) }]
+      datasets: [{
+        label: "Totalt",
+        data: periodsForYear.map(p => getPeriodData(p).total)
+      }]
     },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } }
+    }
   });
 
   if (historyCategoryChart) historyCategoryChart.destroy();
@@ -1057,8 +1122,16 @@ function renderHistoryTab(){
   const catValues = Object.values(selectedData.categoryTotals);
   historyCategoryChart = new Chart(document.getElementById("historyCategoryChart"), {
     type: "pie",
-    data: { labels: catLabels.length ? catLabels : ["Ingen kjøp"], datasets: [{ data: catValues.length ? catValues : [1] }] },
-    options: { responsive:true, maintainAspectRatio:false }
+    data: {
+      labels: catLabels.length ? catLabels : ["Ingen kjøp"],
+      datasets: [{
+        data: catValues.length ? catValues : [1]
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false
+    }
   });
 
   const periodList = document.getElementById("periodList");
@@ -1067,6 +1140,7 @@ function renderHistoryTab(){
     const data = getPeriodData(p);
     const previous = desc[idx+1] ? getPeriodData(desc[idx+1]).total : 0;
     const diff = idx < desc.length - 1 ? data.total - previous : 0;
+
     return `
       <div class="period-row">
         <div class="big">${periodName(p)}</div>
@@ -1084,19 +1158,24 @@ function fillShopYearSelector(){
   const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
   const sel = document.getElementById("shopYear");
   sel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
-  if (!selectedShopYear || !years.includes(Number(selectedShopYear))) selectedShopYear = String(years[0]);
+  if (!selectedShopYear || !years.includes(Number(selectedShopYear))){
+    selectedShopYear = String(years[0] || new Date().getFullYear());
+  }
   sel.value = selectedShopYear;
 }
+
 function renderShopTab(){
   fillShopYearSelector();
   const periods = getAllPeriods().filter(p => String(p.year) === String(selectedShopYear));
   const totals = {};
+
   periods.forEach(p => {
     const data = getPeriodData(p);
     Object.entries(data.categoryTotals).forEach(([shop, amount]) => {
       totals[shop] = (totals[shop] || 0) + amount;
     });
   });
+
   const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
 
   if (shopYearChart) shopYearChart.destroy();
@@ -1104,9 +1183,16 @@ function renderShopTab(){
     type: "bar",
     data: {
       labels: entries.length ? entries.map(e => e[0]) : ["Ingen kjøp"],
-      datasets: [{ label: "Totalt", data: entries.length ? entries.map(e => e[1]) : [0] }]
+      datasets: [{
+        label: "Totalt",
+        data: entries.length ? entries.map(e => e[1]) : [0]
+      }]
     },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } }
+    }
   });
 
   const list = document.getElementById("shopList");
@@ -1114,6 +1200,7 @@ function renderShopTab(){
     list.innerHTML = `<div class="empty">Ingen kjøp registrert for dette året ennå.</div>`;
     return;
   }
+
   const totalYear = entries.reduce((sum, [,amt]) => sum + amt, 0);
   list.innerHTML = entries.map(([shop, amt]) => `
     <div class="shop-row">
@@ -1126,12 +1213,13 @@ function renderShopTab(){
 
 function exportBackup(){
   const payload = {
-    version: 5,
+    version: 7,
     exportedAt: new Date().toISOString(),
     budget: localStorage.getItem(BUDGET_KEY) || "",
     startDay: localStorage.getItem(STARTDAY_KEY) || "20",
     expenses: expenses
   };
+
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -1151,10 +1239,12 @@ function importBackupFromFile(file){
         alert("Ugyldig backupfil.");
         return;
       }
+
       expenses = data.expenses;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
       localStorage.setItem(BUDGET_KEY, data.budget || "");
       localStorage.setItem(STARTDAY_KEY, data.startDay || "20");
+
       document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
       populateStartDay();
       selectedDate = "";
@@ -1173,6 +1263,7 @@ function importBackupFromFile(file){
 
 function resetAllData(){
   if (!confirm("Dette sletter alle kjøp og innstillinger. Er du sikker?")) return;
+
   expenses = [];
   localStorage.removeItem(STORAGE_KEY);
   localStorage.removeItem(BUDGET_KEY);
@@ -1191,7 +1282,9 @@ function setActiveTab(tabId){
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById(tabId).classList.add("active");
-  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add("active");
+  const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (activeBtn) activeBtn.classList.add("active");
+
   if (tabId === "historyTab") renderHistoryTab();
   if (tabId === "shopsTab") renderShopTab();
 }
@@ -1208,7 +1301,12 @@ function updateAll(){
 
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
 document.getElementById("cancelEditBtn").addEventListener("click", setFormForAdd);
-document.getElementById("budget").addEventListener("input", () => { saveBudget(); updateAll(); });
+
+document.getElementById("budget").addEventListener("input", () => {
+  saveBudget();
+  updateAll();
+});
+
 document.getElementById("startDay").addEventListener("change", () => {
   saveStartDay();
   selectedDate = "";
@@ -1218,26 +1316,33 @@ document.getElementById("startDay").addEventListener("change", () => {
   updateAll();
   setFormForAdd();
 });
+
 document.getElementById("selectedDate").addEventListener("change", (e) => {
   selectedDate = e.target.value;
   renderDateStrip();
   renderDaySection();
   updateSummaryOnly();
 });
+
 document.getElementById("historyYear").addEventListener("change", (e) => {
   selectedHistoryYear = e.target.value;
   fillHistorySelectors();
   renderHistoryTab();
 });
+
 document.getElementById("historyPeriod").addEventListener("change", (e) => {
   selectedHistoryPeriod = e.target.value;
   renderHistoryTab();
 });
+
 document.getElementById("shopYear").addEventListener("change", (e) => {
   selectedShopYear = e.target.value;
   renderShopTab();
 });
-document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
+});
 
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
