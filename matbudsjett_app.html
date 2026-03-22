@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Matbudsjett</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --primary-2: #1d4ed8;
+      --good: #15803d;
+      --warn: #b45309;
+      --bad: #b91c1c;
+      --line: #e5e7eb;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 220px);
+      color: var(--text);
+      padding: 20px 14px 40px;
+    }
+
+    .app {
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), #38bdf8);
+      color: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    input, select, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      background: white;
+      appearance: none;
+    }
+
+    input:focus, select:focus {
+      outline: 2px solid rgba(37, 99, 235, 0.18);
+      border-color: var(--primary);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stack > div { margin-bottom: 12px; }
+    .stack > div:last-child { margin-bottom: 0; }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    .secondary-btn {
+      background: #eef2ff;
+      color: var(--primary-2);
+      border: 1px solid #c7d2fe;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px solid #edf2f7;
+    }
+
+    .stat .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .status {
+      margin-top: 12px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .status.good { background: #ecfdf3; color: var(--good); }
+    .status.warn { background: #fff7ed; color: var(--warn); }
+    .status.bad { background: #fef2f2; color: var(--bad); }
+
+    .subline {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .chart-wrap {
+      height: 220px;
+      position: relative;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .legend span {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .day-list, .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .row {
+      background: #f8fafc;
+      border: 1px solid #e9eef5;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .row-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .row strong { font-size: 15px; }
+    .small { font-size: 12px; color: var(--muted); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty {
+      font-size: 14px;
+      color: var(--muted);
+      padding: 10px 0;
+    }
+
+    .danger-zone {
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+
+    @media (max-width: 380px) {
+      .grid, .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <h1>💸 Matbudsjett</h1>
+      <p>Følg matbudsjettet ditt fra den 20. til den 19., se hva du kan bruke per dag, og sammenlign butikker og dager.</p>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Periode og budsjett</h2>
+      <div class="stack">
+        <div>
+          <label for="budget">Budsjett for perioden</label>
+          <input id="budget" type="number" inputmode="decimal" min="0" step="1" placeholder="f.eks. 6000">
+        </div>
+      </div>
+      <div class="subline" id="periodText"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Legg til kjøp</h2>
+      <div class="stack">
+        <div>
+          <label for="expense">Beløp</label>
+          <input id="expense" type="number" inputmode="decimal" min="0" step="0.01" placeholder="f.eks. 189">
+        </div>
+        <div>
+          <label for="category">Butikk</label>
+          <select id="category">
+            <option>Rema 1000</option>
+            <option>Kiwi</option>
+            <option>Coop Extra</option>
+            <option>Coop Prix</option>
+            <option>Coop Mega</option>
+            <option>Obs</option>
+            <option>Meny</option>
+            <option>Spar</option>
+            <option>Joker</option>
+            <option>Bunnpris</option>
+            <option>Oda</option>
+            <option>Holdbart</option>
+            <option>Normal</option>
+            <option>Europris</option>
+            <option>IKEA</option>
+            <option>Apotek / annet</option>
+          </select>
+        </div>
+        <div>
+          <label for="purchaseDate">Dato for kjøpet</label>
+          <input id="purchaseDate" type="date">
+        </div>
+      </div>
+      <div class="grid" style="margin-top:12px;">
+        <button id="addBtn" type="button">Legg til kjøp</button>
+        <button id="todayBtn" type="button" class="secondary-btn">Sett i dag</button>
+      </div>
+      <div class="subline" id="saveMessage"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Oversikt</h2>
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Brukt i perioden</div>
+          <div class="value" id="used">0 kr</div>
+        </div>
+        <div class="stat">
+          <div class="label">Igjen i perioden</div>
+          <div class="value" id="remaining">0 kr</div>
+        </div>
+        <div class="stat">
+          <div class="label">Kan bruke per dag nå</div>
+          <div class="value" id="daily">0 kr</div>
+        </div>
+        <div class="stat">
+          <div class="label">Dager igjen</div>
+          <div class="value" id="daysLeft">0</div>
+        </div>
+      </div>
+      <div id="statusBox" class="status good">Klar</div>
+      <div class="subline" id="detailText"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Graf: forbruk dag for dag</h2>
+      <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Graf: butikker</h2>
+      <div class="chart-wrap"><canvas id="storeChart"></canvas></div>
+      <div class="legend" id="storeLegend"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Dag-for-dag oversikt</h2>
+      <div class="day-list" id="dailyList"></div>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Historikk</h2>
+      <div class="history-list" id="historyList"></div>
+      <div class="danger-zone">
+        <button id="clearBtn" type="button" class="secondary-btn">Slett alle kjøp</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'matbudsjett_v2';
+    const BUDGET_KEY = 'matbudsjett_budget_v2';
+    let expenses = [];
+
+    const COLORS = ['#2563eb','#7c3aed','#db2777','#ea580c','#16a34a','#0891b2','#d97706','#4f46e5','#be185d','#0f766e','#9333ea','#ca8a04'];
+
+    const budgetInput = document.getElementById('budget');
+    const expenseInput = document.getElementById('expense');
+    const categoryInput = document.getElementById('category');
+    const purchaseDateInput = document.getElementById('purchaseDate');
+    const addBtn = document.getElementById('addBtn');
+    const todayBtn = document.getElementById('todayBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const saveMessage = document.getElementById('saveMessage');
+
+    function formatCurrency(value) {
+      const rounded = Math.round((Number(value) || 0) * 100) / 100;
+      return new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 }).format(rounded) + ' kr';
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat('nb-NO', {
+        day: '2-digit', month: '2-digit', year: 'numeric'
+      }).format(date);
+    }
+
+    function toDateInputValue(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function loadData() {
+      try {
+        expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        expenses = [];
+      }
+      const savedBudget = localStorage.getItem(BUDGET_KEY);
+      if (savedBudget !== null) budgetInput.value = savedBudget;
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+      localStorage.setItem(BUDGET_KEY, budgetInput.value || '');
+    }
+
+    function getPeriod(referenceDate = new Date()) {
+      const ref = startOfDay(referenceDate);
+      let start, end;
+      if (ref.getDate() >= 20) {
+        start = new Date(ref.getFullYear(), ref.getMonth(), 20);
+        end = new Date(ref.getFullYear(), ref.getMonth() + 1, 19);
+      } else {
+        start = new Date(ref.getFullYear(), ref.getMonth() - 1, 20);
+        end = new Date(ref.getFullYear(), ref.getMonth(), 19);
+      }
+      return { start, end };
+    }
+
+    function daysBetweenInclusive(start, end) {
+      const ms = startOfDay(end) - startOfDay(start);
+      return Math.floor(ms / 86400000) + 1;
+    }
+
+    function getExpensesInPeriod(start, end) {
+      const startMs = startOfDay(start).getTime();
+      const endMs = startOfDay(end).getTime();
+      return expenses.filter(item => {
+        const d = startOfDay(new Date(item.date)).getTime();
+        return d >= startMs && d <= endMs;
+      });
+    }
+
+    function setDefaultDate() {
+      purchaseDateInput.value = toDateInputValue(new Date());
+    }
+
+    function showSaveMessage(text) {
+      saveMessage.textContent = text;
+      setTimeout(() => {
+        if (saveMessage.textContent === text) saveMessage.textContent = '';
+      }, 2500);
+    }
+
+    function addExpense() {
+      const amount = Number(expenseInput.value.replace(',', '.'));
+      const category = categoryInput.value;
+      const dateValue = purchaseDateInput.value;
+
+      if (!budgetInput.value) {
+        showSaveMessage('Legg inn budsjett først.');
+        return;
+      }
+
+      if (!amount || amount <= 0) {
+        showSaveMessage('Skriv inn et gyldig beløp.');
+        return;
+      }
+
+      if (!dateValue) {
+        showSaveMessage('Velg dato for kjøpet.');
+        return;
+      }
+
+      expenses.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        amount,
+        category,
+        date: dateValue
+      });
+
+      saveData();
+      expenseInput.value = '';
+      showSaveMessage('Kjøpet er lagret.');
+      update();
+    }
+
+    function clearAllExpenses() {
+      const ok = confirm('Vil du slette alle registrerte kjøp?');
+      if (!ok) return;
+      expenses = [];
+      saveData();
+      update();
+    }
+
+    function removeExpense(id) {
+      expenses = expenses.filter(item => item.id !== id);
+      saveData();
+      update();
+    }
+
+    function update() {
+      saveData();
+
+      const budget = Number(budgetInput.value || 0);
+      const today = startOfDay(new Date());
+      const { start, end } = getPeriod(today);
+      const periodExpenses = getExpensesInPeriod(start, end);
+
+      document.getElementById('periodText').textContent = `Denne perioden går fra ${formatDate(start)} til ${formatDate(end)}.`;
+
+      const used = periodExpenses.reduce((sum, item) => sum + Number(item.amount), 0);
+      const totalDays = daysBetweenInclusive(start, end);
+      const passedDays = Math.min(daysBetweenInclusive(start, today), totalDays);
+      const daysLeftIncludingToday = Math.max(daysBetweenInclusive(today, end), 1);
+      const remaining = budget - used;
+      const dailyBudgetOriginal = totalDays ? budget / totalDays : 0;
+      const dailyAvailableNow = daysLeftIncludingToday ? remaining / daysLeftIncludingToday : 0;
+      const shouldHaveUsed = dailyBudgetOriginal * passedDays;
+      const deviation = used - shouldHaveUsed;
+
+      document.getElementById('used').textContent = formatCurrency(used);
+      document.getElementById('remaining').textContent = formatCurrency(remaining);
+      document.getElementById('daily').textContent = formatCurrency(Math.max(dailyAvailableNow, 0));
+      document.getElementById('daysLeft').textContent = String(daysLeftIncludingToday);
+
+      const statusBox = document.getElementById('statusBox');
+      const detailText = document.getElementById('detailText');
+
+      if (!budget) {
+        statusBox.className = 'status warn';
+        statusBox.textContent = 'Legg inn et budsjett for å få beregningene.';
+        detailText.textContent = 'Når budsjettet er på plass, regner appen ut hva du faktisk kan bruke per dag resten av perioden.';
+      } else if (remaining < 0) {
+        statusBox.className = 'status bad';
+        statusBox.textContent = 'Du har brukt mer enn budsjettet ditt i denne perioden.';
+        detailText.textContent = `Du ligger ${formatCurrency(Math.abs(remaining))} over budsjett.`;
+      } else if (deviation > 0) {
+        statusBox.className = 'status warn';
+        statusBox.textContent = 'Du ligger foran skjema og bør bruke litt mindre per dag.';
+        detailText.textContent = `Du har brukt ${formatCurrency(deviation)} mer enn jevnt fordelt budsjett til nå. Nå kan du bruke ${formatCurrency(dailyAvailableNow)} per dag resten av perioden.`;
+      } else {
+        statusBox.className = 'status good';
+        statusBox.textContent = 'Du ligger innenfor budsjett akkurat nå.';
+        detailText.textContent = `Du ligger ${formatCurrency(Math.abs(deviation))} bedre an enn jevn fordeling. Nå kan du bruke ${formatCurrency(dailyAvailableNow)} per dag resten av perioden.`;
+      }
+
+      renderDailyList(start, end, periodExpenses, dailyBudgetOriginal);
+      renderHistory(periodExpenses);
+      drawDailyChart(start, end, periodExpenses, dailyBudgetOriginal);
+      drawStoreChart(periodExpenses);
+    }
+
+    function renderDailyList(start, end, items, dailyBudgetOriginal) {
+      const list = document.getElementById('dailyList');
+      list.innerHTML = '';
+
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const day = startOfDay(new Date(d));
+        const key = toDateInputValue(day);
+        const dayItems = items.filter(item => item.date === key);
+        const spent = dayItems.reduce((sum, item) => sum + Number(item.amount), 0);
+        const diff = spent - dailyBudgetOriginal;
+
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `
+          <div class="row-top">
+            <strong>${formatDate(day)}</strong>
+            <strong>${formatCurrency(spent)}</strong>
+          </div>
+          <div class="small">Bør være rundt ${formatCurrency(dailyBudgetOriginal)} · Avvik: ${diff >= 0 ? '+' : '-'}${formatCurrency(Math.abs(diff)).replace(' kr','')} kr</div>
+          <div class="chips">
+            ${dayItems.length ? dayItems.map(item => `<span class="chip">${item.category}: ${formatCurrency(item.amount)}</span>`).join('') : '<span class="chip">Ingen kjøp</span>'}
+          </div>
+        `;
+        list.appendChild(row);
+      }
+    }
+
+    function renderHistory(items) {
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = '';
+
+      const sorted = [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+      if (!sorted.length) {
+        historyList.innerHTML = '<div class="empty">Ingen kjøp registrert i denne perioden ennå.</div>';
+        return;
+      }
+
+      sorted.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = `
+          <div class="row-top">
+            <strong>${formatDate(new Date(item.date))}</strong>
+            <strong>${formatCurrency(item.amount)}</strong>
+          </div>
+          <div class="small">${item.category}</div>
+          <div style="margin-top:10px;"><button type="button" class="secondary-btn" data-delete-id="${item.id}">Slett</button></div>
+        `;
+        historyList.appendChild(row);
+      });
+
+      historyList.querySelectorAll('[data-delete-id]').forEach(btn => {
+        btn.addEventListener('click', () => removeExpense(btn.getAttribute('data-delete-id')));
+      });
+    }
+
+    function drawDailyChart(start, end, items, dailyBudgetOriginal) {
+      const canvas = document.getElementById('dailyChart');
+      const ctx = canvas.getContext('2d');
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.parentElement.clientWidth;
+      const height = 220;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const labels = [];
+      const values = [];
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const key = toDateInputValue(d);
+        labels.push(String(d.getDate()));
+        values.push(items.filter(item => item.date === key).reduce((sum, item) => sum + Number(item.amount), 0));
+      }
+
+      const maxVal = Math.max(dailyBudgetOriginal, ...values, 10);
+      const pad = { top: 16, right: 10, bottom: 26, left: 36 };
+      const chartW = width - pad.left - pad.right;
+      const chartH = height - pad.top - pad.bottom;
+
+      ctx.strokeStyle = '#e5e7eb';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = pad.top + (chartH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(pad.left, y);
+        ctx.lineTo(width - pad.right, y);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '12px -apple-system, sans-serif';
+      for (let i = 0; i <= 4; i++) {
+        const value = Math.round(maxVal - (maxVal / 4) * i);
+        const y = pad.top + (chartH / 4) * i + 4;
+        ctx.fillText(String(value), 4, y);
+      }
+
+      const budgetY = pad.top + chartH - (dailyBudgetOriginal / maxVal) * chartH;
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(pad.left, budgetY);
+      ctx.lineTo(width - pad.right, budgetY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (values.length === 1) {
+        const x = pad.left + chartW / 2;
+        const y = pad.top + chartH - (values[0] / maxVal) * chartH;
+        ctx.fillStyle = '#2563eb';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (values.length > 1) {
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        values.forEach((val, index) => {
+          const x = pad.left + (chartW / (values.length - 1)) * index;
+          const y = pad.top + chartH - (val / maxVal) * chartH;
+          if (index === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        ctx.fillStyle = '#2563eb';
+        values.forEach((val, index) => {
+          const x = pad.left + (chartW / (values.length - 1)) * index;
+          const y = pad.top + chartH - (val / maxVal) * chartH;
+          ctx.beginPath();
+          ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '11px -apple-system, sans-serif';
+      const step = labels.length > 10 ? Math.ceil(labels.length / 8) : 1;
+      labels.forEach((label, index) => {
+        if (index % step !== 0 && index !== labels.length - 1) return;
+        const x = labels.length === 1 ? pad.left + chartW / 2 : pad.left + (chartW / (labels.length - 1)) * index;
+        ctx.fillText(label, x - 6, height - 8);
+      });
+    }
+
+    function drawStoreChart(items) {
+      const canvas = document.getElementById('storeChart');
+      const ctx = canvas.getContext('2d');
+      const ratio = window.devicePixelRatio || 1;
+      const width = canvas.parentElement.clientWidth;
+      const height = 220;
+      canvas.width = width * ratio;
+      canvas.height = height * ratio;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+
+      const totals = {};
+      items.forEach(item => {
+        totals[item.category] = (totals[item.category] || 0) + Number(item.amount);
+      });
+
+      const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+      const legend = document.getElementById('storeLegend');
+      legend.innerHTML = '';
+
+      if (!entries.length) {
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '14px -apple-system, sans-serif';
+        ctx.fillText('Ingen kjøp registrert ennå.', 16, 40);
+        return;
+      }
+
+      const total = entries.reduce((sum, [, value]) => sum + value, 0);
+      const cx = width / 2;
+      const cy = height / 2;
+      const radius = Math.min(width, height) * 0.28;
+      const inner = radius * 0.55;
+      let startAngle = -Math.PI / 2;
+
+      entries.forEach(([name, value], index) => {
+        const portion = value / total;
+        const endAngle = startAngle + portion * Math.PI * 2;
+        const color = COLORS[index % COLORS.length];
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        startAngle = endAngle;
+
+        const tag = document.createElement('span');
+        tag.textContent = `${name}: ${formatCurrency(value)}`;
+        tag.style.borderLeft = `10px solid ${color}`;
+        tag.style.paddingLeft = '8px';
+        legend.appendChild(tag);
+      });
+
+      ctx.beginPath();
+      ctx.fillStyle = '#ffffff';
+      ctx.arc(cx, cy, inner, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '12px -apple-system, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Totalt', cx, cy - 6);
+      ctx.fillStyle = '#111827';
+      ctx.font = 'bold 16px -apple-system, sans-serif';
+      ctx.fillText(formatCurrency(total).replace(' kr',''), cx, cy + 16);
+      ctx.textAlign = 'start';
+    }
+
+    addBtn.addEventListener('click', addExpense);
+    todayBtn.addEventListener('click', setDefaultDate);
+    clearBtn.addEventListener('click', clearAllExpenses);
+    budgetInput.addEventListener('input', update);
+    window.addEventListener('resize', update);
+
+    loadData();
+    setDefaultDate();
+    update();
+  </script>
+</body>
+</html>
