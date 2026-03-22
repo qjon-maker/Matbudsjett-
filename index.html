@@ -863,32 +863,22 @@ function renderDaySection(){
   const countEntries = entries.length;
 
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
+
   document.getElementById("daySummary").innerHTML = `
-const dates = getDatesInCurrentPeriod();
-const dayIndex = dates.indexOf(iso);
-const allowedSoFar = perDayTarget * (dayIndex + 1);
-
-let usedSoFar = 0;
-for (let i = 0; i <= dayIndex; i++) {
-  usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
-}
-
-const cumulativeDiff = usedSoFar - allowedSoFar;
-const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
-
-document.getElementById("daySummary").innerHTML = ``
-  <strong>${longDate(d)}</strong><br>
-  Antall kjøp: <strong>${countEntries}</strong><br>
-  Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
-  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
-  Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
-`;
+    <strong>${longDate(d)}</strong><br>
+    Antall kjøp: <strong>${countEntries}</strong><br>
+    Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
+    Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
+    Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
+  `;
 
   const wrap = document.getElementById("dayEntries");
+
   if (!entries.length){
     wrap.innerHTML = `<div class="empty">Ingen kjøp registrert på denne datoen ennå.</div>`;
     return;
   }
+
   wrap.innerHTML = entries.map(e => `
     <div class="item">
       <div class="item-head">
@@ -908,11 +898,11 @@ document.getElementById("daySummary").innerHTML = ``
     const entry = expenses.find(e => e.id === btn.dataset.id);
     if (entry) setFormForEdit(entry);
   }));
+
   wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => {
     if (confirm("Fjerne dette kjøpet?")) deleteExpense(btn.dataset.id);
   }));
 }
-
 function updateSummaryOnly(){
   const budget = getBudget();
   const periodExpenses = getCurrentPeriodExpenses();
