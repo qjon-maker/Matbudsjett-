@@ -208,6 +208,25 @@
   background: #fee2e2;
   border-color: #fca5a5;
 }
+  .date-chip.zero {
+  background: #e6f9ed;
+  border-color: #86efac;
+}
+
+.date-chip.good {
+  background: #e6f0ff;
+  border-color: #93c5fd;
+}
+
+.date-chip.warn {
+  background: #fff7e6;
+  border-color: #fcd34d;
+}
+
+.date-chip.bad {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
   .day-summary{
     margin-top:12px;
     padding:13px;
@@ -637,22 +656,41 @@ function renderDateStrip(){
 const active = iso === selectedDate ? "active" : "";
 const today = iso === todayIso ? "today" : "";
 
-// hent data
+// alle datoer i perioden
+const dates = getDatesInCurrentPeriod();
+const index = dates.indexOf(iso);
+
+// hent dagens forbruk
 const entries = getExpensesForDate(iso);
 const total = entries.reduce((sum,e)=>sum+e.amount,0);
 
+// budsjett
 const budget = getBudget();
-const totalDays = getDatesInCurrentPeriod().length;
+const totalDays = dates.length;
 const perDay = budget ? budget / totalDays : 0;
 
+// beregn hvor mye du burde ha brukt til nå
+const allowedSoFar = perDay * (index + 1);
+
+// beregn hva du faktisk har brukt til nå
+let usedSoFar = 0;
+for (let i = 0; i <= index; i++) {
+  const d = dates[i];
+  const dayEntries = getExpensesForDate(d);
+  usedSoFar += dayEntries.reduce((sum,e)=>sum+e.amount,0);
+}
+
+// fargelogikk
 let colorClass = "";
 
 if (total === 0) {
-  colorClass = "zero";
-} else if (total <= perDay) {
-  colorClass = "good";
+  colorClass = "zero"; // grønn
+} else if (usedSoFar > allowedSoFar) {
+  colorClass = "bad"; // rød
+} else if (total > perDay) {
+  colorClass = "warn"; // gul/oransje
 } else {
-  colorClass = "bad";
+  colorClass = "good"; // blå
 }
     return `<button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button">
       <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
