@@ -1,1 +1,237 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matbudsjett</title>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  font-family: -apple-system, Arial;
+  background: #f2f4f7;
+  padding: 15px;
+}
+
+.container {
+  max-width: 420px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 14px;
+  margin: 6px 0;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  background: #007aff;
+  color: white;
+  font-weight: bold;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.main {
+  background: linear-gradient(135deg, #007aff, #00c6ff);
+  color: white;
+}
+
+#dailyList p {
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 5px 0;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>💰 Matbudsjett</h2>
+
+  <input id="budget" type="number" placeholder="Månedlig budsjett">
+
+  <select id="category">
+    <option>Rema 1000</option>
+    <option>Kiwi</option>
+    <option>Coop Extra</option>
+    <option>Coop Prix</option>
+    <option>Coop Mega</option>
+    <option>Spar</option>
+    <option>Meny</option>
+    <option>Joker</option>
+    <option>Bunnpris</option>
+    <option>Obs</option>
+    <option>Annet</option>
+  </select>
+
+  <input id="expense" type="number" placeholder="Beløp">
+  <button id="addBtn">Legg til kjøp</button>
+
+  <div class="card main">
+    <p>Brukt: <b><span id="used">0</span> kr</b></p>
+    <p>Igjen: <b><span id="remaining">0</span> kr</b></p>
+    <p>Per dag nå: <b><span id="daily">0</span> kr</b></p>
+    <p id="status"></p>
+  </div>
+
+  <h3>📊 Forbruk</h3>
+  <canvas id="chartDaily"></canvas>
+
+  <h3>🏪 Fordeling</h3>
+  <canvas id="chartCategory"></canvas>
+
+  <h3>📅 Dag for dag</h3>
+  <div id="dailyList"></div>
+</div>
+
+<script>
+let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+function getPeriod() {
+  const now = new Date();
+  let start, end;
+
+  if (now.getDate() >= 20) {
+    start = new Date(now.getFullYear(), now.getMonth(), 20);
+    end = new Date(now.getFullYear(), now.getMonth() + 1, 19);
+  } else {
+    start = new Date(now.getFullYear(), now.getMonth() - 1, 20);
+    end = new Date(now.getFullYear(), now.getMonth(), 19);
+  }
+
+  return { start, end };
+}
+
+function addExpense() {
+  const amount = Number(document.getElementById("expense").value);
+  const category = document.getElementById("category").value;
+
+  if (!amount) return;
+
+  expenses.push({
+    amount,
+    category,
+    date: new Date().toISOString()
+  });
+
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  update();
+}
+
+function update() {
+  const budget = Number(document.getElementById("budget").value);
+  const { start, end } = getPeriod();
+  const today = new Date();
+
+  const filtered = expenses.filter(e => {
+    const d = new Date(e.date);
+    return d >= start && d <= end;
+  });
+
+  const used = filtered.reduce((sum, e) => sum + e.amount, 0);
+
+  const totalDays = Math.ceil((end - start) / 86400000) + 1;
+  const daysPassed = Math.ceil((today - start) / 86400000) + 1;
+  const daysLeft = Math.max(totalDays - daysPassed, 0);
+
+  const remaining = budget - used;
+  const dailyNow = daysLeft > 0 ? remaining / daysLeft : 0;
+
+  document.getElementById("used").innerText = Math.round(used);
+  document.getElementById("remaining").innerText = Math.round(remaining);
+  document.getElementById("daily").innerText = Math.round(dailyNow);
+
+  const status = document.getElementById("status");
+  status.innerText = dailyNow < (budget / totalDays)
+    ? "⚠️ Du må stramme inn"
+    : "✅ Du ligger bra an";
+
+  renderDailyList(filtered, start, totalDays, budget);
+  renderCharts(filtered);
+}
+
+function renderDailyList(data, start, totalDays, budget) {
+  const list = document.getElementById("dailyList");
+  list.innerHTML = "";
+
+  const dailyBudget = budget / totalDays;
+
+  for (let i = 0; i < totalDays; i++) {
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
+
+    const dayStr = date.toLocaleDateString();
+
+    const spent = data
+      .filter(e => new Date(e.date).toLocaleDateString() === dayStr)
+      .reduce((sum, e) => sum + e.amount, 0);
+
+    const diff = spent - dailyBudget;
+
+    list.innerHTML += `
+      <p>${dayStr}: ${spent} kr (${diff > 0 ? "+" : ""}${Math.round(diff)})</p>
+    `;
+  }
+}
+
+function renderCharts(data) {
+  if (typeof Chart === "undefined") return;
+
+  const dailyTotals = {};
+  const categoryTotals = {};
+
+  data.forEach(e => {
+    const d = new Date(e.date).toLocaleDateString();
+    dailyTotals[d] = (dailyTotals[d] || 0) + e.amount;
+    categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
+  });
+
+  if (window.chart1) window.chart1.destroy();
+  if (window.chart2) window.chart2.destroy();
+
+  window.chart1 = new Chart(document.getElementById("chartDaily"), {
+    type: "line",
+    data: {
+      labels: Object.keys(dailyTotals),
+      datasets: [{
+        label: "Daglig forbruk",
+        data: Object.values(dailyTotals)
+      }]
+    }
+  });
+
+  window.chart2 = new Chart(document.getElementById("chartCategory"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(categoryTotals),
+      datasets: [{
+        data: Object.values(categoryTotals)
+      }]
+    }
+  });
+}
+
+document.getElementById("addBtn").addEventListener("click", addExpense);
+
+update();
+</script>
+
+</body>
+</html>
