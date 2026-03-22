@@ -181,6 +181,13 @@
 .date-chip.active{
   transform:translateY(-1px);
   box-shadow:0 0 0 2px rgba(37,99,235,.18);
+  color:#18212f !important;
+}
+
+.date-chip.active .top,
+.date-chip.active .bottom,
+.date-chip.active .sub{
+  color:#18212f !important;
 }
 
 .date-chip.today{
@@ -280,6 +287,12 @@
 .date-chip.bad {
   background: #fee2e2;
   border-color: #fca5a5;
+}
+  .date-chip,
+.date-chip .top,
+.date-chip .bottom,
+.date-chip .sub{
+  color:inherit;
 }
   .day-summary{
     margin-top:12px;
@@ -847,6 +860,7 @@ function renderDaySection(){
   const perDayTarget = budget ? budget / totalDays : 0;
   const diff = total - perDayTarget;
   const d = parseLocalDate(iso);
+  const countEntries = entries.length;
 
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
   document.getElementById("daySummary").innerHTML = `
@@ -862,12 +876,12 @@ for (let i = 0; i <= dayIndex; i++) {
 const cumulativeDiff = usedSoFar - allowedSoFar;
 const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
 
-document.getElementById("daySummary").innerHTML = `
+document.getElementById("daySummary").innerHTML = ``
   <strong>${longDate(d)}</strong><br>
+  Antall kjøp: <strong>${countEntries}</strong><br>
   Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
-  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
-  Dagsavvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong><br>
-  Samlet til nå: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${Math.round(cumulativeDiff).toLocaleString("no-NO")} kr ${cumulativeDiff > 0 ? "over" : "under"} plan</strong>
+  Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
+  Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
 `;
 
   const wrap = document.getElementById("dayEntries");
