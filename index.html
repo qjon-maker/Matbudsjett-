@@ -1,237 +1,786 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Matbudsjett</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
-body {
-  font-family: -apple-system, Arial;
-  background: #f2f4f7;
-  padding: 15px;
-}
-
-.container {
-  max-width: 420px;
-  margin: auto;
-}
-
-h2 {
-  text-align: center;
-}
-
-input, select, button {
-  width: 100%;
-  padding: 14px;
-  margin: 6px 0;
-  border-radius: 10px;
-  border: none;
-  font-size: 16px;
-}
-
-button {
-  background: #007aff;
-  color: white;
-  font-weight: bold;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 10px;
-}
-
-.main {
-  background: linear-gradient(135deg, #007aff, #00c6ff);
-  color: white;
-}
-
-#dailyList p {
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  margin: 5px 0;
-  font-size: 14px;
-}
+  :root{
+    --bg:#f3f6fb;
+    --card:#ffffff;
+    --text:#18212f;
+    --muted:#657286;
+    --line:#e4eaf2;
+    --primary:#2563eb;
+    --primary2:#1d4ed8;
+    --good:#15803d;
+    --warn:#b45309;
+    --danger:#b91c1c;
+    --shadow:0 10px 24px rgba(15,23,42,.08);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    background:linear-gradient(180deg,#eef4ff 0%, var(--bg) 240px);
+    color:var(--text);
+    padding:18px 18px 90px;
+  }
+  .app{max-width:900px;margin:0 auto}
+  .hero{
+    background:linear-gradient(135deg,var(--primary),#38bdf8);
+    color:#fff;border-radius:24px;padding:22px 18px;
+    box-shadow:var(--shadow);margin-bottom:14px;
+  }
+  .hero h1{margin:0 0 6px;font-size:28px}
+  .hero p{margin:0;opacity:.94}
+  .period{font-size:14px;margin-top:6px;opacity:.95}
+  .tabs{
+    position:sticky; bottom:12px; z-index:20;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    background:rgba(255,255,255,.92); backdrop-filter: blur(10px);
+    border:1px solid var(--line); border-radius:18px; padding:10px;
+    box-shadow:var(--shadow); margin-top:16px;
+  }
+  .tab-btn{
+    width:100%; border:none; border-radius:14px; padding:12px;
+    background:#eef4ff; color:var(--primary2); font-weight:700; font-size:15px;
+  }
+  .tab-btn.active{background:var(--primary); color:#fff}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
+  .grid{display:grid; grid-template-columns:1fr; gap:14px}
+  .card{background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow)}
+  .section-title{margin:0 0 12px; font-size:18px; font-weight:700}
+  .small-title{margin:0 0 8px; font-size:16px; font-weight:700}
+  label{display:block; font-size:14px; color:var(--muted); margin:8px 0 6px; font-weight:600}
+  input, select, button{
+    width:100%; border:none; border-radius:14px; padding:14px; font-size:16px; font-family:inherit;
+  }
+  input, select{background:#f6f8fc; border:1px solid var(--line); color:var(--text)}
+  button{background:var(--primary); color:#fff; font-weight:700}
+  button.secondary{background:#eef4ff; color:var(--primary2); border:1px solid #cfe0ff}
+  button.danger{background:#fef2f2; color:var(--danger); border:1px solid #fecaca}
+  .stats{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+  .stat{background:#f8fbff; border:1px solid var(--line); border-radius:16px; padding:14px}
+  .stat .label{font-size:13px; color:var(--muted); margin-bottom:4px}
+  .stat .value{font-size:22px; font-weight:800}
+  .wide{grid-column:1/-1}
+  .status{margin-top:10px; font-weight:700}
+  .status.good{color:var(--good)}
+  .status.warn{color:var(--warn)}
+  .date-strip{
+    display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;
+    scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch;
+  }
+  .date-chip{
+    min-width:76px; padding:10px 12px; border-radius:16px;
+    border:1px solid var(--line); background:#f8fbff; scroll-snap-align:start;
+    text-align:center; cursor:pointer; flex:0 0 auto;
+  }
+  .date-chip.active{background:var(--primary); color:#fff; border-color:var(--primary)}
+  .date-chip.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.25)}
+  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)}
+  .date-chip .top{display:block; font-size:12px; opacity:.8; margin-bottom:2px}
+  .date-chip .bottom{display:block; font-size:17px; font-weight:800; line-height:1.1}
+  .day-summary{margin-top:12px; padding:12px; border-radius:14px; background:#f8fbff; border:1px solid var(--line)}
+  .list{display:flex; flex-direction:column; gap:10px; margin-top:10px}
+  .item,.period-row,.shop-row{
+    border:1px solid var(--line); border-radius:14px; padding:12px; background:#fff;
+  }
+  .item-head{display:flex; justify-content:space-between; gap:8px; align-items:flex-start}
+  .item-amount{font-weight:800; font-size:18px}
+  .item-meta,.small{color:var(--muted); font-size:13px}
+  .item-actions,.footer-actions{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px}
+  .charts{display:grid; grid-template-columns:1fr; gap:14px}
+  canvas{width:100% !important; max-height:300px}
+  .empty{color:var(--muted); background:#f8fbff; border:1px dashed var(--line); border-radius:14px; padding:14px; text-align:center}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .pill{
+    display:inline-block; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700;
+    background:#eef4ff; color:var(--primary2);
+  }
+  .big{font-weight:800}
+  @media (min-width:760px){
+    .grid{grid-template-columns:1.1fr .9fr}
+    .charts{grid-template-columns:1fr 1fr}
+  }
 </style>
 </head>
-
 <body>
-
-<div class="container">
-  <h2>💰 Matbudsjett</h2>
-
-  <input id="budget" type="number" placeholder="Månedlig budsjett">
-
-  <select id="category">
-    <option>Rema 1000</option>
-    <option>Kiwi</option>
-    <option>Coop Extra</option>
-    <option>Coop Prix</option>
-    <option>Coop Mega</option>
-    <option>Spar</option>
-    <option>Meny</option>
-    <option>Joker</option>
-    <option>Bunnpris</option>
-    <option>Obs</option>
-    <option>Annet</option>
-  </select>
-
-  <input id="expense" type="number" placeholder="Beløp">
-  <button id="addBtn">Legg til kjøp</button>
-
-  <div class="card main">
-    <p>Brukt: <b><span id="used">0</span> kr</b></p>
-    <p>Igjen: <b><span id="remaining">0</span> kr</b></p>
-    <p>Per dag nå: <b><span id="daily">0</span> kr</b></p>
-    <p id="status"></p>
+<div class="app">
+  <div class="hero">
+    <h1>Matbudsjett</h1>
+    <p>Oversikt, historikk og sammenligning over tid.</p>
+    <div class="period" id="periodText"></div>
   </div>
 
-  <h3>📊 Forbruk</h3>
-  <canvas id="chartDaily"></canvas>
+  <div id="overviewTab" class="tab-panel active">
+    <div class="grid">
+      <div class="card">
+        <h2 class="section-title">Status</h2>
 
-  <h3>🏪 Fordeling</h3>
-  <canvas id="chartCategory"></canvas>
+        <div class="settings-grid">
+          <div>
+            <label for="budget">Budsjett for denne perioden</label>
+            <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
+          </div>
+          <div>
+            <label for="startDay">Startdag for perioden</label>
+            <select id="startDay"></select>
+          </div>
+        </div>
 
-  <h3>📅 Dag for dag</h3>
-  <div id="dailyList"></div>
+        <div class="stats" style="margin-top:12px;">
+          <div class="stat"><div class="label">Brukt</div><div class="value" id="used">0 kr</div></div>
+          <div class="stat"><div class="label">Igjen</div><div class="value" id="remaining">0 kr</div></div>
+          <div class="stat"><div class="label">Kan bruke per dag nå</div><div class="value" id="dailyNow">0 kr</div></div>
+          <div class="stat"><div class="label">Valgt dato</div><div class="value" id="selectedTotal">0 kr</div></div>
+          <div class="stat wide">
+            <div class="label">Status</div>
+            <div class="status" id="status">Legg inn budsjett og kjøp.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title" id="formTitle">Legg til kjøp</h2>
+
+        <label for="selectedDate">Dato</label>
+        <input id="selectedDate" type="date" />
+
+        <label for="category">Butikk</label>
+        <select id="category">
+          <option>Rema 1000</option>
+          <option>Kiwi</option>
+          <option>Coop Extra</option>
+          <option>Coop Prix</option>
+          <option>Coop Mega</option>
+          <option>Coop Marked</option>
+          <option>Obs</option>
+          <option>Meny</option>
+          <option>Spar</option>
+          <option>Joker</option>
+          <option>Bunnpris</option>
+          <option>Oda</option>
+          <option>Holdbart</option>
+          <option>Normal</option>
+          <option>Europris</option>
+          <option>Gigaboks</option>
+          <option>Matkroken</option>
+          <option>Nærbutikken</option>
+          <option>Annet</option>
+        </select>
+
+        <label for="expense">Beløp</label>
+        <input id="expense" type="number" inputmode="decimal" placeholder="F.eks. 189" />
+
+        <div class="footer-actions" style="margin-top:12px;">
+          <button id="saveBtn">Legg til kjøp</button>
+          <button id="cancelEditBtn" class="secondary" style="display:none;">Avbryt redigering</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 class="section-title">Datoer i perioden</h2>
+      <div class="date-strip" id="dateStrip"></div>
+      <div class="day-summary" id="daySummary"></div>
+
+      <div style="margin-top:14px;">
+        <h3 class="small-title">Kjøp på valgt dato</h3>
+        <div id="dayEntries" class="list"></div>
+      </div>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card">
+        <h2 class="section-title">Forbruk per dag</h2>
+        <canvas id="dailyChart"></canvas>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Fordeling per butikk</h2>
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div id="historyTab" class="tab-panel">
+    <div class="card">
+      <h2 class="section-title">Historikk og sammenligning</h2>
+      <div class="row">
+        <div>
+          <label for="historyYear">År</label>
+          <select id="historyYear"></select>
+        </div>
+        <div>
+          <label for="historyPeriod">Periode</label>
+          <select id="historyPeriod"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:14px;">
+      <div class="stat"><div class="label">Valgt periode</div><div class="value" id="historyTotal">0 kr</div></div>
+      <div class="stat"><div class="label">Snitt per dag</div><div class="value" id="historyDailyAvg">0 kr</div></div>
+      <div class="stat"><div class="label">Forskjell fra forrige</div><div class="value" id="historyDiffPrev">0 kr</div></div>
+      <div class="stat"><div class="label">Antall kjøp</div><div class="value" id="historyCount">0</div></div>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card">
+        <h2 class="section-title">Perioder dette året</h2>
+        <canvas id="historyPeriodChart"></canvas>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Butikker i valgt periode</h2>
+        <canvas id="historyCategoryChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 class="section-title">Periodeoversikt</h2>
+      <div id="periodList" class="list"></div>
+    </div>
+  </div>
+
+  <div id="shopsTab" class="tab-panel">
+    <div class="card">
+      <h2 class="section-title">Butikksammenligning</h2>
+      <label for="shopYear">År</label>
+      <select id="shopYear"></select>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card">
+        <h2 class="section-title">Butikker gjennom året</h2>
+        <canvas id="shopYearChart"></canvas>
+      </div>
+      <div class="card">
+        <h2 class="section-title">Mest brukt</h2>
+        <div id="shopList" class="list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overviewTab" type="button">Oversikt</button>
+    <button class="tab-btn" data-tab="historyTab" type="button">Historikk</button>
+    <button class="tab-btn" data-tab="shopsTab" type="button">Butikker</button>
+  </div>
 </div>
 
 <script>
-let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+const STORAGE_KEY = "matbudsjett_v4_expenses";
+const BUDGET_KEY = "matbudsjett_v4_budget";
+const STARTDAY_KEY = "matbudsjett_v4_startday";
 
-function getPeriod() {
-  const now = new Date();
-  let start, end;
+let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let editingId = null;
+let selectedDate = "";
+let selectedHistoryPeriod = "";
+let selectedHistoryYear = "";
+let selectedShopYear = "";
+let dailyChart = null;
+let categoryChart = null;
+let historyPeriodChart = null;
+let historyCategoryChart = null;
+let shopYearChart = null;
 
-  if (now.getDate() >= 20) {
-    start = new Date(now.getFullYear(), now.getMonth(), 20);
-    end = new Date(now.getFullYear(), now.getMonth() + 1, 19);
+function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
+function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
+function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
+function saveStartDay(){ localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20"); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+function formatCurrency(value){ return Math.round(Number(value || 0)).toLocaleString("no-NO") + " kr"; }
+function formatISO(date){
+  const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,"0"), d = String(date.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
+}
+function parseLocalDate(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  return new Date(y,m-1,d);
+}
+function shortDate(date){ return date.toLocaleDateString("no-NO", { day:"2-digit", month:"2-digit" }); }
+function longDate(date){ return date.toLocaleDateString("no-NO", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); }
+function daysInMonth(year, monthIndex){ return new Date(year, monthIndex + 1, 0).getDate(); }
+
+function populateStartDay(){
+  const sel = document.getElementById("startDay");
+  sel.innerHTML = Array.from({length:28}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join("");
+  sel.value = String(getStartDay());
+}
+
+function getPeriod(today = new Date()){
+  const startDay = getStartDay();
+
+  let startYear, startMonth;
+  if (today.getDate() >= startDay){
+    startYear = today.getFullYear();
+    startMonth = today.getMonth();
   } else {
-    start = new Date(now.getFullYear(), now.getMonth() - 1, 20);
-    end = new Date(now.getFullYear(), now.getMonth(), 19);
+    const prev = new Date(today.getFullYear(), today.getMonth()-1, 1);
+    startYear = prev.getFullYear();
+    startMonth = prev.getMonth();
   }
 
+  const next = new Date(startYear, startMonth + 1, 1);
+  const endDay = Math.min(startDay - 1 || daysInMonth(startYear, startMonth), daysInMonth(next.getFullYear(), next.getMonth()));
+  const start = new Date(startYear, startMonth, Math.min(startDay, daysInMonth(startYear, startMonth)));
+  const end = new Date(next.getFullYear(), next.getMonth(), endDay);
+
+  start.setHours(0,0,0,0);
+  end.setHours(0,0,0,0);
   return { start, end };
 }
 
-function addExpense() {
-  const amount = Number(document.getElementById("expense").value);
-  const category = document.getElementById("category").value;
-
-  if (!amount) return;
-
-  expenses.push({
-    amount,
-    category,
-    date: new Date().toISOString()
-  });
-
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  update();
+function getPeriodFromStart(startDate){
+  const startDay = getStartDay();
+  const start = new Date(startDate.getFullYear(), startDate.getMonth(), Math.min(startDay, daysInMonth(startDate.getFullYear(), startDate.getMonth())));
+  const next = new Date(start.getFullYear(), start.getMonth()+1, 1);
+  const endDay = Math.min(startDay - 1 || daysInMonth(start.getFullYear(), start.getMonth()), daysInMonth(next.getFullYear(), next.getMonth()));
+  const end = new Date(next.getFullYear(), next.getMonth(), endDay);
+  start.setHours(0,0,0,0);
+  end.setHours(0,0,0,0);
+  return { start, end };
 }
 
-function update() {
-  const budget = Number(document.getElementById("budget").value);
+function getDatesInRange(start, end){
+  const dates = [];
+  const current = new Date(start);
+  while (current <= end){
+    dates.push(formatISO(current));
+    current.setDate(current.getDate()+1);
+  }
+  return dates;
+}
+function getDatesInCurrentPeriod(){
   const { start, end } = getPeriod();
-  const today = new Date();
-
-  const filtered = expenses.filter(e => {
-    const d = new Date(e.date);
+  return getDatesInRange(start, end);
+}
+function ensureSelectedDate(){
+  const dates = getDatesInCurrentPeriod();
+  const todayIso = formatISO(new Date());
+  if (dates.includes(todayIso)) selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso;
+  else selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0];
+  document.getElementById("selectedDate").value = selectedDate;
+}
+function getExpensesInPeriod(start, end){
+  return expenses.filter(e => {
+    const d = parseLocalDate(e.date);
     return d >= start && d <= end;
   });
+}
+function getCurrentPeriodExpenses(){
+  const { start, end } = getPeriod();
+  return getExpensesInPeriod(start, end);
+}
+function getExpensesForDate(iso){
+  return getCurrentPeriodExpenses().filter(e => e.date === iso).sort((a,b)=>a.createdAt-b.createdAt);
+}
+function getBudget(){ return Number(document.getElementById("budget").value || 0); }
 
-  const used = filtered.reduce((sum, e) => sum + e.amount, 0);
+function setFormForAdd(){
+  editingId = null;
+  document.getElementById("formTitle").innerText = "Legg til kjøp";
+  document.getElementById("saveBtn").innerText = "Legg til kjøp";
+  document.getElementById("cancelEditBtn").style.display = "none";
+  document.getElementById("expense").value = "";
+  document.getElementById("selectedDate").value = selectedDate;
+  document.getElementById("category").value = "Rema 1000";
+}
+function setFormForEdit(entry){
+  editingId = entry.id;
+  document.getElementById("formTitle").innerText = "Rediger kjøp";
+  document.getElementById("saveBtn").innerText = "Lagre endring";
+  document.getElementById("cancelEditBtn").style.display = "block";
+  document.getElementById("selectedDate").value = entry.date;
+  document.getElementById("category").value = entry.category;
+  document.getElementById("expense").value = entry.amount;
+  selectedDate = entry.date;
+  renderDateStrip(); renderDaySection(); updateSummaryOnly();
+}
+function addOrUpdateExpense(){
+  const amount = Number(document.getElementById("expense").value);
+  const category = document.getElementById("category").value;
+  const date = document.getElementById("selectedDate").value;
+  if (!date){ alert("Velg dato."); return; }
+  if (!amount || amount <= 0){ alert("Skriv inn et gyldig beløp."); return; }
 
-  const totalDays = Math.ceil((end - start) / 86400000) + 1;
-  const daysPassed = Math.ceil((today - start) / 86400000) + 1;
-  const daysLeft = Math.max(totalDays - daysPassed, 0);
-
-  const remaining = budget - used;
-  const dailyNow = daysLeft > 0 ? remaining / daysLeft : 0;
-
-  document.getElementById("used").innerText = Math.round(used);
-  document.getElementById("remaining").innerText = Math.round(remaining);
-  document.getElementById("daily").innerText = Math.round(dailyNow);
-
-  const status = document.getElementById("status");
-  status.innerText = dailyNow < (budget / totalDays)
-    ? "⚠️ Du må stramme inn"
-    : "✅ Du ligger bra an";
-
-  renderDailyList(filtered, start, totalDays, budget);
-  renderCharts(filtered);
+  if (editingId){
+    const idx = expenses.findIndex(e => e.id === editingId);
+    if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date };
+  } else {
+    expenses.push({ id: uid(), amount, category, date, createdAt: Date.now() });
+  }
+  selectedDate = date;
+  saveExpenses();
+  updateAll();
+  setFormForAdd();
+}
+function deleteExpense(id){
+  expenses = expenses.filter(e => e.id !== id);
+  saveExpenses();
+  if (editingId === id) setFormForAdd();
+  updateAll();
 }
 
-function renderDailyList(data, start, totalDays, budget) {
-  const list = document.getElementById("dailyList");
-  list.innerHTML = "";
+function renderDateStrip(){
+  const strip = document.getElementById("dateStrip");
+  const todayIso = formatISO(new Date());
+  const dates = getDatesInCurrentPeriod();
+  strip.innerHTML = dates.map(iso => {
+    const d = parseLocalDate(iso);
+    const active = iso === selectedDate ? "active" : "";
+    const today = iso === todayIso ? "today" : "";
+    return `<button class="date-chip ${active} ${today}" data-date="${iso}" type="button">
+      <span class="top">${d.toLocaleDateString("no-NO", { weekday:"short" })}</span>
+      <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
+    </button>`;
+  }).join("");
 
-  const dailyBudget = budget / totalDays;
+  strip.querySelectorAll(".date-chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      selectedDate = btn.dataset.date;
+      document.getElementById("selectedDate").value = selectedDate;
+      if (!editingId) document.getElementById("expense").value = "";
+      renderDateStrip(); renderDaySection(); updateSummaryOnly();
+    });
+  });
 
-  for (let i = 0; i < totalDays; i++) {
-    const date = new Date(start);
-    date.setDate(date.getDate() + i);
+  const active = strip.querySelector(".date-chip.active");
+  if (active) active.scrollIntoView({ inline:"center", block:"nearest" });
+}
 
-    const dayStr = date.toLocaleDateString();
+function renderDaySection(){
+  const iso = selectedDate;
+  const entries = getExpensesForDate(iso);
+  const total = entries.reduce((sum,e)=>sum+e.amount,0);
+  const budget = getBudget();
+  const totalDays = getDatesInCurrentPeriod().length;
+  const perDayTarget = budget ? budget / totalDays : 0;
+  const diff = total - perDayTarget;
+  const d = parseLocalDate(iso);
 
-    const spent = data
-      .filter(e => new Date(e.date).toLocaleDateString() === dayStr)
-      .reduce((sum, e) => sum + e.amount, 0);
+  document.getElementById("selectedTotal").innerText = formatCurrency(total);
+  document.getElementById("daySummary").innerHTML = `
+    <strong>${longDate(d)}</strong><br>
+    Brukt denne dagen: <strong>${formatCurrency(total)}</strong><br>
+    Dagens mål: <strong>${formatCurrency(perDayTarget)}</strong><br>
+    Avvik: <strong>${diff > 0 ? "+" : ""}${Math.round(diff).toLocaleString("no-NO")} kr</strong>
+  `;
 
-    const diff = spent - dailyBudget;
+  const wrap = document.getElementById("dayEntries");
+  if (!entries.length){
+    wrap.innerHTML = `<div class="empty">Ingen kjøp registrert på denne datoen ennå.</div>`;
+    return;
+  }
+  wrap.innerHTML = entries.map(e => `
+    <div class="item">
+      <div class="item-head">
+        <div>
+          <div class="item-amount">${formatCurrency(e.amount)}</div>
+          <div class="item-meta">${e.category}</div>
+        </div>
+      </div>
+      <div class="item-actions">
+        <button class="secondary edit-btn" data-id="${e.id}" type="button">Rediger</button>
+        <button class="danger delete-btn" data-id="${e.id}" type="button">Fjern</button>
+      </div>
+    </div>
+  `).join("");
 
-    list.innerHTML += `
-      <p>${dayStr}: ${spent} kr (${diff > 0 ? "+" : ""}${Math.round(diff)})</p>
-    `;
+  wrap.querySelectorAll(".edit-btn").forEach(btn => btn.addEventListener("click", () => {
+    const entry = expenses.find(e => e.id === btn.dataset.id);
+    if (entry) setFormForEdit(entry);
+  }));
+  wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => {
+    if (confirm("Fjerne dette kjøpet?")) deleteExpense(btn.dataset.id);
+  }));
+}
+
+function updateSummaryOnly(){
+  const budget = getBudget();
+  const periodExpenses = getCurrentPeriodExpenses();
+  const used = periodExpenses.reduce((sum,e)=>sum+e.amount,0);
+  const { start, end } = getPeriod();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const totalDays = getDatesInCurrentPeriod().length;
+  const daysGone = today < start ? 0 : Math.min(totalDays, Math.floor((today - start) / 86400000) + 1);
+  const daysLeft = today > end ? 0 : Math.max(1, Math.floor((end - today) / 86400000) + 1);
+  const remaining = budget - used;
+  const dailyNow = daysLeft ? remaining / daysLeft : 0;
+  const idealUsed = budget ? (budget / totalDays) * daysGone : 0;
+
+  document.getElementById("used").innerText = formatCurrency(used);
+  document.getElementById("remaining").innerText = formatCurrency(remaining);
+  document.getElementById("dailyNow").innerText = formatCurrency(dailyNow);
+  document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · startdag ${getStartDay()}`;
+
+  const statusEl = document.getElementById("status");
+  if (!budget){
+    statusEl.className = "status";
+    statusEl.innerText = "Legg inn budsjett for perioden.";
+  } else if (remaining < 0){
+    statusEl.className = "status warn";
+    statusEl.innerText = `Du har brukt over budsjettet. Du er ${formatCurrency(Math.abs(remaining))} over.`;
+  } else if (used > idealUsed){
+    statusEl.className = "status warn";
+    statusEl.innerText = `Du ligger foran planen. Prøv å holde deg rundt ${formatCurrency(dailyNow)} per dag videre.`;
+  } else {
+    statusEl.className = "status good";
+    statusEl.innerText = `Du ligger bra an. Du kan bruke omtrent ${formatCurrency(dailyNow)} per dag videre.`;
   }
 }
 
-function renderCharts(data) {
-  if (typeof Chart === "undefined") return;
-
-  const dailyTotals = {};
+function renderOverviewCharts(){
+  const periodExpenses = getCurrentPeriodExpenses();
+  const dates = getDatesInCurrentPeriod();
+  const dailyTotals = {}; dates.forEach(d => dailyTotals[d] = 0);
   const categoryTotals = {};
-
-  data.forEach(e => {
-    const d = new Date(e.date).toLocaleDateString();
-    dailyTotals[d] = (dailyTotals[d] || 0) + e.amount;
+  periodExpenses.forEach(e => {
+    dailyTotals[e.date] = (dailyTotals[e.date] || 0) + e.amount;
     categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
   });
+  const dailyLabels = dates.map(iso => {
+    const d = parseLocalDate(iso);
+    return `${d.getDate()}.${d.getMonth()+1}`;
+  });
+  const dailyValues = dates.map(iso => dailyTotals[iso] || 0);
 
-  if (window.chart1) window.chart1.destroy();
-  if (window.chart2) window.chart2.destroy();
+  if (dailyChart) dailyChart.destroy();
+  if (categoryChart) categoryChart.destroy();
 
-  window.chart1 = new Chart(document.getElementById("chartDaily"), {
+  dailyChart = new Chart(document.getElementById("dailyChart"), {
     type: "line",
-    data: {
-      labels: Object.keys(dailyTotals),
-      datasets: [{
-        label: "Daglig forbruk",
-        data: Object.values(dailyTotals)
-      }]
-    }
+    data: { labels: dailyLabels, datasets: [{ label: "Forbruk", data: dailyValues, tension:0.25, fill:false }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
   });
 
-  window.chart2 = new Chart(document.getElementById("chartCategory"), {
+  const categoryLabels = Object.keys(categoryTotals);
+  const categoryValues = Object.values(categoryTotals);
+  categoryChart = new Chart(document.getElementById("categoryChart"), {
     type: "pie",
-    data: {
-      labels: Object.keys(categoryTotals),
-      datasets: [{
-        data: Object.values(categoryTotals)
-      }]
-    }
+    data: { labels: categoryLabels.length ? categoryLabels : ["Ingen kjøp ennå"], datasets: [{ data: categoryValues.length ? categoryValues : [1] }] },
+    options: { responsive:true, maintainAspectRatio:false }
   });
 }
 
-document.getElementById("addBtn").addEventListener("click", addExpense);
+function getAllPeriods(){
+  if (!expenses.length){
+    const nowPeriod = getPeriod();
+    return [{
+      id: formatISO(nowPeriod.start), start: nowPeriod.start, end: nowPeriod.end,
+      label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`, year: nowPeriod.end.getFullYear()
+    }];
+  }
+  const dates = expenses.map(e => parseLocalDate(e.date)).sort((a,b)=>a-b);
+  const firstDate = dates[0];
+  const firstPeriod = getPeriod(firstDate);
+  const lastPeriod = getPeriod(dates[dates.length - 1]);
+  let currentStart = new Date(firstPeriod.start);
+  const periods = [];
 
-update();
+  while (currentStart <= lastPeriod.start){
+    const p = getPeriodFromStart(currentStart);
+    periods.push({
+      id: formatISO(p.start),
+      start: p.start,
+      end: p.end,
+      label: `${shortDate(p.start)} – ${shortDate(p.end)}`,
+      year: p.end.getFullYear()
+    });
+    currentStart = new Date(p.end);
+    currentStart.setDate(currentStart.getDate() + 1);
+  }
+  return periods;
+}
+
+function getPeriodData(period){
+  const items = getExpensesInPeriod(period.start, period.end);
+  const total = items.reduce((sum,e)=>sum+e.amount,0);
+  const days = getDatesInRange(period.start, period.end).length;
+  const categoryTotals = {};
+  items.forEach(e => categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount);
+  return { items, total, days, avg: days ? total/days : 0, count: items.length, categoryTotals };
+}
+function periodName(period){
+  const month = period.end.toLocaleDateString("no-NO", { month:"long" });
+  return `${month} ${period.end.getFullYear()}`;
+}
+
+function fillHistorySelectors(){
+  const periods = getAllPeriods();
+  const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
+  const yearSelect = document.getElementById("historyYear");
+  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
+  if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))) selectedHistoryYear = String(years[0]);
+  yearSelect.value = selectedHistoryYear;
+
+  const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start);
+  const periodSelect = document.getElementById("historyPeriod");
+  periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)} (${p.label})</option>`).join("");
+  if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)) selectedHistoryPeriod = periodsForYear[0]?.id || "";
+  periodSelect.value = selectedHistoryPeriod;
+}
+
+function renderHistoryTab(){
+  const periods = getAllPeriods();
+  fillHistorySelectors();
+  const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>a.start-b.start);
+  const selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length-1];
+  if (!selected) return;
+  const selectedData = getPeriodData(selected);
+  const selectedIndex = periods.findIndex(p => p.id === selected.id);
+  const prev = selectedIndex > 0 ? periods[selectedIndex - 1] : null;
+  const prevTotal = prev ? getPeriodData(prev).total : 0;
+  const diffPrev = selectedData.total - prevTotal;
+
+  document.getElementById("historyTotal").innerText = formatCurrency(selectedData.total);
+  document.getElementById("historyDailyAvg").innerText = formatCurrency(selectedData.avg);
+  document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${Math.round(diffPrev).toLocaleString("no-NO")} kr`;
+  document.getElementById("historyCount").innerText = selectedData.count.toLocaleString("no-NO");
+
+  if (historyPeriodChart) historyPeriodChart.destroy();
+  historyPeriodChart = new Chart(document.getElementById("historyPeriodChart"), {
+    type: "bar",
+    data: {
+      labels: periodsForYear.map(p => periodName(p)),
+      datasets: [{ label: "Totalt", data: periodsForYear.map(p => getPeriodData(p).total) }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
+  });
+
+  if (historyCategoryChart) historyCategoryChart.destroy();
+  const catLabels = Object.keys(selectedData.categoryTotals);
+  const catValues = Object.values(selectedData.categoryTotals);
+  historyCategoryChart = new Chart(document.getElementById("historyCategoryChart"), {
+    type: "pie",
+    data: { labels: catLabels.length ? catLabels : ["Ingen kjøp"], datasets: [{ data: catValues.length ? catValues : [1] }] },
+    options: { responsive:true, maintainAspectRatio:false }
+  });
+
+  const periodList = document.getElementById("periodList");
+  const desc = [...periodsForYear].sort((a,b)=>b.start-a.start);
+  periodList.innerHTML = desc.map((p, idx) => {
+    const data = getPeriodData(p);
+    const previous = desc[idx+1] ? getPeriodData(desc[idx+1]).total : 0;
+    const diff = idx < desc.length - 1 ? data.total - previous : 0;
+    return `
+      <div class="period-row">
+        <div class="big">${periodName(p)}</div>
+        <div class="small">${p.label}</div>
+        <div><span class="pill">${data.count} kjøp</span></div>
+        <div class="big">${Math.round(data.total).toLocaleString("no-NO")} kr</div>
+        <div class="small">${idx < desc.length - 1 ? (diff > 0 ? "+" : "") + Math.round(diff).toLocaleString("no-NO") + " kr" : "–"}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function fillShopYearSelector(){
+  const periods = getAllPeriods();
+  const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
+  const sel = document.getElementById("shopYear");
+  sel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
+  if (!selectedShopYear || !years.includes(Number(selectedShopYear))) selectedShopYear = String(years[0]);
+  sel.value = selectedShopYear;
+}
+function renderShopTab(){
+  fillShopYearSelector();
+  const periods = getAllPeriods().filter(p => String(p.year) === String(selectedShopYear));
+  const totals = {};
+  periods.forEach(p => {
+    const data = getPeriodData(p);
+    Object.entries(data.categoryTotals).forEach(([shop, amount]) => {
+      totals[shop] = (totals[shop] || 0) + amount;
+    });
+  });
+  const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+
+  if (shopYearChart) shopYearChart.destroy();
+  shopYearChart = new Chart(document.getElementById("shopYearChart"), {
+    type: "bar",
+    data: {
+      labels: entries.length ? entries.map(e => e[0]) : ["Ingen kjøp"],
+      datasets: [{ label: "Totalt", data: entries.length ? entries.map(e => e[1]) : [0] }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } } }
+  });
+
+  const list = document.getElementById("shopList");
+  if (!entries.length){
+    list.innerHTML = `<div class="empty">Ingen kjøp registrert for dette året ennå.</div>`;
+    return;
+  }
+  const totalYear = entries.reduce((sum, [,amt]) => sum + amt, 0);
+  list.innerHTML = entries.map(([shop, amt]) => `
+    <div class="shop-row">
+      <div class="big">${shop}</div>
+      <div>${Math.round(amt).toLocaleString("no-NO")} kr</div>
+      <div class="small">${Math.round((amt / totalYear) * 100)} %</div>
+    </div>
+  `).join("");
+}
+
+function setActiveTab(tabId){
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById(tabId).classList.add("active");
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add("active");
+  if (tabId === "historyTab") renderHistoryTab();
+  if (tabId === "shopsTab") renderShopTab();
+}
+
+function updateAll(){
+  ensureSelectedDate();
+  updateSummaryOnly();
+  renderDateStrip();
+  renderDaySection();
+  renderOverviewCharts();
+  renderHistoryTab();
+  renderShopTab();
+}
+
+document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
+document.getElementById("cancelEditBtn").addEventListener("click", setFormForAdd);
+document.getElementById("budget").addEventListener("input", () => { saveBudget(); updateAll(); });
+document.getElementById("startDay").addEventListener("change", () => {
+  saveStartDay();
+  selectedDate = "";
+  selectedHistoryPeriod = "";
+  selectedHistoryYear = "";
+  selectedShopYear = "";
+  updateAll();
+  setFormForAdd();
+});
+document.getElementById("selectedDate").addEventListener("change", (e) => {
+  selectedDate = e.target.value;
+  renderDateStrip(); renderDaySection(); updateSummaryOnly();
+});
+document.getElementById("historyYear").addEventListener("change", (e) => {
+  selectedHistoryYear = e.target.value;
+  fillHistorySelectors();
+  renderHistoryTab();
+});
+document.getElementById("historyPeriod").addEventListener("change", (e) => {
+  selectedHistoryPeriod = e.target.value;
+  renderHistoryTab();
+});
+document.getElementById("shopYear").addEventListener("change", (e) => {
+  selectedShopYear = e.target.value;
+  renderShopTab();
+});
+document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+
+document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
+populateStartDay();
+ensureSelectedDate();
+setFormForAdd();
+updateAll();
 </script>
-
 </body>
 </html>
