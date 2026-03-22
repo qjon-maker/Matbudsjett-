@@ -1,1 +1,13 @@
-<img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%22bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232563eb%22%3E%3C%2Fstop%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2338bdf8%22%3E%3C%2Fstop%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%0A%20%20%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22116%22%20fill%3D%22url(%23bg)%22%3E%3C%2Frect%3E%0A%20%20%3Crect%20x%3D%2276%22%20y%3D%2276%22%20width%3D%22360%22%20height%3D%22360%22%20rx%3D%2286%22%20fill%3D%22rgba(255%2C255%2C255%2C0.14)%22%3E%3C%2Frect%3E%0A%0A%20%20%3Cpath%20d%3D%22M138%20186h184l-14%20152c-1.8%2015.5-14.8%2026-30.5%2026h-95c-15.7%200-28.7-10.5-30.5-26L138%20186Z%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2218%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%0A%20%20%3Cpath%20d%3D%22M178%20186c0-31%2022-52%2054-52s54%2021%2054%2052%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%2218%22%20stroke-linecap%3D%22round%22%3E%3C%2Fpath%3E%0A%0A%20%20%3Ccircle%20cx%3D%22346%22%20cy%3D%22336%22%20r%3D%2262%22%20fill%3D%22%23ffffff%22%3E%3C%2Fcircle%3E%0A%20%20%3Cpath%20d%3D%22M346%20302v69M321%20322h40c8.3%200%2014.5%206%2014.5%2013.5S369.3%20349%20361%20349h-29c-8%200-14.5%206-14.5%2013.5S324%20376%20332%20376h44%22%20fill%3D%22none%22%20stroke%3D%22%232563eb%22%20stroke-width%3D%2214%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fpath%3E%0A%3C%2Fsvg%3E"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="116" fill="#2563eb"/>
+  <rect x="76" y="76" width="360" height="360" rx="86" fill="#ffffff" fill-opacity="0.12"/>
+
+  <path d="M138 186h184l-14 152c-1.8 15.5-14.8 26-30.5 26h-95c-15.7 0-28.7-10.5-30.5-26L138 186Z"
+        fill="none" stroke="#ffffff" stroke-width="18" stroke-linejoin="round"/>
+  <path d="M178 186c0-31 22-52 54-52s54 21 54 52"
+        fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round"/>
+
+  <circle cx="346" cy="336" r="62" fill="#ffffff"/>
+  <path d="M346 302v69M321 322h40c8.3 0 14.5 6 14.5 13.5S369.3 349 361 349h-29c-8 0-14.5 6-14.5 13.5S324 376 332 376h44"
+        fill="none" stroke="#2563eb" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
