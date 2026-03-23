@@ -380,8 +380,8 @@
   }
 
   .top-actions{
-  display:flex;
-  gap:10px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
     gap:10px;
     margin-bottom:14px;
   }
@@ -947,6 +947,7 @@
 
       <div class="hero-copy">
         <h1 id="appTitle">Matbudsjett</h1>
+        <p id="appSubtitle">Oversikt, historikk, butikker og backup.</p>
         <div class="period" id="periodText"></div>
       </div>
     </div>
@@ -988,6 +989,7 @@
   <div id="overviewTab" class="tab-panel active">
     <div class="top-actions">
       <button id="jumpToTodayBtn" class="secondary compact" type="button">I dag</button>
+      <button id="openSettingsBtn" class="ghost compact" type="button">Åpne innstillinger</button>
     </div>
 
     <div class="grid">
@@ -2773,6 +2775,7 @@ document.getElementById("currency").addEventListener("change", (e) => {
 });
 
 document.getElementById("jumpToTodayBtn").addEventListener("click", jumpToToday);
+document.getElementById("openSettingsBtn").addEventListener("click", () => setActiveTab("settingsTab"));
 document.getElementById("showSetupAgainBtn").addEventListener("click", showSetupScreen);
 
 document.getElementById("startUsingAppBtn").addEventListener("click", () => saveSetupAndStart(false));
