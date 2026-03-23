@@ -1163,9 +1163,15 @@
 
   <div id="settingsTab" class="tab-panel">
     <div class="card">
-      <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
+  <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
 
-      <div class="settings-grid">
+  <div class="single-action">
+    <button id="createSharedBtn" type="button">
+      Opprett delt budsjett
+    </button>
+  </div>
+
+  <div class="settings-grid">
         <div>
           <label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label>
           <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
@@ -1574,6 +1580,47 @@ function generateShareCode(length = 6){
     out += chars[Math.floor(Math.random() * chars.length)];
   }
   return out;
+}
+  async function createSharedBudget(){
+  try {
+    const shareCode = generateShareCode();
+
+    const budget = Number(localStorage.getItem(BUDGET_KEY) || 0);
+    const startDay = getStartDay();
+    const periodMode = getPeriodMode();
+    const periodLength = getPeriodLength();
+    const currency = getCurrency();
+
+    const { data, error } = await supabase
+      .from("shared_budgets")
+      .insert([{
+        share_code: shareCode,
+        budget_amount: budget,
+        start_day: startDay,
+        period_mode: periodMode,
+        period_length: periodLength,
+        currency: currency
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error(error);
+      alert("Feil ved oppretting av delt budsjett");
+      return;
+    }
+
+    // lagre lokalt
+    setAppMode("shared");
+    setSharedBudgetId(data.id);
+    setSharedShareCode(shareCode);
+
+    alert("Delt budsjett opprettet!\nKode: " + shareCode);
+
+  } catch (err){
+    console.error(err);
+    alert("Noe gikk galt");
+  }
 }
 
 function tr(){ return TEXT[getLang()]; }
@@ -2812,6 +2859,8 @@ document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click
 
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+
+document.getElementById("createSharedBtn").addEventListener("click", createSharedBudget);
 document.getElementById("importFile").addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) importBackupFromFile(file);
