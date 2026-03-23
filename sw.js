@@ -1,60 +1,34 @@
-const CACHE_NAME = "matbudsjett-v15-cache-2";
-const APP_SHELL = [
+const CACHE_NAME = "matbudsjett-v17";
+const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
-  "./icon-192.svg",
-  "./icon-512.svg",
-  "https://cdn.jsdelivr.net/npm/chart.js"
+  "./icon.svg"
 ];
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
-  );
+// install
+self.addEventListener("install", event => {
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+  );
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(
-      keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-    );
-    await self.clients.claim();
-
-    const clients = await self.clients.matchAll({ includeUncontrolled: true });
-    clients.forEach((client) => client.postMessage({ type: "SW_ACTIVE" }));
-  })());
+// activate
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => key !== CACHE_NAME ? caches.delete(key) : null)
+      )
+    )
+  );
+  self.clients.claim();
 });
 
-self.addEventListener("message", (event) => {
-  if (event.data?.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
-
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  if (request.method !== "GET") return;
-
-  event.respondWith((async () => {
-    const cached = await caches.match(request);
-    if (cached) return cached;
-
-    try {
-      const response = await fetch(request);
-      const cache = await caches.open(CACHE_NAME);
-
-      if (request.url.startsWith(self.location.origin) || request.url.includes("cdn.jsdelivr.net")) {
-        cache.put(request, response.clone());
-      }
-
-      return response;
-    } catch (error) {
-      const fallback = await caches.match("./index.html");
-      if (request.mode === "navigate" && fallback) return fallback;
-      throw error;
-    }
-  })());
+// fetch (offline support)
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request).then(response => response || fetch(event.request))
+  );
 });
