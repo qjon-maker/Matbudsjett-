@@ -13,7 +13,6 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="icon.svg" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
   :root{
@@ -1163,15 +1162,9 @@
 
   <div id="settingsTab" class="tab-panel">
     <div class="card">
-  <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
+      <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
 
-  <div class="single-action">
-    <button id="createSharedBtn" type="button">
-      Opprett delt budsjett
-    </button>
-  </div>
-
-  <div class="settings-grid">
+      <div class="settings-grid">
         <div>
           <label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label>
           <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
@@ -1280,14 +1273,6 @@
 </div>
 
 <script>
-  const SUPABASE_URL = "https://aodzgsmdlxzgidscpxkn.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvZHpnc21kbHh6Z2lkc2NweGtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODk2OTYsImV4cCI6MjA4OTg2NTY5Nn0.NaGusK3lx-3kKm2oLmaE9DbE8Mo1EvFDBgFB1Xcb7Y4";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const APP_MODE_KEY = "matbudsjett_v18_mode";
-const SHARED_BUDGET_ID_KEY = "matbudsjett_v18_shared_budget_id";
-const SHARED_SHARE_CODE_KEY = "matbudsjett_v18_share_code";
-const SHARED_CACHE_KEY = "matbudsjett_v18_shared_cache";
-const LOCAL_BACKUP_BEFORE_JOIN_KEY = "matbudsjett_v18_local_backup_before_join";
 const STORAGE_KEY = "matbudsjett_v17_expenses";
 const BUDGET_KEY = "matbudsjett_v17_budget";
 const STARTDAY_KEY = "matbudsjett_v17_startday";
@@ -1537,94 +1522,6 @@ let shopYearChart = null;
 
 function getLang(){ return localStorage.getItem(LANG_KEY) || "no"; }
 function setLang(v){ localStorage.setItem(LANG_KEY, v); }
-
-function getAppMode(){
-  return localStorage.getItem(APP_MODE_KEY) || "local";
-}
-
-function setAppMode(mode){
-  localStorage.setItem(APP_MODE_KEY, mode);
-}
-
-function getSharedBudgetId(){
-  return localStorage.getItem(SHARED_BUDGET_ID_KEY) || "";
-}
-
-function setSharedBudgetId(id){
-  localStorage.setItem(SHARED_BUDGET_ID_KEY, id || "");
-}
-
-function getSharedShareCode(){
-  return localStorage.getItem(SHARED_SHARE_CODE_KEY) || "";
-}
-
-function setSharedShareCode(code){
-  localStorage.setItem(SHARED_SHARE_CODE_KEY, code || "");
-}
-
-function isSharedMode(){
-  return getAppMode() === "shared" && !!getSharedBudgetId();
-}
-
-function clearSharedMode(){
-  localStorage.removeItem(SHARED_BUDGET_ID_KEY);
-  localStorage.removeItem(SHARED_SHARE_CODE_KEY);
-  localStorage.removeItem(SHARED_CACHE_KEY);
-  setAppMode("local");
-}
-
-function generateShareCode(length = 6){
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let out = "";
-  for(let i = 0; i < length; i++){
-    out += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return out;
-}
-  async function createSharedBudget(){
-  try {
-    const shareCode = generateShareCode();
-
-    const budget = Number(localStorage.getItem(BUDGET_KEY) || 0);
-    const startDay = getStartDay();
-    const periodMode = getPeriodMode();
-    const periodLength = getPeriodLength();
-    const currency = getCurrency();
-
-    const { data, error } = await supabase
-      .from("shared_budgets")
-      .insert([{
-        share_code: shareCode,
-        budget_amount: budget,
-        start_day: startDay,
-        period_mode: periodMode,
-        period_length: periodLength,
-        currency: currency
-      }])
-      .select()
-      .single();
-
-    if (error) {
-      console.error(error);
-      alert("Feil ved oppretting av delt budsjett");
-      return;
-    }
-
-    // lagre lokalt
-    setAppMode("shared");
-    setSharedBudgetId(data.id);
-    setSharedShareCode(shareCode);
-
-    alert("Delt budsjett opprettet!\nKode: " + shareCode);
-
-  } catch (err){
-    console.error(err);
-    alert("Noe gikk galt");
-  }
-}
-
-function tr(){ return TEXT[getLang()]; }
-function getCurrency(){ return localStorage.getItem(CURRENCY_KEY) || "NOK"; }
 function tr(){ return TEXT[getLang()]; }
 function getCurrency(){ return localStorage.getItem(CURRENCY_KEY) || "NOK"; }
 function setCurrency(v){ localStorage.setItem(CURRENCY_KEY, v); }
@@ -2859,8 +2756,6 @@ document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click
 
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
-
-document.getElementById("createSharedBtn").addEventListener("click", createSharedBudget);
 document.getElementById("importFile").addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) importBackupFromFile(file);
