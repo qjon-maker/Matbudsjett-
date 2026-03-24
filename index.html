@@ -734,11 +734,6 @@ function saveSetupAndStart(useExisting = false){ if (!useExisting){ const setupB
 function applyQuickAmount(amountToAdd){ const input = document.getElementById("expense"); const current = Number(input.value || 0); input.value = current + amountToAdd; input.focus(); input.setSelectionRange(String(input.value).length, String(input.value).length); vibrateSoft(); }
 async function installApp(){ if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; updatePwaBar(); }
 async function registerServiceWorker(){ if (!("serviceWorker" in navigator)) return; if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") return; try{ const reg = await navigator.serviceWorker.register("./sw.js"); swRegistered = !!reg; updatePwaBar(); if (reg.waiting) reg.waiting.postMessage({ type:"SKIP_WAITING" }); navigator.serviceWorker.addEventListener("message", (event) => { if (event.data?.type === "SW_ACTIVE"){ swRegistered = true; updatePwaBar(); } }); } catch(err){ console.error("Service worker registration failed:", err); } }
-function createSharedBudgetPlaceholder(){
-  try {
-    const testClient = window.supabase.createClient(
-      SUPABASE_URL.trim(),
-      SUPABASE_ANON_KEY.trim()
 
     async function createSharedBudgetPlaceholder(){
   if (!supabaseClient) {
