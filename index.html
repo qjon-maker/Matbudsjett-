@@ -747,7 +747,7 @@ async function registerServiceWorker(){ if (!("serviceWorker" in navigator)) ret
     .from("shared_budgets")
     .insert([
       {
-        join_code: code,
+        share_code: code,
         created_at: new Date().toISOString()
       }
     ]);
