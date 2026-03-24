@@ -740,10 +740,29 @@ function createSharedBudgetPlaceholder(){
       SUPABASE_URL.trim(),
       SUPABASE_ANON_KEY.trim()
     );
-    alert("Klar til å opprette delt budsjett");
-  } catch (e) {
-    alert("Supabase-feil: " + (e?.message || e));
+    async function createSharedBudgetPlaceholder(){
+  if (!supabaseClient) {
+    alert("Supabase ikke koblet");
+    return;
   }
+
+  const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+
+  const { error } = await supabaseClient
+    .from("shared_budgets")
+    .insert([
+      {
+        join_code: code,
+        created_at: new Date().toISOString()
+      }
+    ]);
+
+  if (error) {
+    alert("Kunne ikke opprette delt budsjett: " + error.message);
+    return;
+  }
+
+  alert("Delt budsjett opprettet. Kode: " + code);
 }
 
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
