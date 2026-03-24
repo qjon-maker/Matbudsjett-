@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -19,14 +20,11 @@
     --bg:#eef4fc;
     --bg-2:#e7f0fb;
     --card:rgba(255,255,255,.84);
-    --card-strong:#ffffff;
     --text:#132033;
     --muted:#69798f;
     --line:#dce7f3;
-    --line-strong:#cfdeee;
     --primary:#2563eb;
     --primary-2:#38bdf8;
-    --primary-3:#1d4ed8;
     --primary-soft:#eef5ff;
     --good:#15803d;
     --warn:#b45309;
@@ -35,24 +33,15 @@
     --shadow-soft:0 10px 26px rgba(15,23,42,.07);
     --shadow-tiny:0 5px 14px rgba(15,23,42,.05);
     --radius:26px;
-    --radius-sm:18px;
     --bottom-nav-h:86px;
     --maxw:1120px;
   }
 
   *{box-sizing:border-box}
-  html{
-    scroll-behavior:smooth;
-    -webkit-tap-highlight-color:transparent;
-  }
-
+  html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
   body{
     margin:0;
-    padding:
-      max(14px, env(safe-area-inset-top))
-      14px
-      calc(var(--bottom-nav-h) + 24px + env(safe-area-inset-bottom))
-      14px;
+    padding:max(14px, env(safe-area-inset-top)) 14px calc(var(--bottom-nav-h) + 24px + env(safe-area-inset-bottom)) 14px;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     color:var(--text);
     background:
@@ -62,453 +51,85 @@
   }
 
   .hidden{display:none !important}
+  .app{max-width:var(--maxw);margin:0 auto;animation:fadeIn .28s ease}
+  .setup-screen{max-width:760px;margin:18px auto 0;animation:fadeUp .34s ease}
 
-  .app{
-    max-width:var(--maxw);
-    margin:0 auto;
-    animation:fadeIn .28s ease;
-  }
-
-  .setup-screen{
-    max-width:760px;
-    margin:18px auto 0;
-    animation:fadeUp .34s ease;
-  }
-
-  .setup-card{
-    background:#fff;
-    border-radius:32px;
-    overflow:hidden;
-    box-shadow:0 28px 70px rgba(15,23,42,.14);
-    border:1px solid rgba(255,255,255,.68);
-  }
-
+  .setup-card{background:#fff;border-radius:32px;overflow:hidden;box-shadow:0 28px 70px rgba(15,23,42,.14);border:1px solid rgba(255,255,255,.68)}
   .setup-top{
     background:linear-gradient(135deg,var(--primary),var(--primary-2));
-    color:#fff;
-    padding:28px 24px;
-    display:flex;
-    gap:16px;
-    align-items:flex-start;
-    position:relative;
-    overflow:hidden;
+    color:#fff;padding:28px 24px;display:flex;gap:16px;align-items:flex-start;position:relative;overflow:hidden;
   }
-
-  .setup-top::after,
-  .hero::after{
-    content:"";
-    position:absolute;
-    right:-40px;
-    bottom:-40px;
-    width:190px;
-    height:190px;
-    background:radial-gradient(circle, rgba(255,255,255,.18), transparent 66%);
-    pointer-events:none;
-  }
-
-  .setup-badge,.hero-badge{
-    width:70px;
-    height:70px;
-    border-radius:23px;
-    flex:0 0 auto;
-    background:rgba(255,255,255,.16);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    box-shadow:
-      inset 0 0 0 1px rgba(255,255,255,.18),
-      0 12px 26px rgba(0,0,0,.08);
-    backdrop-filter:blur(8px);
-  }
-
-  .setup-top h1,
-  .hero h1{
-    margin:0 0 6px;
-    font-size:30px;
-    letter-spacing:-.04em;
-    line-height:1.02;
-  }
-
-  .setup-top p,
-  .hero p{
-    margin:0;
-    opacity:.96;
-    line-height:1.45;
-  }
-
+  .setup-top::after,.hero::after{content:"";position:absolute;right:-40px;bottom:-40px;width:190px;height:190px;background:radial-gradient(circle, rgba(255,255,255,.18), transparent 66%);pointer-events:none}
+  .setup-badge,.hero-badge{width:70px;height:70px;border-radius:23px;flex:0 0 auto;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 12px 26px rgba(0,0,0,.08);backdrop-filter:blur(8px)}
+  .setup-top h1,.hero h1{margin:0 0 6px;font-size:30px;letter-spacing:-.04em;line-height:1.02}
+  .setup-top p{margin:0;opacity:.96;line-height:1.45}
   .setup-body{padding:18px}
-  .setup-info{
-    display:grid;
-    gap:10px;
-    margin-bottom:16px;
-  }
+  .setup-info{display:grid;gap:10px;margin-bottom:16px}
+  .setup-info-item{background:#f8fbff;border:1px solid var(--line);border-radius:18px;padding:13px 14px;line-height:1.45}
 
-  .setup-info-item{
-    background:#f8fbff;
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:13px 14px;
-    line-height:1.45;
-  }
+  .hero{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;border-radius:32px;padding:18px 16px;box-shadow:var(--shadow);margin-bottom:14px;position:relative;overflow:hidden;animation:fadeUp .32s ease}
+  .hero-top{display:flex;gap:14px;align-items:center}
+  .hero-copy{min-width:0;flex:1}
+  .period{margin-top:10px;font-size:13px;opacity:.95;display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);backdrop-filter:blur(10px)}
 
-  .hero{
-    background:linear-gradient(135deg,var(--primary),var(--primary-2));
-    color:#fff;
-    border-radius:32px;
-    padding:20px 18px 18px;
-    box-shadow:var(--shadow);
-    margin-bottom:14px;
-    position:relative;
-    overflow:hidden;
-    animation:fadeUp .32s ease;
-  }
+  .pwa-bar{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:14px;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);border:1px solid rgba(220,231,243,.92);border-radius:22px;padding:12px 14px;box-shadow:var(--shadow-soft);animation:fadeUp .28s ease}
+  .pwa-info{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .pwa-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800;background:#f8fbff;border:1px solid var(--line);color:var(--text)}
+  .pwa-pill.good{background:#ecfdf3;border-color:#86efac;color:#166534}
+  .pwa-pill.warn{background:#fff7ed;border-color:#fdba74;color:#9a3412}
+  .pwa-actions{display:flex;gap:8px;flex-wrap:wrap}
 
-  .hero-top{
-    display:flex;
-    gap:14px;
-    align-items:center;
-  }
-
-  .hero-copy{
-    min-width:0;
-    flex:1;
-  }
-
-  .hero-meta{
-    margin-top:12px;
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-  }
-
-  .hero-chip{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:8px 11px;
-    border-radius:999px;
-    background:rgba(255,255,255,.14);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
-    backdrop-filter:blur(10px);
-    font-size:12px;
-    font-weight:800;
-  }
-
-  .period{
-    margin-top:10px;
-    font-size:13px;
-    opacity:.95;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 11px;
-    border-radius:999px;
-    background:rgba(255,255,255,.14);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);
-    backdrop-filter:blur(10px);
-  }
-
-  .pwa-bar{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:10px;
-    align-items:center;
-    margin-bottom:14px;
-    background:rgba(255,255,255,.82);
-    backdrop-filter:blur(16px);
-    border:1px solid rgba(220,231,243,.92);
-    border-radius:22px;
-    padding:12px 14px;
-    box-shadow:var(--shadow-soft);
-    animation:fadeUp .28s ease;
-  }
-
-  .pwa-info{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    align-items:center;
-  }
-
-  .pwa-pill{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:7px 10px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:800;
-    background:#f8fbff;
-    border:1px solid var(--line);
-    color:var(--text);
-  }
-
-  .pwa-pill.good{
-    background:#ecfdf3;
-    border-color:#86efac;
-    color:#166534;
-  }
-
-  .pwa-pill.warn{
-    background:#fff7ed;
-    border-color:#fdba74;
-    color:#9a3412;
-  }
-
-  .pwa-actions{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-
-  .tab-panel{
-    display:none;
-    animation:fadeIn .22s ease;
-  }
+  .tab-panel{display:none;animation:fadeIn .22s ease}
   .tab-panel.active{display:block}
+  .grid,.charts{display:grid;grid-template-columns:1fr;gap:14px}
+  .settings-grid,.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
-  .charts{display:grid;grid-template-columns:1fr;gap:14px}
-  .settings-grid,.row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
+  .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid rgba(220,231,243,.96);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-soft);animation:fadeUp .26s ease}
+  .section-title{margin:0 0 12px;font-size:18px;font-weight:900;letter-spacing:-.02em}
+  .section-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .small-title{margin:0 0 8px;font-size:16px;font-weight:900}
 
-  .card{
-    background:var(--card);
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
-    border:1px solid rgba(220,231,243,.96);
-    border-radius:var(--radius);
-    padding:16px;
-    box-shadow:var(--shadow-soft);
-    animation:fadeUp .26s ease;
-  }
-
-  .section-title{
-    margin:0 0 12px;
-    font-size:18px;
-    font-weight:900;
-    letter-spacing:-.02em;
-  }
-
-  .section-title-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:12px;
-  }
-
-  .small-title{
-    margin:0 0 8px;
-    font-size:16px;
-    font-weight:900;
-  }
-
-  label{
-    display:block;
-    font-size:13px;
-    color:var(--muted);
-    margin:8px 0 6px;
-    font-weight:800;
-    letter-spacing:.01em;
-  }
-
-  input,select,button{
-    width:100%;
-    border:none;
-    border-radius:16px;
-    padding:14px;
-    font-size:16px;
-    font-family:inherit;
-  }
-
-  input,select{
-    background:#f8fbff;
-    border:1px solid var(--line);
-    color:var(--text);
-    outline:none;
-    min-height:50px;
-    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .18s ease;
-  }
-
-  input:focus,select:focus{
-    border-color:#9fc5ff;
-    box-shadow:0 0 0 4px rgba(37,99,235,.10);
-    background:#fff;
-  }
-
+  label{display:block;font-size:13px;color:var(--muted);margin:8px 0 6px;font-weight:800;letter-spacing:.01em}
+  input,select,button{width:100%;border:none;border-radius:16px;padding:14px;font-size:16px;font-family:inherit}
+  input,select{background:#f8fbff;border:1px solid var(--line);color:var(--text);outline:none;min-height:50px;transition:border-color .18s ease, box-shadow .18s ease, background .18s ease}
+  input:focus,select:focus{border-color:#9fc5ff;box-shadow:0 0 0 4px rgba(37,99,235,.10);background:#fff}
   input::placeholder{color:#96a5ba}
 
-  button{
-    background:linear-gradient(135deg,var(--primary),#3478f6);
-    color:#fff;
-    font-weight:900;
-    cursor:pointer;
-    box-shadow:0 10px 20px rgba(37,99,235,.18);
-    transition:transform .14s ease, box-shadow .14s ease, opacity .14s ease;
-    min-height:50px;
-  }
-
+  button{background:linear-gradient(135deg,var(--primary),#3478f6);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 20px rgba(37,99,235,.18);transition:transform .14s ease, box-shadow .14s ease;min-height:50px}
   button:hover{transform:translateY(-1px)}
-  button:active{
-    transform:translateY(0) scale(.985);
-    box-shadow:0 6px 14px rgba(37,99,235,.16);
-  }
+  button:active{transform:translateY(0) scale(.985);box-shadow:0 6px 14px rgba(37,99,235,.16)}
+  button.secondary{background:var(--primary-soft);color:var(--primary);border:1px solid #d7e6ff;box-shadow:none}
+  button.ghost{background:rgba(255,255,255,.92);color:var(--text);border:1px solid var(--line);box-shadow:none}
+  button.danger{background:#fff1f2;color:var(--danger);border:1px solid #fecdd3;box-shadow:none}
 
-  button.secondary{
-    background:var(--primary-soft);
-    color:var(--primary);
-    border:1px solid #d7e6ff;
-    box-shadow:none;
-  }
-
-  button.ghost{
-    background:rgba(255,255,255,.92);
-    color:var(--text);
-    border:1px solid var(--line);
-    box-shadow:none;
-  }
-
-  button.danger{
-    background:#fff1f2;
-    color:var(--danger);
-    border:1px solid #fecdd3;
-    box-shadow:none;
-  }
-
-  .top-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:14px;
-  }
-
-  .compact{
-    font-size:14px;
-    padding:10px 12px;
-    min-height:44px;
-  }
-
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-  }
-
-  .stat{
-    background:linear-gradient(180deg,rgba(255,255,255,.84) 0%, rgba(248,251,255,.96) 100%);
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:14px;
-    box-shadow:var(--shadow-tiny);
-  }
-
-  .stat .label{
-    font-size:12px;
-    color:var(--muted);
-    margin-bottom:5px;
-  }
-
-  .stat .value{
-    font-size:22px;
-    font-weight:900;
-    line-height:1.15;
-    letter-spacing:-.04em;
-  }
-
+  .top-actions{display:flex;gap:10px;margin-bottom:14px}
+  .compact{font-size:14px;padding:10px 12px;min-height:44px}
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat{background:linear-gradient(180deg,rgba(255,255,255,.84) 0%, rgba(248,251,255,.96) 100%);border:1px solid var(--line);border-radius:20px;padding:14px;box-shadow:var(--shadow-tiny)}
+  .stat .label{font-size:12px;color:var(--muted);margin-bottom:5px}
+  .stat .value{font-size:22px;font-weight:900;line-height:1.15;letter-spacing:-.04em}
   .wide{grid-column:1/-1}
-
-  .status{
-    margin-top:10px;
-    font-weight:900;
-    line-height:1.45;
-  }
-
+  .status{margin-top:10px;font-weight:900;line-height:1.45}
   .status.good{color:var(--good)}
   .status.warn{color:var(--warn)}
 
-  .quick-actions{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin-top:10px;
-  }
+  .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+  .quick-btn{padding:10px;border-radius:14px;font-size:14px;font-weight:900;min-height:44px}
+  .helper-text{margin-top:10px;font-size:13px;color:var(--muted);line-height:1.45}
+  .form-stack{display:grid;gap:2px}
+  .subtle-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:999px;background:#f6faff;border:1px solid var(--line);color:var(--muted);font-size:12px;font-weight:800}
 
-  .quick-btn{
-    padding:10px;
-    border-radius:14px;
-    font-size:14px;
-    font-weight:900;
-    min-height:44px;
-  }
-
-  .helper-text{
-    margin-top:10px;
-    font-size:13px;
-    color:var(--muted);
-    line-height:1.45;
-  }
-
-  .form-stack{
-    display:grid;
-    gap:2px;
-  }
-
-  .subtle-chip{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:8px 10px;
-    border-radius:999px;
-    background:#f6faff;
-    border:1px solid var(--line);
-    color:var(--muted);
-    font-size:12px;
-    font-weight:800;
-  }
-
-  .date-strip{
-    display:flex;
-    gap:10px;
-    overflow-x:auto;
-    padding:2px 2px 6px;
-    scroll-snap-type:x proximity;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
+  .date-strip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   .date-strip::-webkit-scrollbar{display:none}
-
-  .date-chip{
-    min-width:94px;
-    padding:10px 12px;
-    border-radius:18px;
-    border:1px solid var(--line);
-    background:#f8fbff;
-    color:#18212f !important;
-    flex:0 0 auto;
-    text-align:center;
-    cursor:pointer;
-    scroll-snap-align:start;
-    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
-    box-shadow:var(--shadow-tiny);
-  }
-
+  .date-chip{min-width:94px;padding:10px 12px;border-radius:18px;border:1px solid var(--line);background:#f8fbff;color:#18212f !important;flex:0 0 auto;text-align:center;cursor:pointer;scroll-snap-align:start;transition:transform .15s ease, box-shadow .15s ease;border-color .15s ease;box-shadow:var(--shadow-tiny)}
   .date-chip .top,.date-chip .bottom,.date-chip .sub{color:inherit !important}
   .date-chip:hover{transform:translateY(-1px)}
-  .date-chip.active{
-    transform:translateY(-1px);
-    box-shadow:0 0 0 2px rgba(37,99,235,.18), 0 10px 18px rgba(15,23,42,.06);
-  }
+  .date-chip.active{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(37,99,235,.18),0 10px 18px rgba(15,23,42,.06)}
   .date-chip.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.18)}
-  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.18),0 0 0 2px rgba(37,99,235,.18), 0 10px 18px rgba(15,23,42,.06)}
-
+  .date-chip.active.today{box-shadow:inset 0 0 0 2px rgba(37,99,235,.18),0 0 0 2px rgba(37,99,235,.18),0 10px 18px rgba(15,23,42,.06)}
   .date-chip .top{display:block;font-size:12px;opacity:.80;margin-bottom:2px}
   .date-chip .bottom{display:block;font-size:17px;font-weight:900;line-height:1.1}
   .date-chip .sub{display:block;font-size:11px;margin-top:3px;opacity:.85}
-
   .date-chip.zero{background:#ecfdf3;border-color:#86efac;color:#166534}
   .date-chip.ok-1{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
   .date-chip.ok-2{background:#dbeafe;border-color:#93c5fd;color:#1e40af}
@@ -517,150 +138,34 @@
   .date-chip.bad-1{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
   .date-chip.bad-2{background:#fecaca;border-color:#f87171;color:#991b1b}
 
-  .day-summary{
-    margin-top:12px;
-    padding:14px;
-    border-radius:18px;
-    background:#f8fbff;
-    border:1px solid var(--line);
-    line-height:1.65;
-  }
-
-  .list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-top:10px;
-  }
-
-  .item,.period-row,.shop-row{
-    background:rgba(255,255,255,.96);
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:12px;
-    box-shadow:var(--shadow-tiny);
-    animation:fadeUp .18s ease;
-  }
-
-  .item-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:8px;
-  }
-
-  .item-amount{
-    font-size:18px;
-    font-weight:900;
-    letter-spacing:-.03em;
-  }
-
-  .item-meta,.small{
-    color:var(--muted);
-    font-size:13px;
-    line-height:1.45;
-  }
-
-  .item-actions,.footer-actions,.setup-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-top:10px;
-  }
-
+  .day-summary{margin-top:12px;padding:14px;border-radius:18px;background:#f8fbff;border:1px solid var(--line);line-height:1.65}
+  .list{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+  .item,.period-row,.shop-row{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow-tiny);animation:fadeUp .18s ease}
+  .item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .item-amount{font-size:18px;font-weight:900;letter-spacing:-.03em}
+  .item-meta,.small{color:var(--muted);font-size:13px;line-height:1.45}
+  .item-actions,.footer-actions,.setup-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
   .single-action{margin-top:10px}
-
-  canvas{
-    width:100% !important;
-    max-height:300px;
-  }
-
-  .chart-wrap{
-    min-height:260px;
-  }
-
-  .empty{
-    color:var(--muted);
-    background:#f8fbff;
-    border:1px dashed var(--line);
-    border-radius:18px;
-    padding:14px;
-    text-align:center;
-  }
-
-  .pill{
-    display:inline-block;
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:900;
-    background:var(--primary-soft);
-    color:var(--primary);
-    margin-top:8px;
-  }
-
+  canvas{width:100% !important;max-height:300px}
+  .chart-wrap{min-height:260px}
+  .empty{color:var(--muted);background:#f8fbff;border:1px dashed var(--line);border-radius:18px;padding:14px;text-align:center}
+  .pill{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;background:var(--primary-soft);color:var(--primary);margin-top:8px}
   .big{font-weight:900}
   .backup-note{margin-top:8px;font-size:13px;color:var(--muted);line-height:1.55}
 
-  .heatmap-topline{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    margin-bottom:12px;
-    flex-wrap:wrap;
-  }
-
+  .heatmap-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
   .heatmap-month-title{font-size:16px;font-weight:900}
   .heatmap-legend{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
   .heatmap-legend-item{display:flex;align-items:center;gap:6px}
   .heatmap-swatch{width:14px;height:14px;border-radius:4px;border:1px solid var(--line)}
-
-  .heatmap-weekdays{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:6px;
-    margin-bottom:6px;
-  }
-
-  .heatmap-weekday{
-    text-align:center;
-    font-size:11px;
-    color:var(--muted);
-    font-weight:800;
-  }
-
-  .heatmap-grid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:6px;
-  }
-
-  .heatmap-day{
-    border-radius:12px;
-    border:1px solid var(--line);
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    font-size:11px;
-    font-weight:800;
-    cursor:pointer;
-    transition:transform .12s ease, box-shadow .12s ease;
-    color:#18212f;
-    background:#f8fbff;
-    min-height:42px;
-    padding:4px;
-  }
-
-  .heatmap-day:hover{
-    transform:translateY(-1px);
-    box-shadow:var(--shadow-tiny);
-  }
+  .heatmap-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+  .heatmap-weekday{text-align:center;font-size:11px;color:var(--muted);font-weight:800}
+  .heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .heatmap-day{border-radius:12px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:11px;font-weight:800;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;color:#18212f;background:#f8fbff;min-height:42px;padding:4px}
+  .heatmap-day:hover{transform:translateY(-1px);box-shadow:var(--shadow-tiny)}
   .heatmap-day .num{font-size:13px;font-weight:900;line-height:1}
   .heatmap-day .amt{font-size:9px;margin-top:4px;opacity:.8}
   .heatmap-empty{visibility:hidden}
-
   .heat-zero{ background:#ecfdf3; border-color:#86efac; color:#166534; }
   .heat-ok1{ background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
   .heat-ok2{ background:#dbeafe; border-color:#93c5fd; color:#1e40af; }
@@ -669,168 +174,33 @@
   .heat-bad1{ background:#fee2e2; border-color:#fca5a5; color:#b91c1c; }
   .heat-bad2{ background:#fecaca; border-color:#f87171; color:#991b1b; }
 
-  .tabs{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:calc(10px + env(safe-area-inset-bottom));
-    z-index:30;
-    width:min(720px, calc(100vw - 20px));
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    background:rgba(255,255,255,.90);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    border:1px solid rgba(220,231,243,.96);
-    border-radius:24px;
-    padding:10px;
-    box-shadow:0 18px 40px rgba(15,23,42,.13);
-  }
+  .tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;width:min(720px, calc(100vw - 20px));display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:rgba(255,255,255,.90);backdrop-filter:blur(18px);border:1px solid rgba(220,231,243,.96);border-radius:24px;padding:10px;box-shadow:0 18px 40px rgba(15,23,42,.13)}
+  .tab-btn{width:100%;border:none;border-radius:16px;padding:10px 8px;min-height:56px;background:transparent;color:#5a6d87;font-size:12px;font-weight:800;cursor:pointer;box-shadow:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;line-height:1.1}
+  .tab-btn .tab-ico{width:20px;height:20px;display:block;opacity:.9}
+  .tab-btn.active{background:linear-gradient(135deg,var(--primary),#3478f6);color:#fff;box-shadow:0 10px 20px rgba(37,99,235,.20)}
 
-  .tab-btn{
-    width:100%;
-    border:none;
-    border-radius:16px;
-    padding:10px 8px;
-    min-height:56px;
-    background:transparent;
-    color:#5a6d87;
-    font-size:12px;
-    font-weight:800;
-    cursor:pointer;
-    box-shadow:none;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:5px;
-    line-height:1.1;
-  }
-
-  .tab-btn .tab-ico{
-    width:20px;
-    height:20px;
-    display:block;
-    opacity:.9;
-  }
-
-  .tab-btn.active{
-    background:linear-gradient(135deg,var(--primary),#3478f6);
-    color:#fff;
-    box-shadow:0 10px 20px rgba(37,99,235,.20);
-  }
-
-  .toast-wrap{
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:calc(var(--bottom-nav-h) + 22px + env(safe-area-inset-bottom));
-    z-index:50;
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    width:min(92vw, 420px);
-    pointer-events:none;
-  }
-
-  .toast{
-    background:rgba(20,32,51,.94);
-    color:#fff;
-    border-radius:18px;
-    padding:12px 14px;
-    box-shadow:0 16px 30px rgba(0,0,0,.18);
-    font-size:14px;
-    line-height:1.4;
-    animation:toastIn .22s ease;
-    pointer-events:auto;
-  }
-
+  .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--bottom-nav-h) + 22px + env(safe-area-inset-bottom));z-index:50;display:flex;flex-direction:column;gap:8px;width:min(92vw, 420px);pointer-events:none}
+  .toast{background:rgba(20,32,51,.94);color:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 16px 30px rgba(0,0,0,.18);font-size:14px;line-height:1.4;animation:toastIn .22s ease;pointer-events:auto}
   .toast.good{background:rgba(21,128,61,.94)}
   .toast.warn{background:rgba(180,83,9,.94)}
   .toast.danger{background:rgba(185,28,28,.94)}
 
-  @keyframes fadeIn{
-    from{opacity:0}
-    to{opacity:1}
-  }
-
-  @keyframes fadeUp{
-    from{
-      opacity:0;
-      transform:translateY(8px);
-    }
-    to{
-      opacity:1;
-      transform:translateY(0);
-    }
-  }
-
-  @keyframes toastIn{
-    from{
-      opacity:0;
-      transform:translateY(8px) scale(.98);
-    }
-    to{
-      opacity:1;
-      transform:translateY(0) scale(1);
-    }
-  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
   @media (max-width:759px){
-    .hero{
-      padding:18px 16px;
-      border-radius:28px;
-    }
-
-    .hero-top{
-      align-items:flex-start;
-    }
-
-    .hero h1,
-    .setup-top h1{
-      font-size:28px;
-    }
-
-    .setup-badge,.hero-badge{
-      width:62px;
-      height:62px;
-      border-radius:20px;
-    }
-
-    .settings-grid,.row{
-      grid-template-columns:1fr;
-    }
-
-    .stats{
-      grid-template-columns:1fr 1fr;
-    }
-
-    .top-actions{
-      position:sticky;
-      top:10px;
-      z-index:12;
-      padding:2px 0 2px;
-      backdrop-filter:blur(4px);
-    }
-
-    .card{
-      padding:14px;
-      border-radius:22px;
-    }
-
-    .item-actions,.footer-actions,.setup-actions{
-      grid-template-columns:1fr;
-    }
-
-    .quick-actions{
-      grid-template-columns:repeat(4,1fr);
-    }
-
-    .tab-btn{
-      min-height:54px;
-      font-size:11px;
-    }
+    .hero{padding:18px 16px;border-radius:28px}
+    .hero-top{align-items:flex-start}
+    .hero h1,.setup-top h1{font-size:28px}
+    .setup-badge,.hero-badge{width:62px;height:62px;border-radius:20px}
+    .settings-grid,.row{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
+    .top-actions{position:sticky;top:10px;z-index:12;padding:2px 0 2px;backdrop-filter:blur(4px)}
+    .card{padding:14px;border-radius:22px}
+    .item-actions,.footer-actions,.setup-actions{grid-template-columns:1fr}
+    .quick-actions{grid-template-columns:repeat(4,1fr)}
+    .tab-btn{min-height:54px;font-size:11px}
   }
 
   @media (min-width:760px){
@@ -842,15 +212,7 @@
     .heatmap-day .amt{font-size:10px}
   }
 
-  @media (prefers-reduced-motion:reduce){
-    *,
-    *::before,
-    *::after{
-      animation:none !important;
-      transition:none !important;
-      scroll-behavior:auto !important;
-    }
-  }
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
 </style>
 </head>
 <body>
@@ -860,11 +222,7 @@
 <div id="setupScreen" class="setup-screen hidden">
   <div class="setup-card">
     <div class="setup-top">
-      <div class="setup-badge" aria-hidden="true">
-<div class="setup-badge">
-  <img src="icon.svg" alt="icon" style="width:100%; height:100%; border-radius:20px;">
-</div>
-      </div>
+      <div class="setup-badge" aria-hidden="true"><img src="icon.svg" alt="" style="width:100%;height:100%;border-radius:20px"></div>
       <div>
         <h1 id="setupTitle">Sett opp appen</h1>
         <p id="setupText">Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.</p>
@@ -939,38 +297,11 @@
 <div class="app hidden" id="mainApp">
   <div class="hero">
     <div class="hero-top">
-      <div class="hero-badge" aria-hidden="true">
-        <div class="hero-badge">
-  <img src="icon.svg" alt="icon" style="width:100%; height:100%; border-radius:20px;">
-</div>
-      </div>
-
+      <div class="hero-badge" aria-hidden="true"><img src="icon.svg" alt="" style="width:100%;height:100%;border-radius:20px"></div>
       <div class="hero-copy">
         <h1 id="appTitle">Matbudsjett</h1>
-        <p id="appSubtitle">Oversikt, historikk, butikker og backup.</p>
         <div class="period" id="periodText"></div>
       </div>
-    </div>
-
-    <div class="hero-meta">
-      <span class="hero-chip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 3v18M7 8.5c0-1.9 1.8-3.5 5-3.5s5 1.6 5 3.5-1.7 3-5 3-5 1.2-5 3.4 1.8 4.1 5 4.1 5-1.7 5-3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Enkel oversikt
-      </span>
-      <span class="hero-chip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M4 12h16M12 4v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Rask registrering
-      </span>
-      <span class="hero-chip">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M5 12.5 9.5 17 19 7.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Offline klar
-      </span>
     </div>
   </div>
 
@@ -989,7 +320,6 @@
   <div id="overviewTab" class="tab-panel active">
     <div class="top-actions">
       <button id="jumpToTodayBtn" class="secondary compact" type="button">I dag</button>
-      <button id="openSettingsBtn" class="ghost compact" type="button">Åpne innstillinger</button>
     </div>
 
     <div class="grid">
@@ -1005,25 +335,7 @@
 
           <label for="category" data-i18n="store">Butikk</label>
           <select id="category">
-            <option>Rema 1000</option>
-            <option>Kiwi</option>
-            <option>Coop Extra</option>
-            <option>Coop Prix</option>
-            <option>Coop Mega</option>
-            <option>Coop Marked</option>
-            <option>Obs</option>
-            <option>Meny</option>
-            <option>Spar</option>
-            <option>Joker</option>
-            <option>Bunnpris</option>
-            <option>Oda</option>
-            <option>Holdbart</option>
-            <option>Normal</option>
-            <option>Europris</option>
-            <option>Gigaboks</option>
-            <option>Matkroken</option>
-            <option>Nærbutikken</option>
-            <option>Annet</option>
+            <option>Rema 1000</option><option>Kiwi</option><option>Coop Extra</option><option>Coop Prix</option><option>Coop Mega</option><option>Coop Marked</option><option>Obs</option><option>Meny</option><option>Spar</option><option>Joker</option><option>Bunnpris</option><option>Oda</option><option>Holdbart</option><option>Normal</option><option>Europris</option><option>Gigaboks</option><option>Matkroken</option><option>Nærbutikken</option><option>Annet</option>
           </select>
 
           <label for="expense" data-i18n="amount">Beløp</label>
@@ -1047,16 +359,12 @@
 
       <div class="card">
         <h2 class="section-title" data-i18n="status_title">Status</h2>
-
         <div class="stats">
           <div class="stat"><div class="label" data-i18n="used">Brukt</div><div class="value" id="used">0 kr</div></div>
           <div class="stat"><div class="label" data-i18n="remaining">Igjen</div><div class="value" id="remaining">0 kr</div></div>
           <div class="stat"><div class="label" data-i18n="daily_now">Kan bruke per dag nå</div><div class="value" id="dailyNow">0 kr</div></div>
           <div class="stat"><div class="label" data-i18n="selected_day">Valgt dato</div><div class="value" id="selectedTotal">0 kr</div></div>
-          <div class="stat wide">
-            <div class="label" data-i18n="status_word">Status</div>
-            <div class="status" id="status">Legg inn budsjett og kjøp.</div>
-          </div>
+          <div class="stat wide"><div class="label" data-i18n="status_word">Status</div><div class="status" id="status">Legg inn budsjett og kjøp.</div></div>
         </div>
       </div>
     </div>
@@ -1065,7 +373,6 @@
       <h2 class="section-title" data-i18n="dates_in_period">Datoer i perioden</h2>
       <div class="date-strip" id="dateStrip"></div>
       <div class="day-summary" id="daySummary"></div>
-
       <div style="margin-top:14px;">
         <h3 class="small-title" data-i18n="entries_selected_day">Kjøp på valgt dato</h3>
         <div id="dayEntries" class="list"></div>
@@ -1073,14 +380,8 @@
     </div>
 
     <div class="charts" style="margin-top:14px;">
-      <div class="card chart-wrap">
-        <h2 class="section-title" data-i18n="spend_per_day">Forbruk per dag</h2>
-        <canvas id="dailyChart"></canvas>
-      </div>
-      <div class="card chart-wrap">
-        <h2 class="section-title" data-i18n="by_store">Fordeling per butikk</h2>
-        <canvas id="categoryChart"></canvas>
-      </div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="spend_per_day">Forbruk per dag</h2><canvas id="dailyChart"></canvas></div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="by_store">Fordeling per butikk</h2><canvas id="categoryChart"></canvas></div>
     </div>
   </div>
 
@@ -1088,14 +389,8 @@
     <div class="card">
       <h2 class="section-title" data-i18n="history_compare">Historikk og sammenligning</h2>
       <div class="row">
-        <div>
-          <label for="historyYear" data-i18n="year">År</label>
-          <select id="historyYear"></select>
-        </div>
-        <div>
-          <label for="historyPeriod" data-i18n="period">Periode</label>
-          <select id="historyPeriod"></select>
-        </div>
+        <div><label for="historyYear" data-i18n="year">År</label><select id="historyYear"></select></div>
+        <div><label for="historyPeriod" data-i18n="period">Periode</label><select id="historyPeriod"></select></div>
       </div>
     </div>
 
@@ -1107,38 +402,20 @@
     </div>
 
     <div class="charts" style="margin-top:14px;">
-      <div class="card chart-wrap">
-        <h2 class="section-title" data-i18n="periods_this_year">Perioder dette året</h2>
-        <canvas id="historyPeriodChart"></canvas>
-      </div>
-      <div class="card chart-wrap">
-        <h2 class="section-title" data-i18n="stores_selected_period">Butikker i valgt periode</h2>
-        <canvas id="historyCategoryChart"></canvas>
-      </div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="periods_this_year">Perioder dette året</h2><canvas id="historyPeriodChart"></canvas></div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="stores_selected_period">Butikker i valgt periode</h2><canvas id="historyCategoryChart"></canvas></div>
     </div>
 
     <div class="card" style="margin-top:14px;">
       <h2 class="section-title">Heatmap</h2>
-      <div class="heatmap-topline">
-        <div class="heatmap-month-title" id="historyHeatmapTitle"></div>
-        <div id="historyHeatmapLegend" class="heatmap-legend"></div>
-      </div>
+      <div class="heatmap-topline"><div class="heatmap-month-title" id="historyHeatmapTitle"></div><div id="historyHeatmapLegend" class="heatmap-legend"></div></div>
       <div class="heatmap-weekdays">
-        <div class="heatmap-weekday" id="wd1">Man</div>
-        <div class="heatmap-weekday" id="wd2">Tir</div>
-        <div class="heatmap-weekday" id="wd3">Ons</div>
-        <div class="heatmap-weekday" id="wd4">Tor</div>
-        <div class="heatmap-weekday" id="wd5">Fre</div>
-        <div class="heatmap-weekday" id="wd6">Lør</div>
-        <div class="heatmap-weekday" id="wd7">Søn</div>
+        <div class="heatmap-weekday" id="wd1">Man</div><div class="heatmap-weekday" id="wd2">Tir</div><div class="heatmap-weekday" id="wd3">Ons</div><div class="heatmap-weekday" id="wd4">Tor</div><div class="heatmap-weekday" id="wd5">Fre</div><div class="heatmap-weekday" id="wd6">Lør</div><div class="heatmap-weekday" id="wd7">Søn</div>
       </div>
       <div id="historyHeatmap" class="heatmap-grid"></div>
     </div>
 
-    <div class="card" style="margin-top:14px;">
-      <h2 class="section-title" data-i18n="period_overview">Periodeoversikt</h2>
-      <div id="periodList" class="list"></div>
-    </div>
+    <div class="card" style="margin-top:14px;"><h2 class="section-title" data-i18n="period_overview">Periodeoversikt</h2><div id="periodList" class="list"></div></div>
   </div>
 
   <div id="shopsTab" class="tab-panel">
@@ -1149,14 +426,8 @@
     </div>
 
     <div class="charts" style="margin-top:14px;">
-      <div class="card chart-wrap">
-        <h2 class="section-title" data-i18n="stores_through_year">Butikker gjennom året</h2>
-        <canvas id="shopYearChart"></canvas>
-      </div>
-      <div class="card">
-        <h2 class="section-title" data-i18n="most_used">Mest brukt</h2>
-        <div id="shopList" class="list"></div>
-      </div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="stores_through_year">Butikker gjennom året</h2><canvas id="shopYearChart"></canvas></div>
+      <div class="card"><h2 class="section-title" data-i18n="most_used">Mest brukt</h2><div id="shopList" class="list"></div></div>
     </div>
   </div>
 
@@ -1164,111 +435,44 @@
     <div class="card">
       <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
 
+      <div class="single-action">
+        <button id="createSharedBtn" type="button">Opprett delt budsjett</button>
+      </div>
+
+      <div class="helper-text">Testknapp for delt budsjett. Selve delingen bygger vi ferdig i neste steg.</div>
+
       <div class="settings-grid">
-        <div>
-          <label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label>
-          <input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
-        </div>
-        <div>
-          <label for="startDay" data-i18n="start_day_label">Startdag for perioden</label>
-          <select id="startDay"></select>
-        </div>
+        <div><label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label><input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" /></div>
+        <div><label for="startDay" data-i18n="start_day_label">Startdag for perioden</label><select id="startDay"></select></div>
       </div>
 
       <div class="settings-grid" style="margin-top:10px;">
-        <div>
-          <label for="periodMode" data-i18n="period_mode_label">Periodetype</label>
-          <select id="periodMode">
-            <option value="weeks">Uker</option>
-            <option value="months">Måneder</option>
-          </select>
-        </div>
-        <div>
-          <label for="periodLength" data-i18n="period_length_label">Lengde</label>
-          <select id="periodLength">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-          </select>
-        </div>
+        <div><label for="periodMode" data-i18n="period_mode_label">Periodetype</label><select id="periodMode"><option value="weeks">Uker</option><option value="months">Måneder</option></select></div>
+        <div><label for="periodLength" data-i18n="period_length_label">Lengde</label><select id="periodLength"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
       </div>
 
       <div class="settings-grid" style="margin-top:10px;">
-        <div>
-          <label for="language" data-i18n="language_label">Språk</label>
-          <select id="language">
-            <option value="no">Norsk</option>
-            <option value="en">English</option>
-          </select>
-        </div>
-        <div>
-          <label for="currency" data-i18n="currency_label">Valuta</label>
-          <select id="currency">
-            <option value="NOK">NOK</option>
-            <option value="SEK">SEK</option>
-            <option value="DKK">DKK</option>
-            <option value="EUR">EUR</option>
-            <option value="USD">USD</option>
-            <option value="GBP">GBP</option>
-          </select>
-        </div>
+        <div><label for="language" data-i18n="language_label">Språk</label><select id="language"><option value="no">Norsk</option><option value="en">English</option></select></div>
+        <div><label for="currency" data-i18n="currency_label">Valuta</label><select id="currency"><option value="NOK">NOK</option><option value="SEK">SEK</option><option value="DKK">DKK</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></div>
       </div>
     </div>
 
     <div class="card" style="margin-top:14px;">
       <h2 class="section-title" data-i18n="backup">Backup</h2>
       <p class="backup-note" data-i18n="backup_note">Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.</p>
-
-      <div class="footer-actions">
-        <button id="exportBtn" class="secondary" type="button">Eksporter backup</button>
-        <button id="importBtn" type="button">Importer backup</button>
-      </div>
-
-      <div class="single-action">
-        <button id="resetBtn" class="danger" type="button">Nullstill alle data</button>
-      </div>
-
-      <div class="single-action">
-        <button id="showSetupAgainBtn" class="ghost" type="button">Vis oppsettsskjerm igjen</button>
-      </div>
-
+      <div class="footer-actions"><button id="exportBtn" class="secondary" type="button">Eksporter backup</button><button id="importBtn" type="button">Importer backup</button></div>
+      <div class="single-action"><button id="resetBtn" class="danger" type="button">Nullstill alle data</button></div>
+      <div class="single-action"><button id="showSetupAgainBtn" class="ghost" type="button">Vis oppsettsskjerm igjen</button></div>
       <input id="importFile" type="file" accept=".json,application/json" style="display:none;" />
-
-      <div class="day-summary" style="margin-top:14px;">
-        <strong data-i18n="backup_contains">Hva backupen inneholder</strong><br>
-        <span data-i18n="backup_contains_text">Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.</span>
-      </div>
+      <div class="day-summary" style="margin-top:14px;"><strong data-i18n="backup_contains">Hva backupen inneholder</strong><br><span data-i18n="backup_contains_text">Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.</span></div>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="overviewTab" type="button">
-      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.8v-5.3H9.8V20H5a1 1 0 0 1-1-1v-8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-      </svg>
-      <span>Oversikt</span>
-    </button>
-    <button class="tab-btn" data-tab="historyTab" type="button">
-      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M5 5v14M5 19h14M8.5 15.5l3-4 3 2 3.5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>Historikk</span>
-    </button>
-    <button class="tab-btn" data-tab="shopsTab" type="button">
-      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 9.5 5.3 5h13.4L20 9.5M6 9.5h12V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        <path d="M9 12.5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <span>Butikker</span>
-    </button>
-    <button class="tab-btn" data-tab="settingsTab" type="button">
-      <svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="2"/>
-        <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .17 1.7 1.7 0 0 0-.9 1.53V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-.9-1.53A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 2.6 15a1.7 1.7 0 0 0-.17-1 1.7 1.7 0 0 0-1.53-.9H.8a2 2 0 1 1 0-4H.9a1.7 1.7 0 0 0 1.53-.9A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 7 2.6a1.7 1.7 0 0 0 1-.17A1.7 1.7 0 0 0 8.9.9V.8a2 2 0 1 1 4 0V.9a1.7 1.7 0 0 0 .9 1.53A1.7 1.7 0 0 0 15 2.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 7c0 .35.06.69.17 1a1.7 1.7 0 0 0 1.53.9h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.53.9c-.11.31-.17.65-.17 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
-      </svg>
-      <span>Innstillinger</span>
-    </button>
+    <button class="tab-btn active" data-tab="overviewTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.8v-5.3H9.8V20H5a1 1 0 0 1-1-1v-8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Oversikt</span></button>
+    <button class="tab-btn" data-tab="historyTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5v14M5 19h14M8.5 15.5l3-4 3 2 3.5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Historikk</span></button>
+    <button class="tab-btn" data-tab="shopsTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5 5.3 5h13.4L20 9.5M6 9.5h12V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12.5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Butikker</span></button>
+    <button class="tab-btn" data-tab="settingsTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .17 1.7 1.7 0 0 0-.9 1.53V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-.9-1.53A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 2.6 15a1.7 1.7 0 0 0-.17-1 1.7 1.7 0 0 0-1.53-.9H.8a2 2 0 1 1 0-4H.9a1.7 1.7 0 0 0 1.53-.9A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 7 2.6a1.7 1.7 0 0 0 1-.17A1.7 1.7 0 0 0 8.9.9V.8a2 2 0 1 1 4 0V.9a1.7 1.7 0 0 0 .9 1.53A1.7 1.7 0 0 0 15 2.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 7c0 .35.06.69.17 1a1.7 1.7 0 0 0 1.53.9h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.53.9c-.11.31-.17.65-.17 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>Innstillinger</span></button>
   </div>
 </div>
 
@@ -1289,223 +493,9 @@ let swRegistered = false;
 
 const TEXT = {
   no: {
-    appTitle:"Matbudsjett",
-    appSubtitle:"Oversikt, historikk, butikker og backup.",
-    status_title:"Status",
-    settings:"Innstillinger",
-    budget_label:"Budsjett for denne perioden",
-    start_day_label:"Startdag for perioden",
-    period_mode_label:"Periodetype",
-    period_length_label:"Lengde",
-    weeks:"Uker",
-    months:"Måneder",
-    language_label:"Språk",
-    currency_label:"Valuta",
-    used:"Brukt",
-    remaining:"Igjen",
-    daily_now:"Kan bruke per dag nå",
-    selected_day:"Valgt dato",
-    status_word:"Status",
-    date:"Dato",
-    store:"Butikk",
-    amount:"Beløp",
-    add_purchase:"Legg til kjøp",
-    save_change:"Lagre endring",
-    cancel_edit:"Avbryt redigering",
-    remove:"Fjern",
-    dates_in_period:"Datoer i perioden",
-    entries_selected_day:"Kjøp på valgt dato",
-    spend_per_day:"Forbruk per dag",
-    by_store:"Fordeling per butikk",
-    history_compare:"Historikk og sammenligning",
-    year:"År",
-    period:"Periode",
-    selected_period:"Valgt periode",
-    avg_per_day:"Snitt per dag",
-    diff_prev:"Forskjell fra forrige",
-    entries_count:"Antall kjøp",
-    periods_this_year:"Perioder dette året",
-    stores_selected_period:"Butikker i valgt periode",
-    period_overview:"Periodeoversikt",
-    store_compare:"Butikksammenligning",
-    stores_through_year:"Butikker gjennom året",
-    most_used:"Mest brukt",
-    backup:"Backup",
-    backup_note:"Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.",
-    export_backup:"Eksporter backup",
-    import_backup:"Importer backup",
-    reset_all:"Nullstill alle data",
-    backup_contains:"Hva backupen inneholder",
-    backup_contains_text:"Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.",
-    tab_overview:"Oversikt",
-    tab_history:"Historikk",
-    tab_stores:"Butikker",
-    tab_settings:"Innstillinger",
-    no_entries_day:"Ingen kjøp registrert på denne datoen ennå.",
-    invalid_amount:"Skriv inn et gyldig beløp.",
-    choose_date:"Velg dato.",
-    delete_confirm:"Fjerne dette kjøpet?",
-    invalid_backup:"Ugyldig backupfil.",
-    import_failed:"Kunne ikke lese backupfilen.",
-    import_ok:"Backup importert.",
-    export_ok:"Backup eksportert.",
-    save_ok:"Kjøp lagret.",
-    update_ok:"Endring lagret.",
-    delete_ok:"Kjøp fjernet.",
-    reset_done:"Alle data er nullstilt.",
-    reset_confirm:"Dette sletter alle kjøp og innstillinger. Er du sikker?",
-    no_purchases:"Ingen kjøp",
-    no_purchases_yet:"Ingen kjøp ennå",
-    no_purchases_year:"Ingen kjøp registrert for dette året ennå.",
-    status_enter_budget:"Legg inn budsjett for perioden.",
-    status_over_budget:(amount)=>`Du er over budsjettet med ${amount}.`,
-    status_over_plan:(amount)=>`Du ligger litt foran planen. Skal du hente deg inn, bør du holde deg rundt ${amount} per dag videre.`,
-    status_within_plan:(amount)=>`Du ligger fint an. Du kan bruke omtrent ${amount} per dag videre.`,
-    day_entries:(n)=>`Antall kjøp: <strong>${n}</strong>`,
-    day_spent:"Brukt denne dagen",
-    day_target:"Dagens mål",
-    day_diff:"Dagsavvik",
-    cumulative:"Samlet til nå",
-    over_plan:"over plan",
-    under_plan:"under plan",
-    heat_zero:"0 kr",
-    heat_ok:"innenfor",
-    heat_warn:"høy dag",
-    heat_bad:"over plan",
-    weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"],
-    quick_hint:"Tips: Appen husker sist valgte butikk.",
-    quick_hint_chip:"Sist valgte butikk huskes",
-    jump_today:"I dag",
-    open_settings:"Åpne innstillinger",
-    show_setup_again:"Vis oppsettsskjerm igjen",
-    setupTitle:"Sett opp appen",
-    setupText:"Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.",
-    setupInfo1Title:"Rask start",
-    setupInfo1Text:"Dette trenger du bare å gjøre første gang.",
-    setupInfo2Title:"Kan endres senere",
-    setupInfo2Text:"Alle valgene kan endres i Innstillinger.",
-    setupStart:"Start appen",
-    setupUseExisting:"Bruk lagrede innstillinger",
-    setupNeedsBudget:"Legg inn budsjett for å komme i gang.",
-    installReady:"Kan installeres",
-    installInstalled:"Installert app",
-    installBrowser:"Kjører i nettleser",
-    networkOnline:"På nett",
-    networkOffline:"Offline",
-    cacheReady:"Offline klar",
-    cacheWaiting:"Offline klargjøres",
-    installBtn:"Installer",
-    dismiss:"Lukk"
-  },
+    appTitle:"Matbudsjett", status_title:"Status", settings:"Innstillinger", budget_label:"Budsjett for denne perioden", start_day_label:"Startdag for perioden", period_mode_label:"Periodetype", period_length_label:"Lengde", weeks:"Uker", months:"Måneder", language_label:"Språk", currency_label:"Valuta", used:"Brukt", remaining:"Igjen", daily_now:"Kan bruke per dag nå", selected_day:"Valgt dato", status_word:"Status", date:"Dato", store:"Butikk", amount:"Beløp", add_purchase:"Legg til kjøp", save_change:"Lagre endring", cancel_edit:"Avbryt redigering", remove:"Fjern", dates_in_period:"Datoer i perioden", entries_selected_day:"Kjøp på valgt dato", spend_per_day:"Forbruk per dag", by_store:"Fordeling per butikk", history_compare:"Historikk og sammenligning", year:"År", period:"Periode", selected_period:"Valgt periode", avg_per_day:"Snitt per dag", diff_prev:"Forskjell fra forrige", entries_count:"Antall kjøp", periods_this_year:"Perioder dette året", stores_selected_period:"Butikker i valgt periode", period_overview:"Periodeoversikt", store_compare:"Butikksammenligning", stores_through_year:"Butikker gjennom året", most_used:"Mest brukt", backup:"Backup", backup_note:"Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.", export_backup:"Eksporter backup", import_backup:"Importer backup", reset_all:"Nullstill alle data", backup_contains:"Hva backupen inneholder", backup_contains_text:"Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.", tab_overview:"Oversikt", tab_history:"Historikk", tab_stores:"Butikker", tab_settings:"Innstillinger", no_entries_day:"Ingen kjøp registrert på denne datoen ennå.", invalid_amount:"Skriv inn et gyldig beløp.", choose_date:"Velg dato.", delete_confirm:"Fjerne dette kjøpet?", invalid_backup:"Ugyldig backupfil.", import_failed:"Kunne ikke lese backupfilen.", import_ok:"Backup importert.", export_ok:"Backup eksportert.", save_ok:"Kjøp lagret.", update_ok:"Endring lagret.", delete_ok:"Kjøp fjernet.", reset_done:"Alle data er nullstilt.", reset_confirm:"Dette sletter alle kjøp og innstillinger. Er du sikker?", no_purchases:"Ingen kjøp", no_purchases_yet:"Ingen kjøp ennå", no_purchases_year:"Ingen kjøp registrert for dette året ennå.", status_enter_budget:"Legg inn budsjett for perioden.", status_over_budget:(amount)=>`Du er over budsjettet med ${amount}.`, status_over_plan:(amount)=>`Du ligger litt foran planen. Skal du hente deg inn, bør du holde deg rundt ${amount} per dag videre.`, status_within_plan:(amount)=>`Du ligger fint an. Du kan bruke omtrent ${amount} per dag videre.`, day_entries:(n)=>`Antall kjøp: <strong>${n}</strong>`, day_spent:"Brukt denne dagen", day_target:"Dagens mål", day_diff:"Dagsavvik", cumulative:"Samlet til nå", over_plan:"over plan", under_plan:"under plan", heat_zero:"0 kr", heat_ok:"innenfor", heat_warn:"høy dag", heat_bad:"over plan", weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"], quick_hint:"Tips: Appen husker sist valgte butikk.", quick_hint_chip:"Sist valgte butikk huskes", jump_today:"I dag", show_setup_again:"Vis oppsettsskjerm igjen", setupTitle:"Sett opp appen", setupText:"Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.", setupInfo1Title:"Rask start", setupInfo1Text:"Dette trenger du bare å gjøre første gang.", setupInfo2Title:"Kan endres senere", setupInfo2Text:"Alle valgene kan endres i Innstillinger.", setupStart:"Start appen", setupUseExisting:"Bruk lagrede innstillinger", setupNeedsBudget:"Legg inn budsjett for å komme i gang.", installReady:"Kan installeres", installInstalled:"Installert app", installBrowser:"Kjører i nettleser", networkOnline:"På nett", networkOffline:"Offline", cacheReady:"Offline klar", cacheWaiting:"Offline klargjøres", installBtn:"Installer", dismiss:"Lukk", shared_placeholder:"Delt budsjett kommer snart"},
   en: {
-    appTitle:"Food Budget",
-    appSubtitle:"Overview, history, stores and backup.",
-    status_title:"Status",
-    settings:"Settings",
-    budget_label:"Budget for this period",
-    start_day_label:"Start day of period",
-    period_mode_label:"Period type",
-    period_length_label:"Length",
-    weeks:"Weeks",
-    months:"Months",
-    language_label:"Language",
-    currency_label:"Currency",
-    used:"Used",
-    remaining:"Remaining",
-    daily_now:"Can spend per day now",
-    selected_day:"Selected day",
-    status_word:"Status",
-    date:"Date",
-    store:"Store",
-    amount:"Amount",
-    add_purchase:"Add purchase",
-    save_change:"Save change",
-    cancel_edit:"Cancel edit",
-    remove:"Remove",
-    dates_in_period:"Dates in period",
-    entries_selected_day:"Purchases on selected date",
-    spend_per_day:"Spend per day",
-    by_store:"By store",
-    history_compare:"History and comparison",
-    year:"Year",
-    period:"Period",
-    selected_period:"Selected period",
-    avg_per_day:"Average per day",
-    diff_prev:"Difference from previous",
-    entries_count:"Number of purchases",
-    periods_this_year:"Periods this year",
-    stores_selected_period:"Stores in selected period",
-    period_overview:"Period overview",
-    store_compare:"Store comparison",
-    stores_through_year:"Stores through the year",
-    most_used:"Most used",
-    backup:"Backup",
-    backup_note:"The app stores data locally in the browser. Here you can export a backup file and import it later.",
-    export_backup:"Export backup",
-    import_backup:"Import backup",
-    reset_all:"Reset all data",
-    backup_contains:"What the backup contains",
-    backup_contains_text:"All purchases, chosen start day, period type, period length and budget settings are stored in one JSON file.",
-    tab_overview:"Overview",
-    tab_history:"History",
-    tab_stores:"Stores",
-    tab_settings:"Settings",
-    no_entries_day:"No purchases registered for this date yet.",
-    invalid_amount:"Enter a valid amount.",
-    choose_date:"Choose a date.",
-    delete_confirm:"Remove this purchase?",
-    invalid_backup:"Invalid backup file.",
-    import_failed:"Could not read the backup file.",
-    import_ok:"Backup imported.",
-    export_ok:"Backup exported.",
-    save_ok:"Purchase saved.",
-    update_ok:"Change saved.",
-    delete_ok:"Purchase removed.",
-    reset_done:"All data has been reset.",
-    reset_confirm:"This deletes all purchases and settings. Are you sure?",
-    no_purchases:"No purchases",
-    no_purchases_yet:"No purchases yet",
-    no_purchases_year:"No purchases registered for this year yet.",
-    status_enter_budget:"Enter a budget for the period.",
-    status_over_budget:(amount)=>`You are over budget by ${amount}.`,
-    status_over_plan:(amount)=>`You are a bit ahead of plan. To catch up, try to stay around ${amount} per day from now on.`,
-    status_within_plan:(amount)=>`You are on track. You can spend about ${amount} per day from now on.`,
-    day_entries:(n)=>`Number of purchases: <strong>${n}</strong>`,
-    day_spent:"Spent this day",
-    day_target:"Daily target",
-    day_diff:"Daily difference",
-    cumulative:"So far",
-    over_plan:"over plan",
-    under_plan:"under plan",
-    heat_zero:"0",
-    heat_ok:"within plan",
-    heat_warn:"high day",
-    heat_bad:"over plan",
-    weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-    quick_hint:"Tip: The app remembers your last selected store.",
-    quick_hint_chip:"Last store is remembered",
-    jump_today:"Today",
-    open_settings:"Open settings",
-    show_setup_again:"Show setup screen again",
-    setupTitle:"Set up the app",
-    setupText:"Choose budget, period, language and currency first. After that you go straight to the overview.",
-    setupInfo1Title:"Quick start",
-    setupInfo1Text:"You only need to do this once.",
-    setupInfo2Title:"Can be changed later",
-    setupInfo2Text:"All settings can be changed later in Settings.",
-    setupStart:"Start app",
-    setupUseExisting:"Use saved settings",
-    setupNeedsBudget:"Enter a budget to get started.",
-    installReady:"Ready to install",
-    installInstalled:"Installed app",
-    installBrowser:"Running in browser",
-    networkOnline:"Online",
-    networkOffline:"Offline",
-    cacheReady:"Offline ready",
-    cacheWaiting:"Preparing offline",
-    installBtn:"Install",
-    dismiss:"Close"
-  }
+    appTitle:"Food Budget", status_title:"Status", settings:"Settings", budget_label:"Budget for this period", start_day_label:"Start day of period", period_mode_label:"Period type", period_length_label:"Length", weeks:"Weeks", months:"Months", language_label:"Language", currency_label:"Currency", used:"Used", remaining:"Remaining", daily_now:"Can spend per day now", selected_day:"Selected day", status_word:"Status", date:"Date", store:"Store", amount:"Amount", add_purchase:"Add purchase", save_change:"Save change", cancel_edit:"Cancel edit", remove:"Remove", dates_in_period:"Dates in period", entries_selected_day:"Purchases on selected date", spend_per_day:"Spend per day", by_store:"By store", history_compare:"History and comparison", year:"Year", period:"Period", selected_period:"Selected period", avg_per_day:"Average per day", diff_prev:"Difference from previous", entries_count:"Number of purchases", periods_this_year:"Periods this year", stores_selected_period:"Stores in selected period", period_overview:"Period overview", store_compare:"Store comparison", stores_through_year:"Stores through the year", most_used:"Most used", backup:"Backup", backup_note:"The app stores data locally in the browser. Here you can export a backup file and import it later.", export_backup:"Export backup", import_backup:"Import backup", reset_all:"Reset all data", backup_contains:"What the backup contains", backup_contains_text:"All purchases, chosen start day, period type, period length and budget settings are stored in one JSON file.", tab_overview:"Overview", tab_history:"History", tab_stores:"Stores", tab_settings:"Settings", no_entries_day:"No purchases registered for this date yet.", invalid_amount:"Enter a valid amount.", choose_date:"Choose a date.", delete_confirm:"Remove this purchase?", invalid_backup:"Invalid backup file.", import_failed:"Could not read the backup file.", import_ok:"Backup imported.", export_ok:"Backup exported.", save_ok:"Purchase saved.", update_ok:"Change saved.", delete_ok:"Purchase removed.", reset_done:"All data has been reset.", reset_confirm:"This deletes all purchases and settings. Are you sure?", no_purchases:"No purchases", no_purchases_yet:"No purchases yet", no_purchases_year:"No purchases registered for this year yet.", status_enter_budget:"Enter a budget for the period.", status_over_budget:(amount)=>`You are over budget by ${amount}.`, status_over_plan:(amount)=>`You are a bit ahead of plan. To catch up, try to stay around ${amount} per day from now on.`, status_within_plan:(amount)=>`You are on track. You can spend about ${amount} per day from now on.`, day_entries:(n)=>`Number of purchases: <strong>${n}</strong>`, day_spent:"Spent this day", day_target:"Daily target", day_diff:"Daily difference", cumulative:"So far", over_plan:"over plan", under_plan:"under plan", heat_zero:"0", heat_ok:"within plan", heat_warn:"high day", heat_bad:"over plan", weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], quick_hint:"Tip: The app remembers your last selected store.", quick_hint_chip:"Last store is remembered", jump_today:"Today", show_setup_again:"Show setup screen again", setupTitle:"Set up the app", setupText:"Choose budget, period, language and currency first. After that you go straight to the overview.", setupInfo1Title:"Quick start", setupInfo1Text:"You only need to do this once.", setupInfo2Title:"Can be changed later", setupInfo2Text:"All settings can be changed later in Settings.", setupStart:"Start app", setupUseExisting:"Use saved settings", setupNeedsBudget:"Enter a budget to get started.", installReady:"Ready to install", installInstalled:"Installed app", installBrowser:"Running in browser", networkOnline:"Online", networkOffline:"Offline", cacheReady:"Offline ready", cacheWaiting:"Preparing offline", installBtn:"Install", dismiss:"Close", shared_placeholder:"Shared budget coming soon"}
 };
 
 let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -1534,7 +524,6 @@ function getLastStore(){ return localStorage.getItem(LAST_STORE_KEY) || "Rema 10
 function setLastStore(v){ localStorage.setItem(LAST_STORE_KEY, v); }
 function isSetupDone(){ return localStorage.getItem(SETUP_DONE_KEY) === "1"; }
 function setSetupDone(v){ localStorage.setItem(SETUP_DONE_KEY, v ? "1" : "0"); }
-
 function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
 function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
 function saveStartDay(){ localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20"); }
@@ -1546,297 +535,75 @@ function showToast(message, type=""){
   el.className = `toast ${type}`.trim();
   el.textContent = message;
   wrap.appendChild(el);
-  setTimeout(() => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(6px)";
-    el.style.transition = "opacity .18s ease, transform .18s ease";
-  }, 2100);
+  setTimeout(() => { el.style.opacity = "0"; el.style.transform = "translateY(6px)"; el.style.transition = "opacity .18s ease, transform .18s ease"; }, 2100);
   setTimeout(() => el.remove(), 2350);
 }
-
-function vibrateSoft(){
-  if ("vibrate" in navigator) navigator.vibrate(12);
-}
-
+function vibrateSoft(){ if ("vibrate" in navigator) navigator.vibrate(12); }
 function formatCurrency(value){
   const currency = getCurrency();
-  try{
-    return new Intl.NumberFormat(getLang() === "no" ? "nb-NO" : "en-GB", {
-      style:"currency",
-      currency,
-      maximumFractionDigits:0
-    }).format(Number(value || 0));
-  } catch {
-    return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB") + " " + currency;
-  }
+  try{ return new Intl.NumberFormat(getLang() === "no" ? "nb-NO" : "en-GB", { style:"currency", currency, maximumFractionDigits:0 }).format(Number(value || 0)); }
+  catch { return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB") + " " + currency; }
 }
-
-function formatNumber(value){
-  return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB");
-}
-
-function formatISO(date){
-  const y = date.getFullYear();
-  const m = String(date.getMonth()+1).padStart(2,"0");
-  const d = String(date.getDate()).padStart(2,"0");
-  return `${y}-${m}-${d}`;
-}
-
-function parseLocalDate(iso){
-  const [y,m,d] = iso.split("-").map(Number);
-  return new Date(y,m-1,d);
-}
-
-function shortDate(date){
-  return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { day:"2-digit", month:"2-digit" });
-}
-
-function longDate(date){
-  return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
-}
-
-function periodName(period){
-  const locale = getLang() === "no" ? "nb-NO" : "en-GB";
-  const startText = period.start.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" });
-  const endText = period.end.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" });
-  return `${startText} – ${endText}`;
-}
-
-function populateStartDaySelect(selectId, selectedValue = getStartDay()){
-  const sel = document.getElementById(selectId);
-  sel.innerHTML = Array.from({length:28}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join("");
-  sel.value = String(selectedValue);
-}
-
-function applyPeriodSelectors(){
-  const modeSel = document.getElementById("periodMode");
-  const lengthSel = document.getElementById("periodLength");
-  modeSel.innerHTML = `
-    <option value="weeks">${tr().weeks}</option>
-    <option value="months">${tr().months}</option>
-  `;
-  lengthSel.innerHTML = `
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-  `;
-  modeSel.value = getPeriodMode();
-  lengthSel.value = String(getPeriodLength());
-}
-
-function applySetupSelectors(){
-  const modeSel = document.getElementById("setupPeriodMode");
-  const lengthSel = document.getElementById("setupPeriodLength");
-  modeSel.innerHTML = `
-    <option value="weeks">${tr().weeks}</option>
-    <option value="months">${tr().months}</option>
-  `;
-  lengthSel.innerHTML = `
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-  `;
-  modeSel.value = getPeriodMode();
-  lengthSel.value = String(getPeriodLength());
-  document.getElementById("setupLanguage").value = getLang();
-  document.getElementById("setupCurrency").value = getCurrency();
-  document.getElementById("setupBudget").value = localStorage.getItem(BUDGET_KEY) || "";
-  populateStartDaySelect("setupStartDay", getStartDay());
-}
-
+function formatNumber(value){ return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB"); }
+function formatISO(date){ const y = date.getFullYear(); const m = String(date.getMonth()+1).padStart(2,"0"); const d = String(date.getDate()).padStart(2,"0"); return `${y}-${m}-${d}`; }
+function parseLocalDate(iso){ const [y,m,d] = iso.split("-").map(Number); return new Date(y,m-1,d); }
+function shortDate(date){ return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { day:"2-digit", month:"2-digit" }); }
+function longDate(date){ return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); }
+function periodName(period){ const locale = getLang() === "no" ? "nb-NO" : "en-GB"; const startText = period.start.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" }); const endText = period.end.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" }); return `${startText} – ${endText}`; }
+function populateStartDaySelect(selectId, selectedValue = getStartDay()){ const sel = document.getElementById(selectId); sel.innerHTML = Array.from({length:28}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join(""); sel.value = String(selectedValue); }
+function applyPeriodSelectors(){ const modeSel = document.getElementById("periodMode"); const lengthSel = document.getElementById("periodLength"); modeSel.innerHTML = `<option value="weeks">${tr().weeks}</option><option value="months">${tr().months}</option>`; lengthSel.innerHTML = `<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>`; modeSel.value = getPeriodMode(); lengthSel.value = String(getPeriodLength()); }
+function applySetupSelectors(){ const modeSel = document.getElementById("setupPeriodMode"); const lengthSel = document.getElementById("setupPeriodLength"); modeSel.innerHTML = `<option value="weeks">${tr().weeks}</option><option value="months">${tr().months}</option>`; lengthSel.innerHTML = `<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>`; modeSel.value = getPeriodMode(); lengthSel.value = String(getPeriodLength()); document.getElementById("setupLanguage").value = getLang(); document.getElementById("setupCurrency").value = getCurrency(); document.getElementById("setupBudget").value = localStorage.getItem(BUDGET_KEY) || ""; populateStartDaySelect("setupStartDay", getStartDay()); }
 function getPeriod(today = new Date()){
-  const startDay = getStartDay();
-  const mode = getPeriodMode();
-  const length = getPeriodLength();
-
+  const startDay = getStartDay(), mode = getPeriodMode(), length = getPeriodLength();
   let startYear, startMonth;
-  if (today.getDate() >= startDay){
-    startYear = today.getFullYear();
-    startMonth = today.getMonth();
-  } else {
-    const prev = new Date(today.getFullYear(), today.getMonth()-1, 1);
-    startYear = prev.getFullYear();
-    startMonth = prev.getMonth();
-  }
-
-  const start = new Date(startYear, startMonth, startDay);
-  let end;
-
-  if (mode === "weeks"){
-    end = new Date(start);
-    end.setDate(end.getDate() + (length * 7) - 1);
-  } else {
-    end = startDay === 1
-      ? new Date(startYear, startMonth + length, 0)
-      : new Date(startYear, startMonth + length, startDay - 1);
-  }
-
-  start.setHours(0,0,0,0);
-  end.setHours(0,0,0,0);
-  return { start, end };
+  if (today.getDate() >= startDay){ startYear = today.getFullYear(); startMonth = today.getMonth(); }
+  else { const prev = new Date(today.getFullYear(), today.getMonth()-1, 1); startYear = prev.getFullYear(); startMonth = prev.getMonth(); }
+  const start = new Date(startYear, startMonth, startDay); let end;
+  if (mode === "weeks"){ end = new Date(start); end.setDate(end.getDate() + (length * 7) - 1); }
+  else { end = startDay === 1 ? new Date(startYear, startMonth + length, 0) : new Date(startYear, startMonth + length, startDay - 1); }
+  start.setHours(0,0,0,0); end.setHours(0,0,0,0); return { start, end };
 }
-
-function getPeriodFromStart(startDate){
-  const mode = getPeriodMode();
-  const length = getPeriodLength();
-  const start = new Date(startDate);
-  start.setHours(0,0,0,0);
-  let end;
-
-  if (mode === "weeks"){
-    end = new Date(start);
-    end.setDate(end.getDate() + (length * 7) - 1);
-  } else {
-    const startDay = getStartDay();
-    end = startDay === 1
-      ? new Date(start.getFullYear(), start.getMonth() + length, 0)
-      : new Date(start.getFullYear(), start.getMonth() + length, startDay - 1);
-  }
-
-  end.setHours(0,0,0,0);
-  return { start, end };
-}
-
-function getDatesInRange(start, end){
-  const dates = [];
-  const current = new Date(start);
-  while (current <= end){
-    dates.push(formatISO(current));
-    current.setDate(current.getDate() + 1);
-  }
-  return dates;
-}
-
-function getDatesInCurrentPeriod(){
-  const { start, end } = getPeriod();
-  return getDatesInRange(start, end);
-}
-
-function ensureSelectedDate(){
-  const dates = getDatesInCurrentPeriod();
-  const todayIso = formatISO(new Date());
-  if (dates.includes(todayIso)) selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso;
-  else selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0];
-  document.getElementById("selectedDate").value = selectedDate;
-}
-
-function getExpensesInPeriod(start, end){
-  return expenses.filter(e => {
-    const d = parseLocalDate(e.date);
-    return d >= start && d <= end;
-  });
-}
-
-function getCurrentPeriodExpenses(){
-  const { start, end } = getPeriod();
-  return getExpensesInPeriod(start, end);
-}
-
-function getExpensesForDate(iso){
-  return getCurrentPeriodExpenses()
-    .filter(e => e.date === iso)
-    .sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0));
-}
-
+function getPeriodFromStart(startDate){ const mode = getPeriodMode(), length = getPeriodLength(); const start = new Date(startDate); start.setHours(0,0,0,0); let end; if (mode === "weeks"){ end = new Date(start); end.setDate(end.getDate() + (length * 7) - 1); } else { const startDay = getStartDay(); end = startDay === 1 ? new Date(start.getFullYear(), start.getMonth() + length, 0) : new Date(start.getFullYear(), start.getMonth() + length, startDay - 1); } end.setHours(0,0,0,0); return { start, end }; }
+function getDatesInRange(start, end){ const dates = []; const current = new Date(start); while (current <= end){ dates.push(formatISO(current)); current.setDate(current.getDate() + 1); } return dates; }
+function getDatesInCurrentPeriod(){ const { start, end } = getPeriod(); return getDatesInRange(start, end); }
+function ensureSelectedDate(){ const dates = getDatesInCurrentPeriod(); const todayIso = formatISO(new Date()); if (dates.includes(todayIso)) selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso; else selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0]; document.getElementById("selectedDate").value = selectedDate; }
+function getExpensesInPeriod(start, end){ return expenses.filter(e => { const d = parseLocalDate(e.date); return d >= start && d <= end; }); }
+function getCurrentPeriodExpenses(){ const { start, end } = getPeriod(); return getExpensesInPeriod(start, end); }
+function getExpensesForDate(iso){ return getCurrentPeriodExpenses().filter(e => e.date === iso).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)); }
 function getBudget(){ return Number(document.getElementById("budget").value || 0); }
-
-function syncSettingsInputsFromStorage(){
-  document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || "";
-  document.getElementById("language").value = getLang();
-  document.getElementById("currency").value = getCurrency();
-  populateStartDaySelect("startDay", getStartDay());
-  applyPeriodSelectors();
-}
-
-function isStandaloneMode(){
-  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-}
-
+function syncSettingsInputsFromStorage(){ document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || ""; document.getElementById("language").value = getLang(); document.getElementById("currency").value = getCurrency(); populateStartDaySelect("startDay", getStartDay()); applyPeriodSelectors(); }
+function isStandaloneMode(){ return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; }
 function updatePwaBar(){
-  const bar = document.getElementById("pwaBar");
-  const installStatePill = document.getElementById("installStatePill");
-  const networkStatePill = document.getElementById("networkStatePill");
-  const cacheStatePill = document.getElementById("cacheStatePill");
-  const installBtn = document.getElementById("installBtn");
-
-  if (localStorage.getItem(PWA_BAR_DISMISSED_KEY) === "1") {
-    bar.classList.add("hidden");
-    return;
-  }
-
+  const bar = document.getElementById("pwaBar"), installStatePill = document.getElementById("installStatePill"), networkStatePill = document.getElementById("networkStatePill"), cacheStatePill = document.getElementById("cacheStatePill"), installBtn = document.getElementById("installBtn");
+  if (localStorage.getItem(PWA_BAR_DISMISSED_KEY) === "1") { bar.classList.add("hidden"); return; }
   bar.classList.remove("hidden");
-
-  if (isStandaloneMode()){
-    installStatePill.textContent = tr().installInstalled;
-    installStatePill.className = "pwa-pill good";
-    installBtn.classList.add("hidden");
-  } else if (deferredInstallPrompt){
-    installStatePill.textContent = tr().installReady;
-    installStatePill.className = "pwa-pill good";
-    installBtn.textContent = tr().installBtn;
-    installBtn.classList.remove("hidden");
-  } else {
-    installStatePill.textContent = tr().installBrowser;
-    installStatePill.className = "pwa-pill";
-    installBtn.classList.add("hidden");
-  }
-
-  if (navigator.onLine){
-    networkStatePill.textContent = tr().networkOnline;
-    networkStatePill.className = "pwa-pill good";
-  } else {
-    networkStatePill.textContent = tr().networkOffline;
-    networkStatePill.className = "pwa-pill warn";
-  }
-
-  if (swRegistered){
-    cacheStatePill.textContent = tr().cacheReady;
-    cacheStatePill.className = "pwa-pill good";
-  } else {
-    cacheStatePill.textContent = tr().cacheWaiting;
-    cacheStatePill.className = "pwa-pill";
-  }
+  if (isStandaloneMode()){ installStatePill.textContent = tr().installInstalled; installStatePill.className = "pwa-pill good"; installBtn.classList.add("hidden"); }
+  else if (deferredInstallPrompt){ installStatePill.textContent = tr().installReady; installStatePill.className = "pwa-pill good"; installBtn.textContent = tr().installBtn; installBtn.classList.remove("hidden"); }
+  else { installStatePill.textContent = tr().installBrowser; installStatePill.className = "pwa-pill"; installBtn.classList.add("hidden"); }
+  if (navigator.onLine){ networkStatePill.textContent = tr().networkOnline; networkStatePill.className = "pwa-pill good"; }
+  else { networkStatePill.textContent = tr().networkOffline; networkStatePill.className = "pwa-pill warn"; }
+  if (swRegistered){ cacheStatePill.textContent = tr().cacheReady; cacheStatePill.className = "pwa-pill good"; }
+  else { cacheStatePill.textContent = tr().cacheWaiting; cacheStatePill.className = "pwa-pill"; }
 }
-
 function applyUIStrings(){
   const s = tr();
   document.getElementById("appTitle").innerText = s.appTitle;
-  document.getElementById("appSubtitle").innerText = s.appSubtitle;
-
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.dataset.i18n;
-    if (s[key]) el.textContent = s[key];
-  });
-
+  document.querySelectorAll("[data-i18n]").forEach(el => { const key = el.dataset.i18n; if (s[key]) el.textContent = s[key]; });
   document.querySelector('.tab-btn[data-tab="overviewTab"] span').textContent = s.tab_overview;
   document.querySelector('.tab-btn[data-tab="historyTab"] span').textContent = s.tab_history;
   document.querySelector('.tab-btn[data-tab="shopsTab"] span').textContent = s.tab_stores;
   document.querySelector('.tab-btn[data-tab="settingsTab"] span').textContent = s.tab_settings;
-
   document.getElementById("jumpToTodayBtn").textContent = s.jump_today;
-  document.getElementById("openSettingsBtn").textContent = s.open_settings;
   document.getElementById("showSetupAgainBtn").textContent = s.show_setup_again;
   document.getElementById("quickHint").textContent = s.quick_hint;
   document.getElementById("quickHintChip").textContent = s.quick_hint_chip;
   document.getElementById("dismissPwaBarBtn").textContent = s.dismiss;
-
-  const w = s.weekdays;
-  document.getElementById("wd1").textContent = w[0];
-  document.getElementById("wd2").textContent = w[1];
-  document.getElementById("wd3").textContent = w[2];
-  document.getElementById("wd4").textContent = w[3];
-  document.getElementById("wd5").textContent = w[4];
-  document.getElementById("wd6").textContent = w[5];
-  document.getElementById("wd7").textContent = w[6];
-
+  const w = s.weekdays; [1,2,3,4,5,6,7].forEach((n,i)=>document.getElementById(`wd${n}`).textContent=w[i]);
   document.getElementById("saveBtn").textContent = editingId ? s.save_change : s.add_purchase;
   document.getElementById("cancelEditBtn").textContent = s.cancel_edit;
   document.getElementById("exportBtn").textContent = s.export_backup;
   document.getElementById("importBtn").textContent = s.import_backup;
   document.getElementById("resetBtn").textContent = s.reset_all;
-
   document.getElementById("setupTitle").textContent = s.setupTitle;
   document.getElementById("setupText").textContent = s.setupText;
   document.getElementById("setupInfo1Title").textContent = s.setupInfo1Title;
@@ -1851,1007 +618,161 @@ function applyUIStrings(){
   document.getElementById("setupCurrencyLabel").textContent = s.currency_label;
   document.getElementById("startUsingAppBtn").textContent = s.setupStart;
   document.getElementById("setupUseExistingBtn").textContent = s.setupUseExisting;
-
   document.getElementById("language").value = getLang();
   document.getElementById("currency").value = getCurrency();
   applyPeriodSelectors();
   applySetupSelectors();
   updatePwaBar();
 }
-
-function showSetupScreen(){
-  document.getElementById("setupScreen").classList.remove("hidden");
-  document.getElementById("mainApp").classList.add("hidden");
-  applyUIStrings();
-  requestAnimationFrame(() => {
-    document.getElementById("setupBudget").focus();
-  });
-}
-
-function showMainApp(){
-  document.getElementById("setupScreen").classList.add("hidden");
-  document.getElementById("mainApp").classList.remove("hidden");
-  syncSettingsInputsFromStorage();
-  applyUIStrings();
-  ensureSelectedDate();
-  setFormForAdd();
-  updateAll();
-  requestAnimationFrame(() => focusAmountField(true));
-}
-
-function shouldShowSetupScreen(){
-  return !isSetupDone() || !localStorage.getItem(BUDGET_KEY);
-}
-
-function focusAmountField(selectContent = false){
-  if (document.getElementById("overviewTab").classList.contains("active")){
-    const field = document.getElementById("expense");
-    field.focus();
-    if (selectContent && field.value) field.select();
-  }
-}
-
-function jumpToToday(){
-  const todayIso = formatISO(new Date());
-  const dates = getDatesInCurrentPeriod();
-  selectedDate = dates.includes(todayIso) ? todayIso : dates[0];
-  document.getElementById("selectedDate").value = selectedDate;
-  renderOverviewOnly();
-  focusAmountField(true);
-}
-
-function setFormForAdd(){
-  editingId = null;
-  document.getElementById("formTitle").innerText = tr().add_purchase;
-  document.getElementById("saveBtn").innerText = tr().add_purchase;
-  document.getElementById("cancelEditBtn").style.display = "none";
-  document.getElementById("expense").value = "";
-  document.getElementById("selectedDate").value = selectedDate;
-  document.getElementById("category").value = getLastStore();
-}
-
-function setFormForEdit(entry){
-  editingId = entry.id;
-  document.getElementById("formTitle").innerText = tr().save_change;
-  document.getElementById("saveBtn").innerText = tr().save_change;
-  document.getElementById("cancelEditBtn").style.display = "block";
-  document.getElementById("cancelEditBtn").innerText = tr().cancel_edit;
-  document.getElementById("selectedDate").value = entry.date;
-  document.getElementById("category").value = entry.category;
-  document.getElementById("expense").value = entry.amount;
-  selectedDate = entry.date;
-  renderOverviewOnly();
-  requestAnimationFrame(() => {
-    const input = document.getElementById("expense");
-    input.focus();
-    input.select();
-  });
-}
-
+function showSetupScreen(){ document.getElementById("setupScreen").classList.remove("hidden"); document.getElementById("mainApp").classList.add("hidden"); applyUIStrings(); requestAnimationFrame(() => { document.getElementById("setupBudget").focus(); }); }
+function showMainApp(){ document.getElementById("setupScreen").classList.add("hidden"); document.getElementById("mainApp").classList.remove("hidden"); syncSettingsInputsFromStorage(); applyUIStrings(); ensureSelectedDate(); setFormForAdd(); updateAll(); requestAnimationFrame(() => focusAmountField(true)); }
+function shouldShowSetupScreen(){ return !isSetupDone() || !localStorage.getItem(BUDGET_KEY); }
+function focusAmountField(selectContent = false){ if (document.getElementById("overviewTab").classList.contains("active")){ const field = document.getElementById("expense"); field.focus(); if (selectContent && field.value) field.select(); } }
+function jumpToToday(){ const todayIso = formatISO(new Date()); const dates = getDatesInCurrentPeriod(); selectedDate = dates.includes(todayIso) ? todayIso : dates[0]; document.getElementById("selectedDate").value = selectedDate; renderOverviewOnly(); focusAmountField(true); }
+function setFormForAdd(){ editingId = null; document.getElementById("formTitle").innerText = tr().add_purchase; document.getElementById("saveBtn").innerText = tr().add_purchase; document.getElementById("cancelEditBtn").style.display = "none"; document.getElementById("expense").value = ""; document.getElementById("selectedDate").value = selectedDate; document.getElementById("category").value = getLastStore(); }
+function setFormForEdit(entry){ editingId = entry.id; document.getElementById("formTitle").innerText = tr().save_change; document.getElementById("saveBtn").innerText = tr().save_change; document.getElementById("cancelEditBtn").style.display = "block"; document.getElementById("cancelEditBtn").innerText = tr().cancel_edit; document.getElementById("selectedDate").value = entry.date; document.getElementById("category").value = entry.category; document.getElementById("expense").value = entry.amount; selectedDate = entry.date; renderOverviewOnly(); requestAnimationFrame(() => { const input = document.getElementById("expense"); input.focus(); input.select(); }); }
 function addOrUpdateExpense(){
-  const amount = Number(document.getElementById("expense").value);
-  const category = document.getElementById("category").value;
-  const date = document.getElementById("selectedDate").value;
-
+  const amount = Number(document.getElementById("expense").value), category = document.getElementById("category").value, date = document.getElementById("selectedDate").value;
   if (!date){ alert(tr().choose_date); return; }
   if (!amount || amount <= 0){ alert(tr().invalid_amount); return; }
-
   setLastStore(category);
-
-  if (editingId){
-    const idx = expenses.findIndex(e => e.id === editingId);
-    if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date };
-  } else {
-    expenses.push({ id: uid(), amount, category, date, createdAt: Date.now() });
-  }
-
-  const wasEditing = !!editingId;
-  selectedDate = date;
-  saveExpenses();
-  editingId = null;
-  updateAll();
-  setFormForAdd();
-  vibrateSoft();
-  showToast(wasEditing ? tr().update_ok : tr().save_ok, "good");
-  requestAnimationFrame(() => focusAmountField(false));
+  if (editingId){ const idx = expenses.findIndex(e => e.id === editingId); if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date }; }
+  else { expenses.push({ id: uid(), amount, category, date, createdAt: Date.now() }); }
+  const wasEditing = !!editingId; selectedDate = date; saveExpenses(); editingId = null; updateAll(); setFormForAdd(); vibrateSoft(); showToast(wasEditing ? tr().update_ok : tr().save_ok, "good"); requestAnimationFrame(() => focusAmountField(false));
 }
-
-function deleteExpense(id){
-  expenses = expenses.filter(e => e.id !== id);
-  saveExpenses();
-  if (editingId === id) setFormForAdd();
-  updateAll();
-  vibrateSoft();
-  showToast(tr().delete_ok, "danger");
-}
-
+function deleteExpense(id){ expenses = expenses.filter(e => e.id !== id); saveExpenses(); if (editingId === id) setFormForAdd(); updateAll(); vibrateSoft(); showToast(tr().delete_ok, "danger"); }
 function renderDateStrip(){
-  const strip = document.getElementById("dateStrip");
-  const todayIso = formatISO(new Date());
-  const dates = getDatesInCurrentPeriod();
-  const budget = getBudget();
-  const totalDays = dates.length;
-  const perDay = budget ? budget / totalDays : 0;
-  const locale = getLang() === "no" ? "nb-NO" : "en-GB";
-
-  const totalsByDate = {};
-  dates.forEach(d => totalsByDate[d] = 0);
-  getCurrentPeriodExpenses().forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
-
+  const strip = document.getElementById("dateStrip"), todayIso = formatISO(new Date()), dates = getDatesInCurrentPeriod(), budget = getBudget(), totalDays = dates.length, perDay = budget ? budget / totalDays : 0, locale = getLang() === "no" ? "nb-NO" : "en-GB";
+  const totalsByDate = {}; dates.forEach(d => totalsByDate[d] = 0); getCurrentPeriodExpenses().forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
   let runningUsed = 0;
-
   strip.innerHTML = dates.map((iso, index) => {
-    const d = parseLocalDate(iso);
-    const total = totalsByDate[iso] || 0;
-    runningUsed += total;
-    const allowedSoFar = perDay * (index + 1);
-    const diff = runningUsed - allowedSoFar;
-    const percentOfDay = perDay > 0 ? Math.round((total / perDay) * 100) : 0;
-    const active = iso === selectedDate ? "active" : "";
-    const today = iso === todayIso ? "today" : "";
-    let colorClass = "";
-    let subText = "";
-
-    if (total === 0){
-      colorClass = "zero";
-      subText = tr().heat_zero;
-    } else if (perDay > 0 && diff > perDay * 0.5){
-      colorClass = "bad-2";
-      subText = `+${Math.round(diff)}`;
-    } else if (diff > 0){
-      colorClass = "bad-1";
-      subText = `+${Math.round(diff)}`;
-    } else if (perDay > 0 && total > perDay * 1.25){
-      colorClass = "warn-2";
-      subText = `${percentOfDay}%`;
-    } else if (perDay > 0 && total > perDay){
-      colorClass = "warn-1";
-      subText = `${percentOfDay}%`;
-    } else if (perDay > 0 && Math.abs(diff) < perDay * 0.35){
-      colorClass = "ok-2";
-      subText = `${percentOfDay}%`;
-    } else {
-      colorClass = "ok-1";
-      subText = `${Math.round(total)}`;
-    }
-
-    return `
-      <button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button" title="${longDate(d)} – ${formatCurrency(total)}">
-        <span class="top">${d.toLocaleDateString(locale, { weekday:"short" })}</span>
-        <span class="bottom">${d.getDate()}.${d.getMonth()+1}</span>
-        <span class="sub">${subText}</span>
-      </button>
-    `;
+    const d = parseLocalDate(iso), total = totalsByDate[iso] || 0; runningUsed += total; const allowedSoFar = perDay * (index + 1), diff = runningUsed - allowedSoFar, percentOfDay = perDay > 0 ? Math.round((total / perDay) * 100) : 0; const active = iso === selectedDate ? "active" : "", today = iso === todayIso ? "today" : ""; let colorClass = "", subText = "";
+    if (total === 0){ colorClass = "zero"; subText = tr().heat_zero; }
+    else if (perDay > 0 && diff > perDay * 0.5){ colorClass = "bad-2"; subText = `+${Math.round(diff)}`; }
+    else if (diff > 0){ colorClass = "bad-1"; subText = `+${Math.round(diff)}`; }
+    else if (perDay > 0 && total > perDay * 1.25){ colorClass = "warn-2"; subText = `${percentOfDay}%`; }
+    else if (perDay > 0 && total > perDay){ colorClass = "warn-1"; subText = `${percentOfDay}%`; }
+    else if (perDay > 0 && Math.abs(diff) < perDay * 0.35){ colorClass = "ok-2"; subText = `${percentOfDay}%`; }
+    else { colorClass = "ok-1"; subText = `${Math.round(total)}`; }
+    return `<button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button" title="${longDate(d)} – ${formatCurrency(total)}"><span class="top">${d.toLocaleDateString(locale, { weekday:"short" })}</span><span class="bottom">${d.getDate()}.${d.getMonth()+1}</span><span class="sub">${subText}</span></button>`;
   }).join("");
-
-  strip.querySelectorAll(".date-chip").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedDate = btn.dataset.date;
-      document.getElementById("selectedDate").value = selectedDate;
-      if (!editingId) document.getElementById("expense").value = "";
-      renderOverviewOnly();
-      focusAmountField();
-    });
-  });
-
-  const activeEl = strip.querySelector(".date-chip.active");
-  if (activeEl) activeEl.scrollIntoView({ inline:"center", block:"nearest" });
+  strip.querySelectorAll(".date-chip").forEach(btn => btn.addEventListener("click", () => { selectedDate = btn.dataset.date; document.getElementById("selectedDate").value = selectedDate; if (!editingId) document.getElementById("expense").value = ""; renderOverviewOnly(); focusAmountField(); }));
+  const activeEl = strip.querySelector(".date-chip.active"); if (activeEl) activeEl.scrollIntoView({ inline:"center", block:"nearest" });
 }
-
 function renderDaySection(){
-  const iso = selectedDate;
-  const entries = getExpensesForDate(iso);
-  const total = entries.reduce((sum,e)=>sum+e.amount,0);
-  const budget = getBudget();
-  const totalDays = getDatesInCurrentPeriod().length;
-  const perDayTarget = budget ? budget / totalDays : 0;
-  const diff = total - perDayTarget;
-  const d = parseLocalDate(iso);
-  const countEntries = entries.length;
-
-  const dates = getDatesInCurrentPeriod();
-  const dayIndex = dates.indexOf(iso);
-  const allowedSoFar = perDayTarget * (dayIndex + 1);
-
-  let usedSoFar = 0;
-  for (let i = 0; i <= dayIndex; i++){
-    usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
-  }
-
-  const cumulativeDiff = usedSoFar - allowedSoFar;
-  const percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
-
+  const iso = selectedDate, entries = getExpensesForDate(iso), total = entries.reduce((sum,e)=>sum+e.amount,0), budget = getBudget(), totalDays = getDatesInCurrentPeriod().length, perDayTarget = budget ? budget / totalDays : 0, diff = total - perDayTarget, d = parseLocalDate(iso), countEntries = entries.length, dates = getDatesInCurrentPeriod(), dayIndex = dates.indexOf(iso), allowedSoFar = perDayTarget * (dayIndex + 1);
+  let usedSoFar = 0; for (let i = 0; i <= dayIndex; i++) usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
+  const cumulativeDiff = usedSoFar - allowedSoFar, percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
   document.getElementById("selectedTotal").innerText = formatCurrency(total);
-
-  document.getElementById("daySummary").innerHTML = `
-    <strong>${longDate(d)}</strong><br>
-    ${tr().day_entries(countEntries)}<br>
-    ${tr().day_spent}: <strong>${formatCurrency(total)}</strong><br>
-    ${tr().day_target}: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>
-    ${tr().day_diff}: <strong>${diff > 0 ? "+" : ""}${formatNumber(diff)}</strong><br>
-    ${tr().cumulative}: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${formatNumber(cumulativeDiff)} ${cumulativeDiff > 0 ? tr().over_plan : tr().under_plan}</strong>
-  `;
-
+  document.getElementById("daySummary").innerHTML = `<strong>${longDate(d)}</strong><br>${tr().day_entries(countEntries)}<br>${tr().day_spent}: <strong>${formatCurrency(total)}</strong><br>${tr().day_target}: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>${tr().day_diff}: <strong>${diff > 0 ? "+" : ""}${formatNumber(diff)}</strong><br>${tr().cumulative}: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${formatNumber(cumulativeDiff)} ${cumulativeDiff > 0 ? tr().over_plan : tr().under_plan}</strong>`;
   const wrap = document.getElementById("dayEntries");
-  if (!entries.length){
-    wrap.innerHTML = `<div class="empty">${tr().no_entries_day}</div>`;
-    return;
-  }
-
-  wrap.innerHTML = entries.map(e => `
-    <div class="item">
-      <div class="item-head">
-        <div>
-          <div class="item-amount">${formatCurrency(e.amount)}</div>
-          <div class="item-meta">${e.category}</div>
-        </div>
-      </div>
-      <div class="item-actions">
-        <button class="secondary edit-btn" data-id="${e.id}" type="button">${tr().save_change}</button>
-        <button class="danger delete-btn" data-id="${e.id}" type="button">${tr().remove}</button>
-      </div>
-    </div>
-  `).join("");
-
-  wrap.querySelectorAll(".edit-btn").forEach(btn => btn.addEventListener("click", () => {
-    const entry = expenses.find(e => e.id === btn.dataset.id);
-    if (entry) setFormForEdit(entry);
-  }));
-
-  wrap.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (confirm(tr().delete_confirm)) deleteExpense(btn.dataset.id);
-    });
-  });
+  if (!entries.length){ wrap.innerHTML = `<div class="empty">${tr().no_entries_day}</div>`; return; }
+  wrap.innerHTML = entries.map(e => `<div class="item"><div class="item-head"><div><div class="item-amount">${formatCurrency(e.amount)}</div><div class="item-meta">${e.category}</div></div></div><div class="item-actions"><button class="secondary edit-btn" data-id="${e.id}" type="button">${tr().save_change}</button><button class="danger delete-btn" data-id="${e.id}" type="button">${tr().remove}</button></div></div>`).join("");
+  wrap.querySelectorAll(".edit-btn").forEach(btn => btn.addEventListener("click", () => { const entry = expenses.find(e => e.id === btn.dataset.id); if (entry) setFormForEdit(entry); }));
+  wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => { if (confirm(tr().delete_confirm)) deleteExpense(btn.dataset.id); }));
 }
-
 function updateSummaryOnly(){
-  const budget = getBudget();
-  const periodExpenses = getCurrentPeriodExpenses();
-  const used = periodExpenses.reduce((sum,e)=>sum+e.amount,0);
-  const { start, end } = getPeriod();
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const totalDays = getDatesInCurrentPeriod().length;
-  const daysGone = today < start ? 0 : Math.min(totalDays, Math.floor((today - start) / 86400000) + 1);
-  const daysLeft = today > end ? 0 : Math.max(1, Math.floor((end - today) / 86400000) + 1);
-  const remaining = budget - used;
-  const dailyNow = daysLeft ? remaining / daysLeft : 0;
-  const idealUsed = budget ? (budget / totalDays) * daysGone : 0;
-
-  document.getElementById("used").innerText = formatCurrency(used);
-  document.getElementById("remaining").innerText = formatCurrency(remaining);
-  document.getElementById("dailyNow").innerText = formatCurrency(dailyNow);
-
-  const modeText = getPeriodMode() === "weeks" ? tr().weeks.toLowerCase() : tr().months.toLowerCase();
-  document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · ${tr().start_day_label.toLowerCase()} ${getStartDay()} · ${getPeriodLength()} ${modeText}`;
-
+  const budget = getBudget(), periodExpenses = getCurrentPeriodExpenses(), used = periodExpenses.reduce((sum,e)=>sum+e.amount,0), { start, end } = getPeriod(); const today = new Date(); today.setHours(0,0,0,0);
+  const totalDays = getDatesInCurrentPeriod().length, daysGone = today < start ? 0 : Math.min(totalDays, Math.floor((today - start) / 86400000) + 1), daysLeft = today > end ? 0 : Math.max(1, Math.floor((end - today) / 86400000) + 1), remaining = budget - used, dailyNow = daysLeft ? remaining / daysLeft : 0, idealUsed = budget ? (budget / totalDays) * daysGone : 0;
+  document.getElementById("used").innerText = formatCurrency(used); document.getElementById("remaining").innerText = formatCurrency(remaining); document.getElementById("dailyNow").innerText = formatCurrency(dailyNow);
+  const modeText = getPeriodMode() === "weeks" ? tr().weeks.toLowerCase() : tr().months.toLowerCase(); document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · ${tr().start_day_label.toLowerCase()} ${getStartDay()} · ${getPeriodLength()} ${modeText}`;
   const statusEl = document.getElementById("status");
-  if (!budget){
-    statusEl.className = "status";
-    statusEl.innerText = tr().status_enter_budget;
-  } else if (remaining < 0){
-    statusEl.className = "status warn";
-    statusEl.innerText = tr().status_over_budget(formatCurrency(Math.abs(remaining)));
-  } else if (used > idealUsed){
-    statusEl.className = "status warn";
-    statusEl.innerText = tr().status_over_plan(formatCurrency(dailyNow));
-  } else {
-    statusEl.className = "status good";
-    statusEl.innerText = tr().status_within_plan(formatCurrency(dailyNow));
-  }
+  if (!budget){ statusEl.className = "status"; statusEl.innerText = tr().status_enter_budget; }
+  else if (remaining < 0){ statusEl.className = "status warn"; statusEl.innerText = tr().status_over_budget(formatCurrency(Math.abs(remaining))); }
+  else if (used > idealUsed){ statusEl.className = "status warn"; statusEl.innerText = tr().status_over_plan(formatCurrency(dailyNow)); }
+  else { statusEl.className = "status good"; statusEl.innerText = tr().status_within_plan(formatCurrency(dailyNow)); }
 }
-
-function getChartBaseOptions(){
-  const darkText = "rgba(20,32,51,.78)";
-  const lightLine = "rgba(209,224,240,.7)";
-  return {
-    responsive:true,
-    maintainAspectRatio:false,
-    animation:{ duration:260 },
-    plugins:{
-      legend:{ display:false },
-      tooltip:{
-        backgroundColor:"rgba(20,32,51,.94)",
-        titleColor:"#fff",
-        bodyColor:"#fff",
-        padding:10,
-        cornerRadius:12
-      }
-    },
-    scales:{
-      x:{
-        grid:{ display:false },
-        ticks:{ color:darkText, maxRotation:0, autoSkip:true }
-      },
-      y:{
-        beginAtZero:true,
-        grid:{ color:lightLine },
-        ticks:{ color:darkText }
-      }
-    }
-  };
-}
-
-function buildChart(id, type, labels, data){
-  return new Chart(document.getElementById(id), {
-    type,
-    data:{
-      labels,
-      datasets:[{
-        label:"",
-        data,
-        tension:0.3,
-        fill:type === "line",
-        borderColor:"#2563eb",
-        backgroundColor:type === "line" ? "rgba(37,99,235,.14)" : "rgba(37,99,235,.82)",
-        pointBackgroundColor:"#2563eb",
-        pointBorderColor:"#ffffff",
-        pointBorderWidth:2,
-        pointRadius:type === "line" ? 3.5 : 0,
-        borderWidth:type === "line" ? 3 : 1,
-        borderRadius:type === "bar" ? 12 : 0
-      }]
-    },
-    options: getChartBaseOptions()
-  });
-}
-
+function getChartBaseOptions(){ const darkText = "rgba(20,32,51,.78)", lightLine = "rgba(209,224,240,.7)"; return { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:"rgba(20,32,51,.94)", titleColor:"#fff", bodyColor:"#fff", padding:10, cornerRadius:12 } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:darkText, maxRotation:0, autoSkip:true } }, y:{ beginAtZero:true, grid:{ color:lightLine }, ticks:{ color:darkText } } } }; }
+function buildChart(id, type, labels, data){ return new Chart(document.getElementById(id), { type, data:{ labels, datasets:[{ label:"", data, tension:0.3, fill:type === "line", borderColor:"#2563eb", backgroundColor:type === "line" ? "rgba(37,99,235,.14)" : "rgba(37,99,235,.82)", pointBackgroundColor:"#2563eb", pointBorderColor:"#ffffff", pointBorderWidth:2, pointRadius:type === "line" ? 3.5 : 0, borderWidth:type === "line" ? 3 : 1, borderRadius:type === "bar" ? 12 : 0 }] }, options:getChartBaseOptions() }); }
 function renderOverviewCharts(){
-  const periodExpenses = getCurrentPeriodExpenses();
-  const dates = getDatesInCurrentPeriod();
-  const dailyTotals = {};
-  dates.forEach(d => dailyTotals[d] = 0);
-
-  const categoryTotals = {};
-  periodExpenses.forEach(e => {
-    dailyTotals[e.date] = (dailyTotals[e.date] || 0) + e.amount;
-    categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
-  });
-
-  const dailyLabels = dates.map(iso => {
-    const d = parseLocalDate(iso);
-    return `${d.getDate()}.${d.getMonth()+1}`;
-  });
-
-  const dailyValues = dates.map(iso => dailyTotals[iso] || 0);
-
-  if (dailyChart) dailyChart.destroy();
-  if (categoryChart) categoryChart.destroy();
-
-  dailyChart = buildChart("dailyChart", "line", dailyLabels, dailyValues);
-
-  categoryChart = new Chart(document.getElementById("categoryChart"), {
-    type: "doughnut",
-    data: {
-      labels: Object.keys(categoryTotals).length ? Object.keys(categoryTotals) : [tr().no_purchases_yet],
-      datasets: [{
-        data: Object.values(categoryTotals).length ? Object.values(categoryTotals) : [1],
-        borderWidth:2,
-        borderColor:"#ffffff"
-      }]
-    },
-    options: {
-      responsive:true,
-      maintainAspectRatio:false,
-      animation:{ duration:260 },
-      plugins:{
-        legend:{
-          position:"bottom",
-          labels:{
-            boxWidth:12,
-            boxHeight:12,
-            usePointStyle:true,
-            padding:14,
-            color:"rgba(20,32,51,.78)"
-          }
-        }
-      }
-    }
-  });
+  const periodExpenses = getCurrentPeriodExpenses(), dates = getDatesInCurrentPeriod(), dailyTotals = {}; dates.forEach(d => dailyTotals[d] = 0); const categoryTotals = {};
+  periodExpenses.forEach(e => { dailyTotals[e.date] = (dailyTotals[e.date] || 0) + e.amount; categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount; });
+  const dailyLabels = dates.map(iso => { const d = parseLocalDate(iso); return `${d.getDate()}.${d.getMonth()+1}`; }); const dailyValues = dates.map(iso => dailyTotals[iso] || 0);
+  if (dailyChart) dailyChart.destroy(); if (categoryChart) categoryChart.destroy(); dailyChart = buildChart("dailyChart", "line", dailyLabels, dailyValues);
+  categoryChart = new Chart(document.getElementById("categoryChart"), { type: "doughnut", data: { labels: Object.keys(categoryTotals).length ? Object.keys(categoryTotals) : [tr().no_purchases_yet], datasets: [{ data: Object.values(categoryTotals).length ? Object.values(categoryTotals) : [1], borderWidth:2, borderColor:"#ffffff" }] }, options: { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, boxHeight:12, usePointStyle:true, padding:14, color:"rgba(20,32,51,.78)" } } } } });
 }
-
 function getAllPeriods(){
-  if (!expenses.length){
-    const nowPeriod = getPeriod();
-    return [{
-      id: formatISO(nowPeriod.start),
-      start: nowPeriod.start,
-      end: nowPeriod.end,
-      label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`,
-      year: nowPeriod.end.getFullYear()
-    }];
-  }
-
-  const dates = expenses.map(e => parseLocalDate(e.date)).sort((a,b)=>a-b);
-  const firstPeriod = getPeriod(dates[0]);
-  const lastPeriod = getPeriod(dates[dates.length - 1]);
-
-  let currentStart = new Date(firstPeriod.start);
-  const periods = [];
-  while (currentStart <= lastPeriod.start){
-    const p = getPeriodFromStart(currentStart);
-    periods.push({
-      id: formatISO(p.start),
-      start: p.start,
-      end: p.end,
-      label: `${shortDate(p.start)} – ${shortDate(p.end)}`,
-      year: p.end.getFullYear()
-    });
-    currentStart = new Date(p.end);
-    currentStart.setDate(currentStart.getDate() + 1);
-  }
+  if (!expenses.length){ const nowPeriod = getPeriod(); return [{ id: formatISO(nowPeriod.start), start: nowPeriod.start, end: nowPeriod.end, label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`, year: nowPeriod.end.getFullYear() }]; }
+  const dates = expenses.map(e => parseLocalDate(e.date)).sort((a,b)=>a-b), firstPeriod = getPeriod(dates[0]), lastPeriod = getPeriod(dates[dates.length - 1]);
+  let currentStart = new Date(firstPeriod.start); const periods = [];
+  while (currentStart <= lastPeriod.start){ const p = getPeriodFromStart(currentStart); periods.push({ id: formatISO(p.start), start: p.start, end: p.end, label: `${shortDate(p.start)} – ${shortDate(p.end)}`, year: p.end.getFullYear() }); currentStart = new Date(p.end); currentStart.setDate(currentStart.getDate() + 1); }
   return periods;
 }
-
-function getPeriodData(period){
-  const items = getExpensesInPeriod(period.start, period.end);
-  const total = items.reduce((sum,e)=>sum+e.amount,0);
-  const days = getDatesInRange(period.start, period.end).length;
-  const categoryTotals = {};
-  items.forEach(e => { categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount; });
-  return { items, total, days, avg: days ? total/days : 0, count: items.length, categoryTotals };
-}
-
-function fillHistorySelectors(){
-  const periods = getAllPeriods();
-  const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
-
-  const yearSelect = document.getElementById("historyYear");
-  yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
-  if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))){
-    selectedHistoryYear = String(years[0] || new Date().getFullYear());
-  }
-  yearSelect.value = selectedHistoryYear;
-
-  const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start);
-  const periodSelect = document.getElementById("historyPeriod");
-  periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)}</option>`).join("");
-  if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)){
-    selectedHistoryPeriod = periodsForYear[0]?.id || "";
-  }
-  periodSelect.value = selectedHistoryPeriod;
-}
-
+function getPeriodData(period){ const items = getExpensesInPeriod(period.start, period.end), total = items.reduce((sum,e)=>sum+e.amount,0), days = getDatesInRange(period.start, period.end).length, categoryTotals = {}; items.forEach(e => { categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount; }); return { items, total, days, avg: days ? total/days : 0, count: items.length, categoryTotals }; }
+function fillHistorySelectors(){ const periods = getAllPeriods(), years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a), yearSelect = document.getElementById("historyYear"); yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join(""); if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))) selectedHistoryYear = String(years[0] || new Date().getFullYear()); yearSelect.value = selectedHistoryYear; const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start), periodSelect = document.getElementById("historyPeriod"); periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)}</option>`).join(""); if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)) selectedHistoryPeriod = periodsForYear[0]?.id || ""; periodSelect.value = selectedHistoryPeriod; }
 function renderHistoryHeatmap(selectedPeriod){
-  const wrap = document.getElementById("historyHeatmap");
-  const legend = document.getElementById("historyHeatmapLegend");
-  const title = document.getElementById("historyHeatmapTitle");
-  if (!wrap || !selectedPeriod) return;
-
-  title.innerText = periodName(selectedPeriod);
-
-  const dates = getDatesInRange(selectedPeriod.start, selectedPeriod.end);
-  const items = getExpensesInPeriod(selectedPeriod.start, selectedPeriod.end);
-
-  const totalsByDate = {};
-  dates.forEach(d => totalsByDate[d] = 0);
-  items.forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
-
-  const budget = getBudget();
-  const totalDays = dates.length;
-  const perDay = budget ? budget / totalDays : 0;
-
-  legend.innerHTML = `
-    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-zero"></span>${tr().heat_zero}</div>
-    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-ok1"></span>${tr().heat_ok}</div>
-    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-warn1"></span>${tr().heat_warn}</div>
-    <div class="heatmap-legend-item"><span class="heatmap-swatch heat-bad1"></span>${tr().heat_bad}</div>
-  `;
-
-  const firstDate = parseLocalDate(dates[0]);
-  const firstWeekday = (firstDate.getDay() + 6) % 7;
-  let html = "";
-  for (let i = 0; i < firstWeekday; i++) html += `<div class="heatmap-day heatmap-empty"></div>`;
-
+  const wrap = document.getElementById("historyHeatmap"), legend = document.getElementById("historyHeatmapLegend"), title = document.getElementById("historyHeatmapTitle"); if (!wrap || !selectedPeriod) return; title.innerText = periodName(selectedPeriod);
+  const dates = getDatesInRange(selectedPeriod.start, selectedPeriod.end), items = getExpensesInPeriod(selectedPeriod.start, selectedPeriod.end), totalsByDate = {}; dates.forEach(d => totalsByDate[d] = 0); items.forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
+  const budget = getBudget(), totalDays = dates.length, perDay = budget ? budget / totalDays : 0;
+  legend.innerHTML = `<div class="heatmap-legend-item"><span class="heatmap-swatch heat-zero"></span>${tr().heat_zero}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-ok1"></span>${tr().heat_ok}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-warn1"></span>${tr().heat_warn}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-bad1"></span>${tr().heat_bad}</div>`;
+  const firstDate = parseLocalDate(dates[0]), firstWeekday = (firstDate.getDay() + 6) % 7; let html = ""; for (let i = 0; i < firstWeekday; i++) html += `<div class="heatmap-day heatmap-empty"></div>`;
   let runningUsed = 0;
-  dates.forEach((iso, index) => {
-    const d = parseLocalDate(iso);
-    const total = totalsByDate[iso] || 0;
-    runningUsed += total;
-    const allowedSoFar = perDay * (index + 1);
-    const diff = runningUsed - allowedSoFar;
-
-    let heatClass = "heat-ok1";
-    if (total === 0) heatClass = "heat-zero";
-    else if (perDay > 0 && diff > perDay * 0.5) heatClass = "heat-bad2";
-    else if (diff > 0) heatClass = "heat-bad1";
-    else if (perDay > 0 && total > perDay * 1.25) heatClass = "heat-warn2";
-    else if (perDay > 0 && total > perDay) heatClass = "heat-warn1";
-    else if (perDay > 0 && Math.abs(diff) < perDay * 0.35) heatClass = "heat-ok2";
-    else heatClass = "heat-ok1";
-
-    html += `
-      <button type="button" class="heatmap-day ${heatClass}" data-date="${iso}" title="${longDate(d)} – ${formatCurrency(total)}">
-        <span class="num">${d.getDate()}</span>
-        <span class="amt">${Math.round(total)}</span>
-      </button>
-    `;
-  });
-
+  dates.forEach((iso, index) => { const d = parseLocalDate(iso), total = totalsByDate[iso] || 0; runningUsed += total; const allowedSoFar = perDay * (index + 1), diff = runningUsed - allowedSoFar; let heatClass = "heat-ok1"; if (total === 0) heatClass = "heat-zero"; else if (perDay > 0 && diff > perDay * 0.5) heatClass = "heat-bad2"; else if (diff > 0) heatClass = "heat-bad1"; else if (perDay > 0 && total > perDay * 1.25) heatClass = "heat-warn2"; else if (perDay > 0 && total > perDay) heatClass = "heat-warn1"; else if (perDay > 0 && Math.abs(diff) < perDay * 0.35) heatClass = "heat-ok2"; html += `<button type="button" class="heatmap-day ${heatClass}" data-date="${iso}" title="${longDate(d)} – ${formatCurrency(total)}"><span class="num">${d.getDate()}</span><span class="amt">${Math.round(total)}</span></button>`; });
   wrap.innerHTML = html;
-  wrap.querySelectorAll(".heatmap-day[data-date]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      selectedDate = btn.dataset.date;
-      setActiveTab("overviewTab");
-      document.getElementById("selectedDate").value = selectedDate;
-      renderOverviewOnly();
-      focusAmountField();
-    });
-  });
+  wrap.querySelectorAll(".heatmap-day[data-date]").forEach(btn => btn.addEventListener("click", () => { selectedDate = btn.dataset.date; setActiveTab("overviewTab"); document.getElementById("selectedDate").value = selectedDate; renderOverviewOnly(); focusAmountField(); }));
 }
-
 function renderHistoryTab(){
-  const periods = getAllPeriods();
-  fillHistorySelectors();
-  const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>a.start-b.start);
-  const selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length - 1];
-  if (!selected) return;
-
-  const selectedData = getPeriodData(selected);
-  const selectedIndex = periods.findIndex(p => p.id === selected.id);
-  const prev = selectedIndex > 0 ? periods[selectedIndex - 1] : null;
-  const prevTotal = prev ? getPeriodData(prev).total : 0;
-  const diffPrev = selectedData.total - prevTotal;
-
-  document.getElementById("historyTotal").innerText = formatCurrency(selectedData.total);
-  document.getElementById("historyDailyAvg").innerText = formatCurrency(selectedData.avg);
-  document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${formatNumber(diffPrev)}`;
-  document.getElementById("historyCount").innerText = formatNumber(selectedData.count);
-
-  if (historyPeriodChart) historyPeriodChart.destroy();
-  historyPeriodChart = buildChart("historyPeriodChart", "bar", periodsForYear.map(p => periodName(p)), periodsForYear.map(p => getPeriodData(p).total));
-
-  if (historyCategoryChart) historyCategoryChart.destroy();
-  historyCategoryChart = new Chart(document.getElementById("historyCategoryChart"), {
-    type: "doughnut",
-    data: {
-      labels: Object.keys(selectedData.categoryTotals).length ? Object.keys(selectedData.categoryTotals) : [tr().no_purchases],
-      datasets: [{
-        data: Object.values(selectedData.categoryTotals).length ? Object.values(selectedData.categoryTotals) : [1],
-        borderWidth:2,
-        borderColor:"#ffffff"
-      }]
-    },
-    options: {
-      responsive:true,
-      maintainAspectRatio:false,
-      animation:{ duration:260 },
-      plugins:{
-        legend:{
-          position:"bottom",
-          labels:{
-            boxWidth:12,
-            boxHeight:12,
-            usePointStyle:true,
-            padding:14,
-            color:"rgba(20,32,51,.78)"
-          }
-        }
-      }
-    }
-  });
-
+  const periods = getAllPeriods(); fillHistorySelectors(); const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>a.start-b.start), selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length - 1]; if (!selected) return;
+  const selectedData = getPeriodData(selected), selectedIndex = periods.findIndex(p => p.id === selected.id), prev = selectedIndex > 0 ? periods[selectedIndex - 1] : null, prevTotal = prev ? getPeriodData(prev).total : 0, diffPrev = selectedData.total - prevTotal;
+  document.getElementById("historyTotal").innerText = formatCurrency(selectedData.total); document.getElementById("historyDailyAvg").innerText = formatCurrency(selectedData.avg); document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${formatNumber(diffPrev)}`; document.getElementById("historyCount").innerText = formatNumber(selectedData.count);
+  if (historyPeriodChart) historyPeriodChart.destroy(); historyPeriodChart = buildChart("historyPeriodChart", "bar", periodsForYear.map(p => periodName(p)), periodsForYear.map(p => getPeriodData(p).total));
+  if (historyCategoryChart) historyCategoryChart.destroy(); historyCategoryChart = new Chart(document.getElementById("historyCategoryChart"), { type: "doughnut", data: { labels: Object.keys(selectedData.categoryTotals).length ? Object.keys(selectedData.categoryTotals) : [tr().no_purchases], datasets: [{ data: Object.values(selectedData.categoryTotals).length ? Object.values(selectedData.categoryTotals) : [1], borderWidth:2, borderColor:"#ffffff" }] }, options: { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, boxHeight:12, usePointStyle:true, padding:14, color:"rgba(20,32,51,.78)" } } } } });
   renderHistoryHeatmap(selected);
-
-  const periodList = document.getElementById("periodList");
-  const desc = [...periodsForYear].sort((a,b)=>b.start-a.start);
-  periodList.innerHTML = desc.map((p, idx) => {
-    const data = getPeriodData(p);
-    const previous = desc[idx+1] ? getPeriodData(desc[idx+1]).total : 0;
-    const diff = idx < desc.length - 1 ? data.total - previous : 0;
-    return `
-      <div class="period-row">
-        <div class="big">${periodName(p)}</div>
-        <div class="small">${p.label}</div>
-        <div><span class="pill">${data.count} ${getLang() === "no" ? "kjøp" : "entries"}</span></div>
-        <div class="big">${formatCurrency(data.total)}</div>
-        <div class="small">${idx < desc.length - 1 ? (diff > 0 ? "+" : "") + formatCurrency(diff).replace(/[^\d\-\+\s.,]/g, "").trim() : "–"}</div>
-      </div>
-    `;
-  }).join("");
+  const periodList = document.getElementById("periodList"), desc = [...periodsForYear].sort((a,b)=>b.start-a.start);
+  periodList.innerHTML = desc.map((p, idx) => { const data = getPeriodData(p), previous = desc[idx+1] ? getPeriodData(desc[idx+1]).total : 0, diff = idx < desc.length - 1 ? data.total - previous : 0; return `<div class="period-row"><div class="big">${periodName(p)}</div><div class="small">${p.label}</div><div><span class="pill">${data.count} ${getLang() === "no" ? "kjøp" : "entries"}</span></div><div class="big">${formatCurrency(data.total)}</div><div class="small">${idx < desc.length - 1 ? (diff > 0 ? "+" : "") + formatCurrency(diff).replace(/[^\d\-\+\s.,]/g, "").trim() : "–"}</div></div>`; }).join("");
 }
-
-function fillShopYearSelector(){
-  const periods = getAllPeriods();
-  const years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a);
-  const sel = document.getElementById("shopYear");
-  sel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join("");
-  if (!selectedShopYear || !years.includes(Number(selectedShopYear))){
-    selectedShopYear = String(years[0] || new Date().getFullYear());
-  }
-  sel.value = selectedShopYear;
-}
-
-function renderShopTab(){
-  fillShopYearSelector();
-  const periods = getAllPeriods().filter(p => String(p.year) === String(selectedShopYear));
-  const totals = {};
-
-  periods.forEach(p => {
-    const data = getPeriodData(p);
-    Object.entries(data.categoryTotals).forEach(([shop, amount]) => {
-      totals[shop] = (totals[shop] || 0) + amount;
-    });
-  });
-
-  const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]);
-
-  if (shopYearChart) shopYearChart.destroy();
-  shopYearChart = buildChart("shopYearChart", "bar", entries.length ? entries.map(e => e[0]) : [tr().no_purchases], entries.length ? entries.map(e => e[1]) : [0]);
-
-  const list = document.getElementById("shopList");
-  if (!entries.length){
-    list.innerHTML = `<div class="empty">${tr().no_purchases_year}</div>`;
-    return;
-  }
-
-  const totalYear = entries.reduce((sum, [,amt]) => sum + amt, 0);
-  list.innerHTML = entries.map(([shop, amt]) => `
-    <div class="shop-row">
-      <div class="big">${shop}</div>
-      <div>${formatCurrency(amt)}</div>
-      <div class="small">${Math.round((amt / totalYear) * 100)} %</div>
-    </div>
-  `).join("");
-}
-
-function exportBackup(){
-  const payload = {
-    version: 17,
-    exportedAt: new Date().toISOString(),
-    budget: localStorage.getItem(BUDGET_KEY) || "",
-    startDay: localStorage.getItem(STARTDAY_KEY) || "20",
-    periodMode: getPeriodMode(),
-    periodLength: getPeriodLength(),
-    language: getLang(),
-    currency: getCurrency(),
-    lastStore: getLastStore(),
-    setupDone: isSetupDone(),
-    expenses
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  const today = new Date().toISOString().slice(0,10);
-  a.href = url;
-  a.download = `matbudsjett-backup-${today}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast(tr().export_ok, "good");
-}
-
-function importBackupFromFile(file){
-  const reader = new FileReader();
-  reader.onload = function(e){
-    try{
-      const data = JSON.parse(e.target.result);
-      if (!data || !Array.isArray(data.expenses)){ alert(tr().invalid_backup); return; }
-
-      expenses = data.expenses;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
-      localStorage.setItem(BUDGET_KEY, data.budget || "");
-      localStorage.setItem(STARTDAY_KEY, data.startDay || "20");
-      localStorage.setItem(PERIOD_MODE_KEY, data.periodMode || "months");
-      localStorage.setItem(PERIOD_LENGTH_KEY, String(data.periodLength || 1));
-      localStorage.setItem(LANG_KEY, data.language || "no");
-      localStorage.setItem(CURRENCY_KEY, data.currency || "NOK");
-      localStorage.setItem(LAST_STORE_KEY, data.lastStore || "Rema 1000");
-      localStorage.setItem(SETUP_DONE_KEY, data.setupDone ? "1" : "0");
-
-      syncSettingsInputsFromStorage();
-      applyUIStrings();
-      selectedDate = "";
-      selectedHistoryPeriod = "";
-      selectedHistoryYear = "";
-      selectedShopYear = "";
-      setFormForAdd();
-      updateAll();
-
-      if (shouldShowSetupScreen()) showSetupScreen();
-      else showMainApp();
-
-      showToast(tr().import_ok, "good");
-    } catch(err){
-      alert(tr().import_failed);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function resetAllData(){
-  if (!confirm(tr().reset_confirm)) return;
-  expenses = [];
-  localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem(BUDGET_KEY);
-  localStorage.removeItem(STARTDAY_KEY);
-  localStorage.removeItem(PERIOD_MODE_KEY);
-  localStorage.removeItem(PERIOD_LENGTH_KEY);
-  localStorage.removeItem(LANG_KEY);
-  localStorage.removeItem(CURRENCY_KEY);
-  localStorage.removeItem(LAST_STORE_KEY);
-  localStorage.removeItem(SETUP_DONE_KEY);
-  localStorage.removeItem(PWA_BAR_DISMISSED_KEY);
-
-  selectedDate = "";
-  selectedHistoryPeriod = "";
-  selectedHistoryYear = "";
-  selectedShopYear = "";
-  editingId = null;
-
-  syncSettingsInputsFromStorage();
-  applyUIStrings();
-  showSetupScreen();
-  showToast(tr().reset_done, "danger");
-}
-
-function setActiveTab(tabId){
-  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-  document.getElementById(tabId).classList.add("active");
-  const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-  if (activeBtn) activeBtn.classList.add("active");
-
-  if (tabId === "historyTab") renderHistoryTab();
-  if (tabId === "shopsTab") renderShopTab();
-  if (tabId === "overviewTab") focusAmountField();
-  window.scrollTo({ top:0, behavior:"smooth" });
-}
-
-function renderOverviewOnly(){
-  ensureSelectedDate();
-  updateSummaryOnly();
-  renderDateStrip();
-  renderDaySection();
-  renderOverviewCharts();
-}
-
-function updateAll(){
-  syncSettingsInputsFromStorage();
-  applyUIStrings();
-  renderOverviewOnly();
-  renderHistoryTab();
-  renderShopTab();
-}
-
-function saveSetupAndStart(useExisting = false){
-  if (!useExisting){
-    const setupBudget = document.getElementById("setupBudget").value;
-    if (!setupBudget || Number(setupBudget) <= 0){
-      alert(tr().setupNeedsBudget);
-      return;
-    }
-
-    localStorage.setItem(BUDGET_KEY, setupBudget);
-    localStorage.setItem(STARTDAY_KEY, document.getElementById("setupStartDay").value || "20");
-    localStorage.setItem(PERIOD_MODE_KEY, document.getElementById("setupPeriodMode").value || "months");
-    localStorage.setItem(PERIOD_LENGTH_KEY, document.getElementById("setupPeriodLength").value || "1");
-    localStorage.setItem(LANG_KEY, document.getElementById("setupLanguage").value || "no");
-    localStorage.setItem(CURRENCY_KEY, document.getElementById("setupCurrency").value || "NOK");
-  } else {
-    if (!localStorage.getItem(BUDGET_KEY)){
-      alert(tr().setupNeedsBudget);
-      return;
-    }
-  }
-
-  setSetupDone(true);
-  selectedDate = "";
-  selectedHistoryPeriod = "";
-  selectedHistoryYear = "";
-  selectedShopYear = "";
-  showMainApp();
-}
-
-function applyQuickAmount(amountToAdd){
-  const input = document.getElementById("expense");
-  const current = Number(input.value || 0);
-  input.value = current + amountToAdd;
-  input.focus();
-  input.setSelectionRange(String(input.value).length, String(input.value).length);
-  vibrateSoft();
-}
-
-async function installApp(){
-  if (!deferredInstallPrompt) return;
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt = null;
-  updatePwaBar();
-}
-
-async function registerServiceWorker(){
-  if (!("serviceWorker" in navigator)) return;
-  if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1"){
-    return;
-  }
-
-  try{
-    const reg = await navigator.serviceWorker.register("./sw.js");
-    swRegistered = !!reg;
-    updatePwaBar();
-
-    if (reg.waiting){
-      reg.waiting.postMessage({ type:"SKIP_WAITING" });
-    }
-
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      if (event.data?.type === "SW_ACTIVE"){
-        swRegistered = true;
-        updatePwaBar();
-      }
-    });
-  } catch(err){
-    console.error("Service worker registration failed:", err);
-  }
-}
+function fillShopYearSelector(){ const periods = getAllPeriods(), years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a), sel = document.getElementById("shopYear"); sel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join(""); if (!selectedShopYear || !years.includes(Number(selectedShopYear))) selectedShopYear = String(years[0] || new Date().getFullYear()); sel.value = selectedShopYear; }
+function renderShopTab(){ const periods = getAllPeriods().filter(p => String(p.year) === String(selectedShopYear = (selectedShopYear || String(new Date().getFullYear())))); fillShopYearSelector(); const totals = {}; periods.forEach(p => { const data = getPeriodData(p); Object.entries(data.categoryTotals).forEach(([shop, amount]) => { totals[shop] = (totals[shop] || 0) + amount; }); }); const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]); if (shopYearChart) shopYearChart.destroy(); shopYearChart = buildChart("shopYearChart", "bar", entries.length ? entries.map(e => e[0]) : [tr().no_purchases], entries.length ? entries.map(e => e[1]) : [0]); const list = document.getElementById("shopList"); if (!entries.length){ list.innerHTML = `<div class="empty">${tr().no_purchases_year}</div>`; return; } const totalYear = entries.reduce((sum, [,amt]) => sum + amt, 0); list.innerHTML = entries.map(([shop, amt]) => `<div class="shop-row"><div class="big">${shop}</div><div>${formatCurrency(amt)}</div><div class="small">${Math.round((amt / totalYear) * 100)} %</div></div>`).join(""); }
+function exportBackup(){ const payload = { version: 17.1, exportedAt: new Date().toISOString(), budget: localStorage.getItem(BUDGET_KEY) || "", startDay: localStorage.getItem(STARTDAY_KEY) || "20", periodMode: getPeriodMode(), periodLength: getPeriodLength(), language: getLang(), currency: getCurrency(), lastStore: getLastStore(), setupDone: isSetupDone(), expenses }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const today = new Date().toISOString().slice(0,10); a.href = url; a.download = `matbudsjett-backup-${today}.json`; a.click(); URL.revokeObjectURL(url); showToast(tr().export_ok, "good"); }
+function importBackupFromFile(file){ const reader = new FileReader(); reader.onload = function(e){ try{ const data = JSON.parse(e.target.result); if (!data || !Array.isArray(data.expenses)){ alert(tr().invalid_backup); return; } expenses = data.expenses; localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); localStorage.setItem(BUDGET_KEY, data.budget || ""); localStorage.setItem(STARTDAY_KEY, data.startDay || "20"); localStorage.setItem(PERIOD_MODE_KEY, data.periodMode || "months"); localStorage.setItem(PERIOD_LENGTH_KEY, String(data.periodLength || 1)); localStorage.setItem(LANG_KEY, data.language || "no"); localStorage.setItem(CURRENCY_KEY, data.currency || "NOK"); localStorage.setItem(LAST_STORE_KEY, data.lastStore || "Rema 1000"); localStorage.setItem(SETUP_DONE_KEY, data.setupDone ? "1" : "0"); syncSettingsInputsFromStorage(); applyUIStrings(); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; setFormForAdd(); updateAll(); if (shouldShowSetupScreen()) showSetupScreen(); else showMainApp(); showToast(tr().import_ok, "good"); } catch(err){ alert(tr().import_failed); } }; reader.readAsText(file); }
+function resetAllData(){ if (!confirm(tr().reset_confirm)) return; expenses = []; localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(BUDGET_KEY); localStorage.removeItem(STARTDAY_KEY); localStorage.removeItem(PERIOD_MODE_KEY); localStorage.removeItem(PERIOD_LENGTH_KEY); localStorage.removeItem(LANG_KEY); localStorage.removeItem(CURRENCY_KEY); localStorage.removeItem(LAST_STORE_KEY); localStorage.removeItem(SETUP_DONE_KEY); localStorage.removeItem(PWA_BAR_DISMISSED_KEY); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; editingId = null; syncSettingsInputsFromStorage(); applyUIStrings(); showSetupScreen(); showToast(tr().reset_done, "danger"); }
+function setActiveTab(tabId){ document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active")); document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); document.getElementById(tabId).classList.add("active"); const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`); if (activeBtn) activeBtn.classList.add("active"); if (tabId === "historyTab") renderHistoryTab(); if (tabId === "shopsTab") renderShopTab(); if (tabId === "overviewTab") focusAmountField(); window.scrollTo({ top:0, behavior:"smooth" }); }
+function renderOverviewOnly(){ ensureSelectedDate(); updateSummaryOnly(); renderDateStrip(); renderDaySection(); renderOverviewCharts(); }
+function updateAll(){ syncSettingsInputsFromStorage(); applyUIStrings(); renderOverviewOnly(); renderHistoryTab(); renderShopTab(); }
+function saveSetupAndStart(useExisting = false){ if (!useExisting){ const setupBudget = document.getElementById("setupBudget").value; if (!setupBudget || Number(setupBudget) <= 0){ alert(tr().setupNeedsBudget); return; } localStorage.setItem(BUDGET_KEY, setupBudget); localStorage.setItem(STARTDAY_KEY, document.getElementById("setupStartDay").value || "20"); localStorage.setItem(PERIOD_MODE_KEY, document.getElementById("setupPeriodMode").value || "months"); localStorage.setItem(PERIOD_LENGTH_KEY, document.getElementById("setupPeriodLength").value || "1"); localStorage.setItem(LANG_KEY, document.getElementById("setupLanguage").value || "no"); localStorage.setItem(CURRENCY_KEY, document.getElementById("setupCurrency").value || "NOK"); } else { if (!localStorage.getItem(BUDGET_KEY)){ alert(tr().setupNeedsBudget); return; } } setSetupDone(true); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; showMainApp(); }
+function applyQuickAmount(amountToAdd){ const input = document.getElementById("expense"); const current = Number(input.value || 0); input.value = current + amountToAdd; input.focus(); input.setSelectionRange(String(input.value).length, String(input.value).length); vibrateSoft(); }
+async function installApp(){ if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; updatePwaBar(); }
+async function registerServiceWorker(){ if (!("serviceWorker" in navigator)) return; if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") return; try{ const reg = await navigator.serviceWorker.register("./sw.js"); swRegistered = !!reg; updatePwaBar(); if (reg.waiting) reg.waiting.postMessage({ type:"SKIP_WAITING" }); navigator.serviceWorker.addEventListener("message", (event) => { if (event.data?.type === "SW_ACTIVE"){ swRegistered = true; updatePwaBar(); } }); } catch(err){ console.error("Service worker registration failed:", err); } }
+function createSharedBudgetPlaceholder(){ showToast(tr().shared_placeholder, "warn"); }
 
 document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
-document.getElementById("cancelEditBtn").addEventListener("click", () => {
-  setFormForAdd();
-  focusAmountField();
-});
-
-document.getElementById("budget").addEventListener("input", () => {
-  saveBudget();
-  updateAll();
-});
-
-document.getElementById("startDay").addEventListener("change", () => {
-  saveStartDay();
-  selectedDate = "";
-  selectedHistoryPeriod = "";
-  selectedHistoryYear = "";
-  selectedShopYear = "";
-  updateAll();
-  setFormForAdd();
-});
-
-document.getElementById("periodMode").addEventListener("change", (e) => {
-  setPeriodMode(e.target.value);
-  selectedDate = "";
-  selectedHistoryPeriod = "";
-  selectedHistoryYear = "";
-  selectedShopYear = "";
-  updateAll();
-});
-
-document.getElementById("periodLength").addEventListener("change", (e) => {
-  setPeriodLength(e.target.value);
-  selectedDate = "";
-  selectedHistoryPeriod = "";
-  selectedHistoryYear = "";
-  selectedShopYear = "";
-  updateAll();
-});
-
-document.getElementById("selectedDate").addEventListener("change", (e) => {
-  selectedDate = e.target.value;
-  renderOverviewOnly();
-  focusAmountField();
-});
-
-document.getElementById("category").addEventListener("change", (e) => {
-  setLastStore(e.target.value);
-});
-
-document.getElementById("historyYear").addEventListener("change", (e) => {
-  selectedHistoryYear = e.target.value;
-  fillHistorySelectors();
-  renderHistoryTab();
-});
-
-document.getElementById("historyPeriod").addEventListener("change", (e) => {
-  selectedHistoryPeriod = e.target.value;
-  renderHistoryTab();
-});
-
-document.getElementById("shopYear").addEventListener("change", (e) => {
-  selectedShopYear = e.target.value;
-  renderShopTab();
-});
-
+document.getElementById("cancelEditBtn").addEventListener("click", () => { setFormForAdd(); focusAmountField(); });
+document.getElementById("budget").addEventListener("input", () => { saveBudget(); updateAll(); });
+document.getElementById("startDay").addEventListener("change", () => { saveStartDay(); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); setFormForAdd(); });
+document.getElementById("periodMode").addEventListener("change", (e) => { setPeriodMode(e.target.value); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); });
+document.getElementById("periodLength").addEventListener("change", (e) => { setPeriodLength(e.target.value); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); });
+document.getElementById("selectedDate").addEventListener("change", (e) => { selectedDate = e.target.value; renderOverviewOnly(); focusAmountField(); });
+document.getElementById("category").addEventListener("change", (e) => { setLastStore(e.target.value); });
+document.getElementById("historyYear").addEventListener("change", (e) => { selectedHistoryYear = e.target.value; fillHistorySelectors(); renderHistoryTab(); });
+document.getElementById("historyPeriod").addEventListener("change", (e) => { selectedHistoryPeriod = e.target.value; renderHistoryTab(); });
+document.getElementById("shopYear").addEventListener("change", (e) => { selectedShopYear = e.target.value; renderShopTab(); });
 document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
-
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) importBackupFromFile(file);
-  e.target.value = "";
-});
-
+document.getElementById("createSharedBtn").addEventListener("click", createSharedBudgetPlaceholder);
+document.getElementById("importFile").addEventListener("change", (e) => { const file = e.target.files[0]; if (file) importBackupFromFile(file); e.target.value = ""; });
 document.getElementById("resetBtn").addEventListener("click", resetAllData);
-
-document.getElementById("language").addEventListener("change", (e) => {
-  setLang(e.target.value);
-  updateAll();
-});
-
-document.getElementById("currency").addEventListener("change", (e) => {
-  setCurrency(e.target.value);
-  updateAll();
-});
-
+document.getElementById("language").addEventListener("change", (e) => { setLang(e.target.value); updateAll(); });
+document.getElementById("currency").addEventListener("change", (e) => { setCurrency(e.target.value); updateAll(); });
 document.getElementById("jumpToTodayBtn").addEventListener("click", jumpToToday);
-document.getElementById("openSettingsBtn").addEventListener("click", () => setActiveTab("settingsTab"));
 document.getElementById("showSetupAgainBtn").addEventListener("click", showSetupScreen);
-
 document.getElementById("startUsingAppBtn").addEventListener("click", () => saveSetupAndStart(false));
 document.getElementById("setupUseExistingBtn").addEventListener("click", () => saveSetupAndStart(true));
-
-document.querySelectorAll("[data-quick-amount]").forEach(btn => {
-  btn.addEventListener("click", () => applyQuickAmount(Number(btn.dataset.quickAmount)));
-});
-
-document.getElementById("expense").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addOrUpdateExpense();
-});
-
-document.getElementById("setupLanguage").addEventListener("change", (e) => {
-  setLang(e.target.value);
-  applyUIStrings();
-});
-
-document.getElementById("setupCurrency").addEventListener("change", (e) => {
-  setCurrency(e.target.value);
-  applyUIStrings();
-});
-
-document.getElementById("setupPeriodMode").addEventListener("change", (e) => {
-  setPeriodMode(e.target.value);
-  applyUIStrings();
-});
-
-document.getElementById("setupPeriodLength").addEventListener("change", (e) => {
-  setPeriodLength(e.target.value);
-  applyUIStrings();
-});
-
-document.getElementById("setupStartDay").addEventListener("change", (e) => {
-  localStorage.setItem(STARTDAY_KEY, e.target.value || "20");
-});
-
+document.querySelectorAll("[data-quick-amount]").forEach(btn => btn.addEventListener("click", () => applyQuickAmount(Number(btn.dataset.quickAmount))));
+document.getElementById("expense").addEventListener("keydown", (e) => { if (e.key === "Enter") addOrUpdateExpense(); });
+document.getElementById("setupLanguage").addEventListener("change", (e) => { setLang(e.target.value); applyUIStrings(); });
+document.getElementById("setupCurrency").addEventListener("change", (e) => { setCurrency(e.target.value); applyUIStrings(); });
+document.getElementById("setupPeriodMode").addEventListener("change", (e) => { setPeriodMode(e.target.value); applyUIStrings(); });
+document.getElementById("setupPeriodLength").addEventListener("change", (e) => { setPeriodLength(e.target.value); applyUIStrings(); });
+document.getElementById("setupStartDay").addEventListener("change", (e) => { localStorage.setItem(STARTDAY_KEY, e.target.value || "20"); });
 document.getElementById("installBtn").addEventListener("click", installApp);
-document.getElementById("dismissPwaBarBtn").addEventListener("click", () => {
-  localStorage.setItem(PWA_BAR_DISMISSED_KEY, "1");
-  updatePwaBar();
-});
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredInstallPrompt = e;
-  localStorage.removeItem(PWA_BAR_DISMISSED_KEY);
-  updatePwaBar();
-});
-
-window.addEventListener("appinstalled", () => {
-  deferredInstallPrompt = null;
-  localStorage.removeItem(PWA_BAR_DISMISSED_KEY);
-  updatePwaBar();
-});
-
+document.getElementById("dismissPwaBarBtn").addEventListener("click", () => { localStorage.setItem(PWA_BAR_DISMISSED_KEY, "1"); updatePwaBar(); });
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstallPrompt = e; localStorage.removeItem(PWA_BAR_DISMISSED_KEY); updatePwaBar(); });
+window.addEventListener("appinstalled", () => { deferredInstallPrompt = null; localStorage.removeItem(PWA_BAR_DISMISSED_KEY); updatePwaBar(); });
 window.addEventListener("online", updatePwaBar);
 window.addEventListener("offline", updatePwaBar);
-
-function boot(){
-  syncSettingsInputsFromStorage();
-  applyUIStrings();
-  populateStartDaySelect("setupStartDay", getStartDay());
-  applySetupSelectors();
-  updatePwaBar();
-  registerServiceWorker();
-
-  if (shouldShowSetupScreen()) {
-    showSetupScreen();
-  } else {
-    showMainApp();
-  }
-}
-
+function boot(){ syncSettingsInputsFromStorage(); applyUIStrings(); populateStartDaySelect("setupStartDay", getStartDay()); applySetupSelectors(); updatePwaBar(); registerServiceWorker(); if (shouldShowSetupScreen()) showSetupScreen(); else showMainApp(); }
 boot();
 </script>
 </body>
 </html>
-<!-- test -->
