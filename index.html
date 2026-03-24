@@ -468,6 +468,11 @@
 <script>
   const SUPABASE_URL = "";
 const SUPABASE_ANON_KEY = "";
+
+const supabaseClient =
+  window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
 const STORAGE_KEY = "matbudsjett_v17_expenses";
 const BUDGET_KEY = "matbudsjett_v17_budget";
 const STARTDAY_KEY = "matbudsjett_v17_startday";
