@@ -214,7 +214,39 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+// Funksjon for å hente delt budsjett basert på delingskode
+const getSharedBudget = async () => {
+  const shareCode = document.getElementById("shareCodeInput").value;
+  if (!shareCode) {
+    alert("Vennligst skriv inn en delingskode");
+    return;
+  }
 
+  if (!supabaseClient) {
+    alert("Supabase ikke koblet");
+    return;
+  }
+
+  // Søk etter budsjettet basert på delingskoden
+  const { data, error } = await supabaseClient
+    .from('shared_budgets')
+    .select('*')
+    .eq('share_code', shareCode) // Filtrer etter delingskode
+    .single();  // Vi forventer kun én rad
+
+  if (error) {
+    console.error('Feil ved henting av delt budsjett:', error.message);
+    alert('Feil: Koden er ugyldig eller budsjettet finnes ikke.');
+  } else {
+    // Vis budsjettdata i appen
+    document.getElementById("shareCodeInfo").innerText = `Budsjett hentet! Beløp: ${data.budget_amount} ${data.currency}. Periode: ${data.start_day} - ${data.period_length} ${data.period_mode}.`;
+    // Du kan oppdatere andre deler av appen basert på de dataene
+  }
+};
+
+// Knytt knappen til funksjonen
+document.getElementById("getSharedBudgetBtn").addEventListener("click", getSharedBudget);
+  
 <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
 <div id="setupScreen" class="setup-screen hidden">
@@ -243,7 +275,12 @@
           <select id="setupStartDay"></select>
         </div>
       </div>
-
+<div>
+  <h2>Hent delt budsjett</h2>
+  <input type="text" id="shareCodeInput" placeholder="Skriv inn delingskode">
+  <button id="getSharedBudgetBtn">Hent budsjett</button>
+  <p id="shareCodeInfo"></p> <!-- Informasjon om budsjettet som hentes -->
+</div>
       <div class="settings-grid" style="margin-top:10px;">
         <div>
           <label for="setupPeriodMode" id="setupPeriodModeLabel">Periodetype</label>
