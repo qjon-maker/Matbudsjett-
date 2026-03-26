@@ -220,6 +220,10 @@
   const SUPABASE_URL = "https://aodzgsmdlxzgidscpxkn.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvZHpnc21kbHh6Z2lkc2NweGtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODk2OTYsImV4cCI6MjA4OTg2NTY5Nn0.NaGusK3lx-3kKm2oLmaE9DbE8Mo1EvFDBgFB1Xcb7Y4";
 
+  <script>
+  const SUPABASE_URL = "https://aodzgsmdlxzgidscpxkn.supabase.co";
+  const SUPABASE_ANON_KEY = "LIM_INN_ANON_KEY_HER";
+
   let supabaseClient = null;
   try {
     supabaseClient =
@@ -231,18 +235,55 @@
     supabaseClient = null;
   }
 
-  function createSharedBudgetPlaceholder() {
+  function generateShareCode() {
+    return Math.random().toString(36).slice(2, 8).toUpperCase();
+  }
+
+  async function createSharedBudget() {
     if (!supabaseClient) {
       alert("Supabase ikke koblet");
       return;
     }
 
-    alert("Klar til å opprette delt budsjett");
+    const budgetValue = Number(document.getElementById("budget")?.value || 0);
+    const startDayValue = Number(document.getElementById("startDay")?.value || 20);
+    const periodModeValue = document.getElementById("periodMode")?.value || "months";
+    const periodLengthValue = Number(document.getElementById("periodLength")?.value || 1);
+    const currencyValue = document.getElementById("currency")?.value || "NOK";
 
-    // Supabase logic for creating shared budget
+    if (!budgetValue || budgetValue <= 0) {
+      alert("Legg inn et gyldig budsjett først.");
+      return;
+    }
+
+    const code = generateShareCode();
+
+    const { error } = await supabaseClient
+      .from("shared_budgets")
+      .insert([
+        {
+          share_code: code,
+          budget_amount: budgetValue,
+          start_day: startDayValue,
+          period_mode: periodModeValue,
+          period_length: periodLengthValue,
+          currency: currencyValue
+        }
+      ]);
+
+    if (error) {
+      console.error("Kunne ikke opprette delt budsjett:", error);
+      alert("Kunne ikke opprette delt budsjett: " + error.message);
+      return;
+    }
+
+    alert("Delt budsjett opprettet. Kode: " + code);
   }
 
-  document.getElementById("createSharedBtn").addEventListener("click", createSharedBudgetPlaceholder);
+  const createSharedBtn = document.getElementById("createSharedBtn");
+  if (createSharedBtn) {
+    createSharedBtn.addEventListener("click", createSharedBudget);
+  }
 </script>
 
 </body>
