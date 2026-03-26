@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
@@ -209,82 +211,576 @@
 
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important}}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<!-- your existing HTML code -->
+<div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+
+<div id="setupScreen" class="setup-screen hidden">
+  <div class="setup-card">
+    <div class="setup-top">
+      <div class="setup-badge" aria-hidden="true"><img src="icon.svg" alt="" style="width:100%;height:100%;border-radius:20px"></div>
+      <div>
+        <h1 id="setupTitle">Sett opp appen</h1>
+        <p id="setupText">Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.</p>
+      </div>
+    </div>
+
+    <div class="setup-body">
+      <div class="setup-info">
+        <div class="setup-info-item"><strong id="setupInfo1Title">Rask start</strong><div id="setupInfo1Text">Dette trenger du bare å gjøre første gang.</div></div>
+        <div class="setup-info-item"><strong id="setupInfo2Title">Kan endres senere</strong><div id="setupInfo2Text">Alle valgene kan endres i Innstillinger.</div></div>
+      </div>
+
+      <div class="settings-grid">
+        <div>
+          <label for="setupBudget" id="setupBudgetLabel">Budsjett for denne perioden</label>
+          <input id="setupBudget" type="number" inputmode="numeric" placeholder="F.eks. 6000" />
+        </div>
+        <div>
+          <label for="setupStartDay" id="setupStartDayLabel">Startdag for perioden</label>
+          <select id="setupStartDay"></select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="setupPeriodMode" id="setupPeriodModeLabel">Periodetype</label>
+          <select id="setupPeriodMode">
+            <option value="weeks">Uker</option>
+            <option value="months">Måneder</option>
+          </select>
+        </div>
+        <div>
+          <label for="setupPeriodLength" id="setupPeriodLengthLabel">Lengde</label>
+          <select id="setupPeriodLength">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div>
+          <label for="setupLanguage" id="setupLanguageLabel">Språk</label>
+          <select id="setupLanguage">
+            <option value="no">Norsk</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div>
+          <label for="setupCurrency" id="setupCurrencyLabel">Valuta</label>
+          <select id="setupCurrency">
+            <option value="NOK">NOK</option>
+            <option value="SEK">SEK</option>
+            <option value="DKK">DKK</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="setup-actions">
+        <button id="startUsingAppBtn" type="button">Start appen</button>
+        <button id="setupUseExistingBtn" class="secondary" type="button">Bruk lagrede innstillinger</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app hidden" id="mainApp">
+  <div class="hero">
+    <div class="hero-top">
+      <div class="hero-badge" aria-hidden="true"><img src="icon.svg" alt="" style="width:100%;height:100%;border-radius:20px"></div>
+      <div class="hero-copy">
+        <h1 id="appTitle">Matbudsjett</h1>
+        <div class="period" id="periodText"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pwaBar" class="pwa-bar hidden">
+    <div class="pwa-info">
+      <span id="installStatePill" class="pwa-pill">App</span>
+      <span id="networkStatePill" class="pwa-pill">Nett</span>
+      <span id="cacheStatePill" class="pwa-pill">Offline</span>
+    </div>
+    <div class="pwa-actions">
+      <button id="installBtn" type="button" class="secondary hidden" style="width:auto;padding:10px 14px;min-height:44px;">Installer</button>
+      <button id="dismissPwaBarBtn" type="button" class="ghost" style="width:auto;padding:10px 14px;min-height:44px;">Lukk</button>
+    </div>
+  </div>
+
+  <div id="overviewTab" class="tab-panel active">
+    <div class="grid">
+      <div class="card">
+        <h2 class="section-title" id="formTitle">Legg til kjøp</h2>
+
+        <div class="form-stack">
+          <label for="selectedDate" data-i18n="date">Dato</label>
+          <input id="selectedDate" type="date" />
+
+          <label for="category" data-i18n="store">Butikk</label>
+          <select id="category">
+            <option>Rema 1000</option><option>Kiwi</option><option>Coop Extra</option><option>Coop Prix</option><option>Coop Mega</option><option>Coop Marked</option><option>Obs</option><option>Meny</option><option>Spar</option><option>Joker</option><option>Bunnpris</option><option>Oda</option><option>Holdbart</option><option>Normal</option><option>Europris</option><option>Gigaboks</option><option>Matkroken</option><option>Nærbutikken</option><option>Annet</option>
+          </select>
+
+          <label for="expense" data-i18n="amount">Beløp</label>
+          <input id="expense" type="number" inputmode="decimal" placeholder="F.eks. 189" enterkeyhint="done" />
+        </div>
+
+        <div class="quick-actions">
+          <button class="secondary quick-btn" type="button" data-quick-amount="50">+50</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="100">+100</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="200">+200</button>
+          <button class="secondary quick-btn" type="button" data-quick-amount="500">+500</button>
+        </div>
+
+        <div class="helper-text" id="quickHint">Tips: Appen husker sist valgte butikk.</div>
+
+        <div class="footer-actions">
+          <button id="saveBtn">Legg til kjøp</button>
+          <button id="cancelEditBtn" class="secondary" style="display:none;">Avbryt redigering</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="section-title" data-i18n="status_title">Status</h2>
+        <div class="stats">
+          <div class="stat"><div class="label" data-i18n="used">Brukt</div><div class="value" id="used">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="remaining">Igjen</div><div class="value" id="remaining">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="daily_now">Kan bruke per dag nå</div><div class="value" id="dailyNow">0 kr</div></div>
+          <div class="stat"><div class="label" data-i18n="selected_day">Valgt dato</div><div class="value" id="selectedTotal">0 kr</div></div>
+          <div class="stat wide"><div class="label" data-i18n="status_word">Status</div><div class="status" id="status">Legg inn budsjett og kjøp.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 class="section-title" data-i18n="dates_in_period">Datoer i perioden</h2>
+      <div class="date-strip" id="dateStrip"></div>
+      <div class="day-summary" id="daySummary"></div>
+      <div style="margin-top:14px;">
+        <h3 class="small-title" data-i18n="entries_selected_day">Kjøp på valgt dato</h3>
+        <div id="dayEntries" class="list"></div>
+      </div>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="spend_per_day">Forbruk per dag</h2><canvas id="dailyChart"></canvas></div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="by_store">Fordeling per butikk</h2><canvas id="categoryChart"></canvas></div>
+    </div>
+  </div>
+
+  <div id="historyTab" class="tab-panel">
+    <div class="card">
+      <h2 class="section-title" data-i18n="history_compare">Historikk og sammenligning</h2>
+      <div class="row">
+        <div><label for="historyYear" data-i18n="year">År</label><select id="historyYear"></select></div>
+        <div><label for="historyPeriod" data-i18n="period">Periode</label><select id="historyPeriod"></select></div>
+      </div>
+    </div>
+
+    <div class="stats" style="margin-top:14px;">
+      <div class="stat"><div class="label" data-i18n="selected_period">Valgt periode</div><div class="value" id="historyTotal">0 kr</div></div>
+      <div class="stat"><div class="label" data-i18n="avg_per_day">Snitt per dag</div><div class="value" id="historyDailyAvg">0 kr</div></div>
+      <div class="stat"><div class="label" data-i18n="diff_prev">Forskjell fra forrige</div><div class="value" id="historyDiffPrev">0 kr</div></div>
+      <div class="stat"><div class="label" data-i18n="entries_count">Antall kjøp</div><div class="value" id="historyCount">0</div></div>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="periods_this_year">Perioder dette året</h2><canvas id="historyPeriodChart"></canvas></div>
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="stores_selected_period">Butikker i valgt periode</h2><canvas id="historyCategoryChart"></canvas></div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 class="section-title">Heatmap</h2>
+      <div class="heatmap-topline"><div class="heatmap-month-title" id="historyHeatmapTitle"></div><div id="historyHeatmapLegend" class="heatmap-legend"></div></div>
+      <div class="heatmap-weekdays">
+        <div class="heatmap-weekday" id="wd1">Man</div><div class="heatmap-weekday" id="wd2">Tir</div><div class="heatmap-weekday" id="wd3">Ons</div><div class="heatmap-weekday" id="wd4">Tor</div><div class="heatmap-weekday" id="wd5">Fre</div><div class="heatmap-weekday" id="wd6">Lør</div><div class="heatmap-weekday" id="wd7">Søn</div>
+      </div>
+      <div id="historyHeatmap" class="heatmap-grid"></div>
+    </div>
+
+    <div class="card" style="margin-top:14px;"><h2 class="section-title" data-i18n="period_overview">Periodeoversikt</h2><div id="periodList" class="list"></div></div>
+  </div>
+
+  <div id="shopsTab" class="tab-panel">
+    <div class="card">
+      <h2 class="section-title" data-i18n="store_compare">Butikksammenligning</h2>
+      <label for="shopYear" data-i18n="year">År</label>
+      <select id="shopYear"></select>
+    </div>
+
+    <div class="charts" style="margin-top:14px;">
+      <div class="card chart-wrap"><h2 class="section-title" data-i18n="stores_through_year">Butikker gjennom året</h2><canvas id="shopYearChart"></canvas></div>
+      <div class="card"><h2 class="section-title" data-i18n="most_used">Mest brukt</h2><div id="shopList" class="list"></div></div>
+    </div>
+  </div>
+
+  <div id="settingsTab" class="tab-panel">
+    <div class="card">
+      <h2 class="section-title" data-i18n="settings">Innstillinger</h2>
+
+      <div class="single-action">
+        <button id="createSharedBtn" type="button">Opprett delt budsjett</button>
+      </div>
+
+      <div class="helper-text">Testknapp for delt budsjett. Selve delingen bygger vi ferdig i neste steg.</div>
+
+      <div class="settings-grid">
+        <div><label for="budget" data-i18n="budget_label">Budsjett for denne perioden</label><input id="budget" type="number" inputmode="numeric" placeholder="F.eks. 6000" /></div>
+        <div><label for="startDay" data-i18n="start_day_label">Startdag for perioden</label><select id="startDay"></select></div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div><label for="periodMode" data-i18n="period_mode_label">Periodetype</label><select id="periodMode"><option value="weeks">Uker</option><option value="months">Måneder</option></select></div>
+        <div><label for="periodLength" data-i18n="period_length_label">Lengde</label><select id="periodLength"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:10px;">
+        <div><label for="language" data-i18n="language_label">Språk</label><select id="language"><option value="no">Norsk</option><option value="en">English</option></select></div>
+        <div><label for="currency" data-i18n="currency_label">Valuta</label><select id="currency"><option value="NOK">NOK</option><option value="SEK">SEK</option><option value="DKK">DKK</option><option value="EUR">EUR</option><option value="USD">USD</option><option value="GBP">GBP</option></select></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <h2 class="section-title" data-i18n="backup">Backup</h2>
+      <p class="backup-note" data-i18n="backup_note">Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.</p>
+      <div class="footer-actions"><button id="exportBtn" class="secondary" type="button">Eksporter backup</button><button id="importBtn" type="button">Importer backup</button></div>
+      <div class="single-action"><button id="resetBtn" class="danger" type="button">Nullstill alle data</button></div>
+      <div class="single-action"><button id="showSetupAgainBtn" class="ghost" type="button">Vis oppsettsskjerm igjen</button></div>
+      <input id="importFile" type="file" accept=".json,application/json" style="display:none;" />
+      <div class="day-summary" style="margin-top:14px;"><strong data-i18n="backup_contains">Hva backupen inneholder</strong><br><span data-i18n="backup_contains_text">Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.</span></div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overviewTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.8v-5.3H9.8V20H5a1 1 0 0 1-1-1v-8.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span>Oversikt</span></button>
+    <button class="tab-btn" data-tab="historyTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5v14M5 19h14M8.5 15.5l3-4 3 2 3.5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Historikk</span></button>
+    <button class="tab-btn" data-tab="shopsTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9.5 5.3 5h13.4L20 9.5M6 9.5h12V19a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12.5h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Butikker</span></button>
+    <button class="tab-btn" data-tab="settingsTab" type="button"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .17 1.7 1.7 0 0 0-.9 1.53V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-.9-1.53A1.7 1.7 0 0 0 7 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 2.6 15a1.7 1.7 0 0 0-.17-1 1.7 1.7 0 0 0-1.53-.9H.8a2 2 0 1 1 0-4H.9a1.7 1.7 0 0 0 1.53-.9A1.7 1.7 0 0 0 2.6 7a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 7 2.6a1.7 1.7 0 0 0 1-.17A1.7 1.7 0 0 0 8.9.9V.8a2 2 0 1 1 4 0V.9a1.7 1.7 0 0 0 .9 1.53A1.7 1.7 0 0 0 15 2.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 7c0 .35.06.69.17 1a1.7 1.7 0 0 0 1.53.9h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.53.9c-.11.31-.17.65-.17 1Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span>Innstillinger</span></button>
+  </div>
+</div>
 
 <script>
-  const SUPABASE_URL = "https://aodzgsmdlxzgidscpxkn.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFvZHpnc21kbHh6Z2lkc2NweGtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODk2OTYsImV4cCI6MjA4OTg2NTY5Nn0.NaGusK3lx-3kKm2oLmaE9DbE8Mo1EvFDBgFB1Xcb7Y4";
+  const SUPABASE_URL = "...";
+const SUPABASE_ANON_KEY = "...";
 
-  <script>
-  const SUPABASE_URL = "https://aodzgsmdlxzgidscpxkn.supabase.co";
-  const SUPABASE_ANON_KEY = "LIM_INN_ANON_KEY_HER";
+let supabaseClient = null;
+try {
+  supabaseClient =
+    window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+} catch (e) {
+  console.error("Supabase init feilet", e);
+  supabaseClient = null;
+}
+const STORAGE_KEY = "matbudsjett_v17_expenses";
+const BUDGET_KEY = "matbudsjett_v17_budget";
+const STARTDAY_KEY = "matbudsjett_v17_startday";
+const PERIOD_MODE_KEY = "matbudsjett_v17_period_mode";
+const PERIOD_LENGTH_KEY = "matbudsjett_v17_period_length";
+const LANG_KEY = "matbudsjett_v17_lang";
+const CURRENCY_KEY = "matbudsjett_v17_currency";
+const LAST_STORE_KEY = "matbudsjett_v17_last_store";
+const SETUP_DONE_KEY = "matbudsjett_v17_setup_done";
+const PWA_BAR_DISMISSED_KEY = "matbudsjett_v17_pwa_bar_dismissed";
 
-  let supabaseClient = null;
-  try {
-    supabaseClient =
-      window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        : null;
-  } catch (e) {
-    console.error("Supabase init feilet", e);
-    supabaseClient = null;
+let deferredInstallPrompt = null;
+let swRegistered = false;
+
+const TEXT = {
+  no: {
+    appTitle:"Matbudsjett", status_title:"Status", settings:"Innstillinger", budget_label:"Budsjett for denne perioden", start_day_label:"Startdag for perioden", period_mode_label:"Periodetype", period_length_label:"Lengde", weeks:"Uker", months:"Måneder", language_label:"Språk", currency_label:"Valuta", used:"Brukt", remaining:"Igjen", daily_now:"Kan bruke per dag nå", selected_day:"Valgt dato", status_word:"Status", date:"Dato", store:"Butikk", amount:"Beløp", add_purchase:"Legg til kjøp", save_change:"Lagre endring", cancel_edit:"Avbryt redigering", remove:"Fjern", dates_in_period:"Datoer i perioden", entries_selected_day:"Kjøp på valgt dato", spend_per_day:"Forbruk per dag", by_store:"Fordeling per butikk", history_compare:"Historikk og sammenligning", year:"År", period:"Periode", selected_period:"Valgt periode", avg_per_day:"Snitt per dag", diff_prev:"Forskjell fra forrige", entries_count:"Antall kjøp", periods_this_year:"Perioder dette året", stores_selected_period:"Butikker i valgt periode", period_overview:"Periodeoversikt", store_compare:"Butikksammenligning", stores_through_year:"Butikker gjennom året", most_used:"Mest brukt", backup:"Backup", backup_note:"Appen lagrer data lokalt i nettleseren. Her kan du ta backup til fil og importere igjen senere.", export_backup:"Eksporter backup", import_backup:"Importer backup", reset_all:"Nullstill alle data", backup_contains:"Hva backupen inneholder", backup_contains_text:"Alle kjøp, valgt startdag, periodetype, lengde og budsjettinnstilling lagres i én JSON-fil.", tab_overview:"Oversikt", tab_history:"Historikk", tab_stores:"Butikker", tab_settings:"Innstillinger", no_entries_day:"Ingen kjøp registrert på denne datoen ennå.", invalid_amount:"Skriv inn et gyldig beløp.", choose_date:"Velg dato.", delete_confirm:"Fjerne dette kjøpet?", invalid_backup:"Ugyldig backupfil.", import_failed:"Kunne ikke lese backupfilen.", import_ok:"Backup importert.", export_ok:"Backup eksportert.", save_ok:"Kjøp lagret.", update_ok:"Endring lagret.", delete_ok:"Kjøp fjernet.", reset_done:"Alle data er nullstilt.", reset_confirm:"Dette sletter alle kjøp og innstillinger. Er du sikker?", no_purchases:"Ingen kjøp", no_purchases_yet:"Ingen kjøp ennå", no_purchases_year:"Ingen kjøp registrert for dette året ennå.", status_enter_budget:"Legg inn budsjett for perioden.", status_over_budget:(amount)=>`Du er over budsjettet med ${amount}.`, status_over_plan:(amount)=>`Du ligger litt foran planen. Skal du hente deg inn, bør du holde deg rundt ${amount} per dag videre.`, status_within_plan:(amount)=>`Du ligger fint an. Du kan bruke omtrent ${amount} per dag videre.`, day_entries:(n)=>`Antall kjøp: <strong>${n}</strong>`, day_spent:"Brukt denne dagen", day_target:"Dagens mål", day_diff:"Dagsavvik", cumulative:"Samlet til nå", over_plan:"over plan", under_plan:"under plan", heat_zero:"0 kr", heat_ok:"innenfor", heat_warn:"høy dag", heat_bad:"over plan", weekdays:["Man","Tir","Ons","Tor","Fre","Lør","Søn"], quick_hint:"Tips: Appen husker sist valgte butikk.", jump_today:"I dag", show_setup_again:"Vis oppsettsskjerm igjen", setupTitle:"Sett opp appen", setupText:"Velg budsjett, periode, språk og valuta først. Etterpå kommer du rett inn i oversikten.", setupInfo1Title:"Rask start", setupInfo1Text:"Dette trenger du bare å gjøre første gang.", setupInfo2Title:"Kan endres senere", setupInfo2Text:"Alle valgene kan endres i Innstillinger.", setupStart:"Start appen", setupUseExisting:"Bruk lagrede innstillinger", setupNeedsBudget:"Legg inn budsjett for å komme i gang.", installReady:"Kan installeres", installInstalled:"Installert app", installBrowser:"Kjører i nettleser", networkOnline:"På nett", networkOffline:"Offline", cacheReady:"Offline klar", cacheWaiting:"Offline klargjøres", installBtn:"Installer", dismiss:"Lukk", shared_placeholder:"KNAPPEN BRUKER DENNE FILA"},
+  en: {
+    appTitle:"Food Budget", status_title:"Status", settings:"Settings", budget_label:"Budget for this period", start_day_label:"Start day of period", period_mode_label:"Period type", period_length_label:"Length", weeks:"Weeks", months:"Months", language_label:"Language", currency_label:"Currency", used:"Used", remaining:"Remaining", daily_now:"Can spend per day now", selected_day:"Selected day", status_word:"Status", date:"Date", store:"Store", amount:"Amount", add_purchase:"Add purchase", save_change:"Save change", cancel_edit:"Cancel edit", remove:"Remove", dates_in_period:"Dates in period", entries_selected_day:"Purchases on selected date", spend_per_day:"Spend per day", by_store:"By store", history_compare:"History and comparison", year:"Year", period:"Period", selected_period:"Selected period", avg_per_day:"Average per day", diff_prev:"Difference from previous", entries_count:"Number of purchases", periods_this_year:"Periods this year", stores_selected_period:"Stores in selected period", period_overview:"Period overview", store_compare:"Store comparison", stores_through_year:"Stores through the year", most_used:"Most used", backup:"Backup", backup_note:"The app stores data locally in the browser. Here you can export a backup file and import it later.", export_backup:"Export backup", import_backup:"Import backup", reset_all:"Reset all data", backup_contains:"What the backup contains", backup_contains_text:"All purchases, chosen start day, period type, period length and budget settings are stored in one JSON file.", tab_overview:"Overview", tab_history:"History", tab_stores:"Stores", tab_settings:"Settings", no_entries_day:"No purchases registered for this date yet.", invalid_amount:"Enter a valid amount.", choose_date:"Choose a date.", delete_confirm:"Remove this purchase?", invalid_backup:"Invalid backup file.", import_failed:"Could not read the backup file.", import_ok:"Backup imported.", export_ok:"Backup exported.", save_ok:"Purchase saved.", update_ok:"Change saved.", delete_ok:"Purchase removed.", reset_done:"All data has been reset.", reset_confirm:"This deletes all purchases and settings. Are you sure?", no_purchases:"No purchases", no_purchases_yet:"No purchases yet", no_purchases_year:"No purchases registered for this year yet.", status_enter_budget:"Enter a budget for the period.", status_over_budget:(amount)=>`You are over budget by ${amount}.`, status_over_plan:(amount)=>`You are a bit ahead of plan. To catch up, try to stay around ${amount} per day from now on.`, status_within_plan:(amount)=>`You are on track. You can spend about ${amount} per day from now on.`, day_entries:(n)=>`Number of purchases: <strong>${n}</strong>`, day_spent:"Spent this day", day_target:"Daily target", day_diff:"Daily difference", cumulative:"So far", over_plan:"over plan", under_plan:"under plan", heat_zero:"0", heat_ok:"within plan", heat_warn:"high day", heat_bad:"over plan", weekdays:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], quick_hint:"Tip: The app remembers your last selected store.", jump_today:"Today", show_setup_again:"Show setup screen again", setupTitle:"Set up the app", setupText:"Choose budget, period, language and currency first. After that you go straight to the overview.", setupInfo1Title:"Quick start", setupInfo1Text:"You only need to do this once.", setupInfo2Title:"Can be changed later", setupInfo2Text:"All settings can be changed later in Settings.", setupStart:"Start app", setupUseExisting:"Use saved settings", setupNeedsBudget:"Enter a budget to get started.", installReady:"Ready to install", installInstalled:"Installed app", installBrowser:"Running in browser", networkOnline:"Online", networkOffline:"Offline", cacheReady:"Offline ready", cacheWaiting:"Preparing offline", installBtn:"Install", dismiss:"Close", shared_placeholder:"BUTTON USES THIS FILE"}
+};
+
+let expenses = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let editingId = null;
+let selectedDate = "";
+let selectedHistoryPeriod = "";
+let selectedHistoryYear = "";
+let selectedShopYear = "";
+let dailyChart = null;
+let categoryChart = null;
+let historyPeriodChart = null;
+let historyCategoryChart = null;
+let shopYearChart = null;
+
+function getLang(){ return localStorage.getItem(LANG_KEY) || "no"; }
+function setLang(v){ localStorage.setItem(LANG_KEY, v); }
+function tr(){ return TEXT[getLang()]; }
+function getCurrency(){ return localStorage.getItem(CURRENCY_KEY) || "NOK"; }
+function setCurrency(v){ localStorage.setItem(CURRENCY_KEY, v); }
+function getPeriodMode(){ return localStorage.getItem(PERIOD_MODE_KEY) || "months"; }
+function setPeriodMode(v){ localStorage.setItem(PERIOD_MODE_KEY, v); }
+function getPeriodLength(){ return Number(localStorage.getItem(PERIOD_LENGTH_KEY) || 1); }
+function setPeriodLength(v){ localStorage.setItem(PERIOD_LENGTH_KEY, String(v)); }
+function getStartDay(){ return Number(localStorage.getItem(STARTDAY_KEY) || 20); }
+function getLastStore(){ return localStorage.getItem(LAST_STORE_KEY) || "Rema 1000"; }
+function setLastStore(v){ localStorage.setItem(LAST_STORE_KEY, v); }
+function isSetupDone(){ return localStorage.getItem(SETUP_DONE_KEY) === "1"; }
+function setSetupDone(v){ localStorage.setItem(SETUP_DONE_KEY, v ? "1" : "0"); }
+function saveExpenses(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); }
+function saveBudget(){ localStorage.setItem(BUDGET_KEY, document.getElementById("budget").value || ""); }
+function saveStartDay(){ localStorage.setItem(STARTDAY_KEY, document.getElementById("startDay").value || "20"); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+function showToast(message, type=""){
+  const wrap = document.getElementById("toastWrap");
+  const el = document.createElement("div");
+  el.className = `toast ${type}`.trim();
+  el.textContent = message;
+  wrap.appendChild(el);
+  setTimeout(() => { el.style.opacity = "0"; el.style.transform = "translateY(6px)"; el.style.transition = "opacity .18s ease, transform .18s ease"; }, 2100);
+  setTimeout(() => el.remove(), 2350);
+}
+function vibrateSoft(){ if ("vibrate" in navigator) navigator.vibrate(12); }
+function formatCurrency(value){
+  const currency = getCurrency();
+  try{ return new Intl.NumberFormat(getLang() === "no" ? "nb-NO" : "en-GB", { style:"currency", currency, maximumFractionDigits:0 }).format(Number(value || 0)); }
+  catch { return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB") + " " + currency; }
+}
+function formatNumber(value){ return Math.round(Number(value || 0)).toLocaleString(getLang() === "no" ? "no-NO" : "en-GB"); }
+function formatISO(date){ const y = date.getFullYear(); const m = String(date.getMonth()+1).padStart(2,"0"); const d = String(date.getDate()).padStart(2,"0"); return `${y}-${m}-${d}`; }
+function parseLocalDate(iso){ const [y,m,d] = iso.split("-").map(Number); return new Date(y,m-1,d); }
+function shortDate(date){ return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { day:"2-digit", month:"2-digit" }); }
+function longDate(date){ return date.toLocaleDateString(getLang() === "no" ? "nb-NO" : "en-GB", { weekday:"long", day:"numeric", month:"long", year:"numeric" }); }
+function periodName(period){ const locale = getLang() === "no" ? "nb-NO" : "en-GB"; const startText = period.start.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" }); const endText = period.end.toLocaleDateString(locale, { day:"numeric", month:"short", year:"numeric" }); return `${startText} – ${endText}`; }
+function populateStartDaySelect(selectId, selectedValue = getStartDay()){ const sel = document.getElementById(selectId); sel.innerHTML = Array.from({length:28}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join(""); sel.value = String(selectedValue); }
+function applyPeriodSelectors(){ const modeSel = document.getElementById("periodMode"); const lengthSel = document.getElementById("periodLength"); modeSel.innerHTML = `<option value="weeks">${tr().weeks}</option><option value="months">${tr().months}</option>`; lengthSel.innerHTML = `<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>`; modeSel.value = getPeriodMode(); lengthSel.value = String(getPeriodLength()); }
+function applySetupSelectors(){ const modeSel = document.getElementById("setupPeriodMode"); const lengthSel = document.getElementById("setupPeriodLength"); modeSel.innerHTML = `<option value="weeks">${tr().weeks}</option><option value="months">${tr().months}</option>`; lengthSel.innerHTML = `<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>`; modeSel.value = getPeriodMode(); lengthSel.value = String(getPeriodLength()); document.getElementById("setupLanguage").value = getLang(); document.getElementById("setupCurrency").value = getCurrency(); document.getElementById("setupBudget").value = localStorage.getItem(BUDGET_KEY) || ""; populateStartDaySelect("setupStartDay", getStartDay()); }
+function getPeriod(today = new Date()){
+  const startDay = getStartDay(), mode = getPeriodMode(), length = getPeriodLength();
+  let startYear, startMonth;
+  if (today.getDate() >= startDay){ startYear = today.getFullYear(); startMonth = today.getMonth(); }
+  else { const prev = new Date(today.getFullYear(), today.getMonth()-1, 1); startYear = prev.getFullYear(); startMonth = prev.getMonth(); }
+  const start = new Date(startYear, startMonth, startDay); let end;
+  if (mode === "weeks"){ end = new Date(start); end.setDate(end.getDate() + (length * 7) - 1); }
+  else { end = startDay === 1 ? new Date(startYear, startMonth + length, 0) : new Date(startYear, startMonth + length, startDay - 1); }
+  start.setHours(0,0,0,0); end.setHours(0,0,0,0); return { start, end };
+}
+function getPeriodFromStart(startDate){ const mode = getPeriodMode(), length = getPeriodLength(); const start = new Date(startDate); start.setHours(0,0,0,0); let end; if (mode === "weeks"){ end = new Date(start); end.setDate(end.getDate() + (length * 7) - 1); } else { const startDay = getStartDay(); end = startDay === 1 ? new Date(start.getFullYear(), start.getMonth() + length, 0) : new Date(start.getFullYear(), start.getMonth() + length, startDay - 1); } end.setHours(0,0,0,0); return { start, end }; }
+function getDatesInRange(start, end){ const dates = []; const current = new Date(start); while (current <= end){ dates.push(formatISO(current)); current.setDate(current.getDate() + 1); } return dates; }
+function getDatesInCurrentPeriod(){ const { start, end } = getPeriod(); return getDatesInRange(start, end); }
+function ensureSelectedDate(){ const dates = getDatesInCurrentPeriod(); const todayIso = formatISO(new Date()); if (dates.includes(todayIso)) selectedDate = dates.includes(selectedDate) ? selectedDate : todayIso; else selectedDate = dates.includes(selectedDate) ? selectedDate : dates[0]; document.getElementById("selectedDate").value = selectedDate; }
+function getExpensesInPeriod(start, end){ return expenses.filter(e => { const d = parseLocalDate(e.date); return d >= start && d <= end; }); }
+function getCurrentPeriodExpenses(){ const { start, end } = getPeriod(); return getExpensesInPeriod(start, end); }
+function getExpensesForDate(iso){ return getCurrentPeriodExpenses().filter(e => e.date === iso).sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)); }
+function getBudget(){ return Number(document.getElementById("budget").value || 0); }
+function syncSettingsInputsFromStorage(){ document.getElementById("budget").value = localStorage.getItem(BUDGET_KEY) || ""; document.getElementById("language").value = getLang(); document.getElementById("currency").value = getCurrency(); populateStartDaySelect("startDay", getStartDay()); applyPeriodSelectors(); }
+function isStandaloneMode(){ return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true; }
+function updatePwaBar(){
+  const bar = document.getElementById("pwaBar"), installStatePill = document.getElementById("installStatePill"), networkStatePill = document.getElementById("networkStatePill"), cacheStatePill = document.getElementById("cacheStatePill"), installBtn = document.getElementById("installBtn");
+  if (localStorage.getItem(PWA_BAR_DISMISSED_KEY) === "1") { bar.classList.add("hidden"); return; }
+  bar.classList.remove("hidden");
+  if (isStandaloneMode()){ installStatePill.textContent = tr().installInstalled; installStatePill.className = "pwa-pill good"; installBtn.classList.add("hidden"); }
+  else if (deferredInstallPrompt){ installStatePill.textContent = tr().installReady; installStatePill.className = "pwa-pill good"; installBtn.textContent = tr().installBtn; installBtn.classList.remove("hidden"); }
+  else { installStatePill.textContent = tr().installBrowser; installStatePill.className = "pwa-pill"; installBtn.classList.add("hidden"); }
+  if (navigator.onLine){ networkStatePill.textContent = tr().networkOnline; networkStatePill.className = "pwa-pill good"; }
+  else { networkStatePill.textContent = tr().networkOffline; networkStatePill.className = "pwa-pill warn"; }
+  if (swRegistered){ cacheStatePill.textContent = tr().cacheReady; cacheStatePill.className = "pwa-pill good"; }
+  else { cacheStatePill.textContent = tr().cacheWaiting; cacheStatePill.className = "pwa-pill"; }
+}
+function applyUIStrings(){
+  const s = tr();
+  document.getElementById("appTitle").innerText = s.appTitle;
+  document.querySelectorAll("[data-i18n]").forEach(el => { const key = el.dataset.i18n; if (s[key]) el.textContent = s[key]; });
+  document.querySelector('.tab-btn[data-tab="overviewTab"] span').textContent = s.tab_overview;
+  document.querySelector('.tab-btn[data-tab="historyTab"] span').textContent = s.tab_history;
+  document.querySelector('.tab-btn[data-tab="shopsTab"] span').textContent = s.tab_stores;
+  document.querySelector('.tab-btn[data-tab="settingsTab"] span').textContent = s.tab_settings;
+  document.getElementById("showSetupAgainBtn").textContent = s.show_setup_again;
+  document.getElementById("quickHint").textContent = s.quick_hint;
+  document.getElementById("dismissPwaBarBtn").textContent = s.dismiss;
+  const w = s.weekdays; [1,2,3,4,5,6,7].forEach((n,i)=>document.getElementById(`wd${n}`).textContent=w[i]);
+  document.getElementById("saveBtn").textContent = editingId ? s.save_change : s.add_purchase;
+  document.getElementById("cancelEditBtn").textContent = s.cancel_edit;
+  document.getElementById("exportBtn").textContent = s.export_backup;
+  document.getElementById("importBtn").textContent = s.import_backup;
+  document.getElementById("resetBtn").textContent = s.reset_all;
+  document.getElementById("setupTitle").textContent = s.setupTitle;
+  document.getElementById("setupText").textContent = s.setupText;
+  document.getElementById("setupInfo1Title").textContent = s.setupInfo1Title;
+  document.getElementById("setupInfo1Text").textContent = s.setupInfo1Text;
+  document.getElementById("setupInfo2Title").textContent = s.setupInfo2Title;
+  document.getElementById("setupInfo2Text").textContent = s.setupInfo2Text;
+  document.getElementById("setupBudgetLabel").textContent = s.budget_label;
+  document.getElementById("setupStartDayLabel").textContent = s.start_day_label;
+  document.getElementById("setupPeriodModeLabel").textContent = s.period_mode_label;
+  document.getElementById("setupPeriodLengthLabel").textContent = s.period_length_label;
+  document.getElementById("setupLanguageLabel").textContent = s.language_label;
+  document.getElementById("setupCurrencyLabel").textContent = s.currency_label;
+  document.getElementById("startUsingAppBtn").textContent = s.setupStart;
+  document.getElementById("setupUseExistingBtn").textContent = s.setupUseExisting;
+  document.getElementById("language").value = getLang();
+  document.getElementById("currency").value = getCurrency();
+  applyPeriodSelectors();
+  applySetupSelectors();
+  updatePwaBar();
+}
+function showSetupScreen(){ document.getElementById("setupScreen").classList.remove("hidden"); document.getElementById("mainApp").classList.add("hidden"); applyUIStrings(); requestAnimationFrame(() => { document.getElementById("setupBudget").focus(); }); }
+function showMainApp(){ document.getElementById("setupScreen").classList.add("hidden"); document.getElementById("mainApp").classList.remove("hidden"); syncSettingsInputsFromStorage(); applyUIStrings(); ensureSelectedDate(); setFormForAdd(); updateAll(); }
+function shouldShowSetupScreen(){ return !isSetupDone() || !localStorage.getItem(BUDGET_KEY); }
+function focusAmountField(selectContent = false){ if (document.getElementById("overviewTab").classList.contains("active")){ const field = document.getElementById("expense"); field.focus(); if (selectContent && field.value) field.select(); } }
+function setFormForAdd(){ editingId = null; document.getElementById("formTitle").innerText = tr().add_purchase; document.getElementById("saveBtn").innerText = tr().add_purchase; document.getElementById("cancelEditBtn").style.display = "none"; document.getElementById("expense").value = ""; document.getElementById("selectedDate").value = selectedDate; document.getElementById("category").value = getLastStore(); }
+function setFormForEdit(entry){ editingId = entry.id; document.getElementById("formTitle").innerText = tr().save_change; document.getElementById("saveBtn").innerText = tr().save_change; document.getElementById("cancelEditBtn").style.display = "block"; document.getElementById("cancelEditBtn").innerText = tr().cancel_edit; document.getElementById("selectedDate").value = entry.date; document.getElementById("category").value = entry.category; document.getElementById("expense").value = entry.amount; selectedDate = entry.date; renderOverviewOnly(); requestAnimationFrame(() => { const input = document.getElementById("expense"); input.focus(); input.select(); }); }
+function addOrUpdateExpense(){
+  const amount = Number(document.getElementById("expense").value), category = document.getElementById("category").value, date = document.getElementById("selectedDate").value;
+  if (!date){ alert(tr().choose_date); return; }
+  if (!amount || amount <= 0){ alert(tr().invalid_amount); return; }
+  setLastStore(category);
+  if (editingId){ const idx = expenses.findIndex(e => e.id === editingId); if (idx !== -1) expenses[idx] = { ...expenses[idx], amount, category, date }; }
+  else { expenses.push({ id: uid(), amount, category, date, createdAt: Date.now() }); }
+  const wasEditing = !!editingId; selectedDate = date; saveExpenses(); editingId = null; updateAll(); setFormForAdd(); vibrateSoft(); showToast(wasEditing ? tr().update_ok : tr().save_ok, "good"); requestAnimationFrame(() => focusAmountField(false));
+}
+function deleteExpense(id){ expenses = expenses.filter(e => e.id !== id); saveExpenses(); if (editingId === id) setFormForAdd(); updateAll(); vibrateSoft(); showToast(tr().delete_ok, "danger"); }
+function renderDateStrip(){
+  const strip = document.getElementById("dateStrip"), todayIso = formatISO(new Date()), dates = getDatesInCurrentPeriod(), budget = getBudget(), totalDays = dates.length, perDay = budget ? budget / totalDays : 0, locale = getLang() === "no" ? "nb-NO" : "en-GB";
+  const totalsByDate = {}; dates.forEach(d => totalsByDate[d] = 0); getCurrentPeriodExpenses().forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
+  let runningUsed = 0;
+  strip.innerHTML = dates.map((iso, index) => {
+    const d = parseLocalDate(iso), total = totalsByDate[iso] || 0; runningUsed += total; const allowedSoFar = perDay * (index + 1), diff = runningUsed - allowedSoFar, percentOfDay = perDay > 0 ? Math.round((total / perDay) * 100) : 0; const active = iso === selectedDate ? "active" : "", today = iso === todayIso ? "today" : ""; let colorClass = "", subText = "";
+    if (total === 0){ colorClass = "zero"; subText = tr().heat_zero; }
+    else if (perDay > 0 && diff > perDay * 0.5){ colorClass = "bad-2"; subText = `+${Math.round(diff)}`; }
+    else if (diff > 0){ colorClass = "bad-1"; subText = `+${Math.round(diff)}`; }
+    else if (perDay > 0 && total > perDay * 1.25){ colorClass = "warn-2"; subText = `${percentOfDay}%`; }
+    else if (perDay > 0 && total > perDay){ colorClass = "warn-1"; subText = `${percentOfDay}%`; }
+    else if (perDay > 0 && Math.abs(diff) < perDay * 0.35){ colorClass = "ok-2"; subText = `${percentOfDay}%`; }
+    else { colorClass = "ok-1"; subText = `${Math.round(total)}`; }
+    return `<button class="date-chip ${active} ${today} ${colorClass}" data-date="${iso}" type="button" title="${longDate(d)} – ${formatCurrency(total)}"><span class="top">${d.toLocaleDateString(locale, { weekday:"short" })}</span><span class="bottom">${d.getDate()}.${d.getMonth()+1}</span><span class="sub">${subText}</span></button>`;
+  }).join("");
+  strip.querySelectorAll(".date-chip").forEach(btn => btn.addEventListener("click", () => { selectedDate = btn.dataset.date; document.getElementById("selectedDate").value = selectedDate; if (!editingId) document.getElementById("expense").value = ""; renderOverviewOnly(); focusAmountField(); }));
+  const activeEl = strip.querySelector(".date-chip.active"); if (activeEl) activeEl.scrollIntoView({ inline:"center", block:"nearest" });
+}
+function renderDaySection(){
+  const iso = selectedDate, entries = getExpensesForDate(iso), total = entries.reduce((sum,e)=>sum+e.amount,0), budget = getBudget(), totalDays = getDatesInCurrentPeriod().length, perDayTarget = budget ? budget / totalDays : 0, diff = total - perDayTarget, d = parseLocalDate(iso), countEntries = entries.length, dates = getDatesInCurrentPeriod(), dayIndex = dates.indexOf(iso), allowedSoFar = perDayTarget * (dayIndex + 1);
+  let usedSoFar = 0; for (let i = 0; i <= dayIndex; i++) usedSoFar += getExpensesForDate(dates[i]).reduce((sum,e)=>sum+e.amount,0);
+  const cumulativeDiff = usedSoFar - allowedSoFar, percentOfDay = perDayTarget > 0 ? Math.round((total / perDayTarget) * 100) : 0;
+  document.getElementById("selectedTotal").innerText = formatCurrency(total);
+  document.getElementById("daySummary").innerHTML = `<strong>${longDate(d)}</strong><br>${tr().day_entries(countEntries)}<br>${tr().day_spent}: <strong>${formatCurrency(total)}</strong><br>${tr().day_target}: <strong>${formatCurrency(perDayTarget)}</strong> (${percentOfDay}%)<br>${tr().day_diff}: <strong>${diff > 0 ? "+" : ""}${formatNumber(diff)}</strong><br>${tr().cumulative}: <strong>${usedSoFar > allowedSoFar ? "+" : ""}${formatNumber(cumulativeDiff)} ${cumulativeDiff > 0 ? tr().over_plan : tr().under_plan}</strong>`;
+  const wrap = document.getElementById("dayEntries");
+  if (!entries.length){ wrap.innerHTML = `<div class="empty">${tr().no_entries_day}</div>`; return; }
+  wrap.innerHTML = entries.map(e => `<div class="item"><div class="item-head"><div><div class="item-amount">${formatCurrency(e.amount)}</div><div class="item-meta">${e.category}</div></div></div><div class="item-actions"><button class="secondary edit-btn" data-id="${e.id}" type="button">${tr().save_change}</button><button class="danger delete-btn" data-id="${e.id}" type="button">${tr().remove}</button></div></div>`).join("");
+  wrap.querySelectorAll(".edit-btn").forEach(btn => btn.addEventListener("click", () => { const entry = expenses.find(e => e.id === btn.dataset.id); if (entry) setFormForEdit(entry); }));
+  wrap.querySelectorAll(".delete-btn").forEach(btn => btn.addEventListener("click", () => { if (confirm(tr().delete_confirm)) deleteExpense(btn.dataset.id); }));
+}
+function updateSummaryOnly(){
+  const budget = getBudget(), periodExpenses = getCurrentPeriodExpenses(), used = periodExpenses.reduce((sum,e)=>sum+e.amount,0), { start, end } = getPeriod(); const today = new Date(); today.setHours(0,0,0,0);
+  const totalDays = getDatesInCurrentPeriod().length, daysGone = today < start ? 0 : Math.min(totalDays, Math.floor((today - start) / 86400000) + 1), daysLeft = today > end ? 0 : Math.max(1, Math.floor((end - today) / 86400000) + 1), remaining = budget - used, dailyNow = daysLeft ? remaining / daysLeft : 0, idealUsed = budget ? (budget / totalDays) * daysGone : 0;
+  document.getElementById("used").innerText = formatCurrency(used); document.getElementById("remaining").innerText = formatCurrency(remaining); document.getElementById("dailyNow").innerText = formatCurrency(dailyNow);
+  const modeText = getPeriodMode() === "weeks" ? tr().weeks.toLowerCase() : tr().months.toLowerCase(); document.getElementById("periodText").innerText = `${shortDate(start)} – ${shortDate(end)} · ${tr().start_day_label.toLowerCase()} ${getStartDay()} · ${getPeriodLength()} ${modeText}`;
+  const statusEl = document.getElementById("status");
+  if (!budget){ statusEl.className = "status"; statusEl.innerText = tr().status_enter_budget; }
+  else if (remaining < 0){ statusEl.className = "status warn"; statusEl.innerText = tr().status_over_budget(formatCurrency(Math.abs(remaining))); }
+  else if (used > idealUsed){ statusEl.className = "status warn"; statusEl.innerText = tr().status_over_plan(formatCurrency(dailyNow)); }
+  else { statusEl.className = "status good"; statusEl.innerText = tr().status_within_plan(formatCurrency(dailyNow)); }
+}
+function getChartBaseOptions(){ const darkText = "rgba(20,32,51,.78)", lightLine = "rgba(209,224,240,.7)"; return { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:"rgba(20,32,51,.94)", titleColor:"#fff", bodyColor:"#fff", padding:10, cornerRadius:12 } }, scales:{ x:{ grid:{ display:false }, ticks:{ color:darkText, maxRotation:0, autoSkip:true } }, y:{ beginAtZero:true, grid:{ color:lightLine }, ticks:{ color:darkText } } } }; }
+function buildChart(id, type, labels, data){ return new Chart(document.getElementById(id), { type, data:{ labels, datasets:[{ label:"", data, tension:0.3, fill:type === "line", borderColor:"#2563eb", backgroundColor:type === "line" ? "rgba(37,99,235,.14)" : "rgba(37,99,235,.82)", pointBackgroundColor:"#2563eb", pointBorderColor:"#ffffff", pointBorderWidth:2, pointRadius:type === "line" ? 3.5 : 0, borderWidth:type === "line" ? 3 : 1, borderRadius:type === "bar" ? 12 : 0 }] }, options:getChartBaseOptions() }); }
+function renderOverviewCharts(){
+  const periodExpenses = getCurrentPeriodExpenses(), dates = getDatesInCurrentPeriod(), dailyTotals = {}; dates.forEach(d => dailyTotals[d] = 0); const categoryTotals = {};
+  periodExpenses.forEach(e => { dailyTotals[e.date] = (dailyTotals[e.date] || 0) + e.amount; categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount; });
+  const dailyLabels = dates.map(iso => { const d = parseLocalDate(iso); return `${d.getDate()}.${d.getMonth()+1}`; }); const dailyValues = dates.map(iso => dailyTotals[iso] || 0);
+  if (dailyChart) dailyChart.destroy(); if (categoryChart) categoryChart.destroy(); dailyChart = buildChart("dailyChart", "line", dailyLabels, dailyValues);
+  categoryChart = new Chart(document.getElementById("categoryChart"), { type: "doughnut", data: { labels: Object.keys(categoryTotals).length ? Object.keys(categoryTotals) : [tr().no_purchases_yet], datasets: [{ data: Object.values(categoryTotals).length ? Object.values(categoryTotals) : [1], borderWidth:2, borderColor:"#ffffff" }] }, options: { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, boxHeight:12, usePointStyle:true, padding:14, color:"rgba(20,32,51,.78)" } } } } });
+}
+function getAllPeriods(){
+  if (!expenses.length){ const nowPeriod = getPeriod(); return [{ id: formatISO(nowPeriod.start), start: nowPeriod.start, end: nowPeriod.end, label: `${shortDate(nowPeriod.start)} – ${shortDate(nowPeriod.end)}`, year: nowPeriod.end.getFullYear() }]; }
+  const dates = expenses.map(e => parseLocalDate(e.date)).sort((a,b)=>a-b), firstPeriod = getPeriod(dates[0]), lastPeriod = getPeriod(dates[dates.length - 1]);
+  let currentStart = new Date(firstPeriod.start); const periods = [];
+  while (currentStart <= lastPeriod.start){ const p = getPeriodFromStart(currentStart); periods.push({ id: formatISO(p.start), start: p.start, end: p.end, label: `${shortDate(p.start)} – ${shortDate(p.end)}`, year: p.end.getFullYear() }); currentStart = new Date(p.end); currentStart.setDate(currentStart.getDate() + 1); }
+  return periods;
+}
+function getPeriodData(period){ const items = getExpensesInPeriod(period.start, period.end), total = items.reduce((sum,e)=>sum+e.amount,0), days = getDatesInRange(period.start, period.end).length, categoryTotals = {}; items.forEach(e => { categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount; }); return { items, total, days, avg: days ? total/days : 0, count: items.length, categoryTotals }; }
+function fillHistorySelectors(){ const periods = getAllPeriods(), years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a), yearSelect = document.getElementById("historyYear"); yearSelect.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join(""); if (!selectedHistoryYear || !years.includes(Number(selectedHistoryYear))) selectedHistoryYear = String(years[0] || new Date().getFullYear()); yearSelect.value = selectedHistoryYear; const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>b.start-a.start), periodSelect = document.getElementById("historyPeriod"); periodSelect.innerHTML = periodsForYear.map(p => `<option value="${p.id}">${periodName(p)}</option>`).join(""); if (!selectedHistoryPeriod || !periodsForYear.some(p => p.id === selectedHistoryPeriod)) selectedHistoryPeriod = periodsForYear[0]?.id || ""; periodSelect.value = selectedHistoryPeriod; }
+function renderHistoryHeatmap(selectedPeriod){
+  const wrap = document.getElementById("historyHeatmap"), legend = document.getElementById("historyHeatmapLegend"), title = document.getElementById("historyHeatmapTitle"); if (!wrap || !selectedPeriod) return; title.innerText = periodName(selectedPeriod);
+  const dates = getDatesInRange(selectedPeriod.start, selectedPeriod.end), items = getExpensesInPeriod(selectedPeriod.start, selectedPeriod.end), totalsByDate = {}; dates.forEach(d => totalsByDate[d] = 0); items.forEach(e => { totalsByDate[e.date] = (totalsByDate[e.date] || 0) + e.amount; });
+  const budget = getBudget(), totalDays = dates.length, perDay = budget ? budget / totalDays : 0;
+  legend.innerHTML = `<div class="heatmap-legend-item"><span class="heatmap-swatch heat-zero"></span>${tr().heat_zero}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-ok1"></span>${tr().heat_ok}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-warn1"></span>${tr().heat_warn}</div><div class="heatmap-legend-item"><span class="heatmap-swatch heat-bad1"></span>${tr().heat_bad}</div>`;
+  const firstDate = parseLocalDate(dates[0]), firstWeekday = (firstDate.getDay() + 6) % 7; let html = ""; for (let i = 0; i < firstWeekday; i++) html += `<div class="heatmap-day heatmap-empty"></div>`;
+  let runningUsed = 0;
+  dates.forEach((iso, index) => { const d = parseLocalDate(iso), total = totalsByDate[iso] || 0; runningUsed += total; const allowedSoFar = perDay * (index + 1), diff = runningUsed - allowedSoFar; let heatClass = "heat-ok1"; if (total === 0) heatClass = "heat-zero"; else if (perDay > 0 && diff > perDay * 0.5) heatClass = "heat-bad2"; else if (diff > 0) heatClass = "heat-bad1"; else if (perDay > 0 && total > perDay * 1.25) heatClass = "heat-warn2"; else if (perDay > 0 && total > perDay) heatClass = "heat-warn1"; else if (perDay > 0 && Math.abs(diff) < perDay * 0.35) heatClass = "heat-ok2"; html += `<button type="button" class="heatmap-day ${heatClass}" data-date="${iso}" title="${longDate(d)} – ${formatCurrency(total)}"><span class="num">${d.getDate()}</span><span class="amt">${Math.round(total)}</span></button>`; });
+  wrap.innerHTML = html;
+  wrap.querySelectorAll(".heatmap-day[data-date]").forEach(btn => btn.addEventListener("click", () => { selectedDate = btn.dataset.date; setActiveTab("overviewTab"); document.getElementById("selectedDate").value = selectedDate; renderOverviewOnly(); focusAmountField(); }));
+}
+function renderHistoryTab(){
+  const periods = getAllPeriods(); fillHistorySelectors(); const periodsForYear = periods.filter(p => String(p.year) === String(selectedHistoryYear)).sort((a,b)=>a.start-b.start), selected = periods.find(p => p.id === selectedHistoryPeriod) || periodsForYear[periodsForYear.length - 1]; if (!selected) return;
+  const selectedData = getPeriodData(selected), selectedIndex = periods.findIndex(p => p.id === selected.id), prev = selectedIndex > 0 ? periods[selectedIndex - 1] : null, prevTotal = prev ? getPeriodData(prev).total : 0, diffPrev = selectedData.total - prevTotal;
+  document.getElementById("historyTotal").innerText = formatCurrency(selectedData.total); document.getElementById("historyDailyAvg").innerText = formatCurrency(selectedData.avg); document.getElementById("historyDiffPrev").innerText = `${diffPrev > 0 ? "+" : ""}${formatNumber(diffPrev)}`; document.getElementById("historyCount").innerText = formatNumber(selectedData.count);
+  if (historyPeriodChart) historyPeriodChart.destroy(); historyPeriodChart = buildChart("historyPeriodChart", "bar", periodsForYear.map(p => periodName(p)), periodsForYear.map(p => getPeriodData(p).total));
+  if (historyCategoryChart) historyCategoryChart.destroy(); historyCategoryChart = new Chart(document.getElementById("historyCategoryChart"), { type: "doughnut", data: { labels: Object.keys(selectedData.categoryTotals).length ? Object.keys(selectedData.categoryTotals) : [tr().no_purchases], datasets: [{ data: Object.values(selectedData.categoryTotals).length ? Object.values(selectedData.categoryTotals) : [1], borderWidth:2, borderColor:"#ffffff" }] }, options: { responsive:true, maintainAspectRatio:false, animation:{ duration:260 }, plugins:{ legend:{ position:"bottom", labels:{ boxWidth:12, boxHeight:12, usePointStyle:true, padding:14, color:"rgba(20,32,51,.78)" } } } } });
+  renderHistoryHeatmap(selected);
+  const periodList = document.getElementById("periodList"), desc = [...periodsForYear].sort((a,b)=>b.start-a.start);
+  periodList.innerHTML = desc.map((p, idx) => { const data = getPeriodData(p), previous = desc[idx+1] ? getPeriodData(desc[idx+1]).total : 0, diff = idx < desc.length - 1 ? data.total - previous : 0; return `<div class="period-row"><div class="big">${periodName(p)}</div><div class="small">${p.label}</div><div><span class="pill">${data.count} ${getLang() === "no" ? "kjøp" : "entries"}</span></div><div class="big">${formatCurrency(data.total)}</div><div class="small">${idx < desc.length - 1 ? (diff > 0 ? "+" : "") + formatCurrency(diff).replace(/[^\d\-\+\s.,]/g, "").trim() : "–"}</div></div>`; }).join("");
+}
+function fillShopYearSelector(){ const periods = getAllPeriods(), years = [...new Set(periods.map(p => p.year))].sort((a,b)=>b-a), sel = document.getElementById("shopYear"); sel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join(""); if (!selectedShopYear || !years.includes(Number(selectedShopYear))) selectedShopYear = String(years[0] || new Date().getFullYear()); sel.value = selectedShopYear; }
+function renderShopTab(){ const periods = getAllPeriods().filter(p => String(p.year) === String(selectedShopYear = (selectedShopYear || String(new Date().getFullYear())))); fillShopYearSelector(); const totals = {}; periods.forEach(p => { const data = getPeriodData(p); Object.entries(data.categoryTotals).forEach(([shop, amount]) => { totals[shop] = (totals[shop] || 0) + amount; }); }); const entries = Object.entries(totals).sort((a,b)=>b[1]-a[1]); if (shopYearChart) shopYearChart.destroy(); shopYearChart = buildChart("shopYearChart", "bar", entries.length ? entries.map(e => e[0]) : [tr().no_purchases], entries.length ? entries.map(e => e[1]) : [0]); const list = document.getElementById("shopList"); if (!entries.length){ list.innerHTML = `<div class="empty">${tr().no_purchases_year}</div>`; return; } const totalYear = entries.reduce((sum, [,amt]) => sum + amt, 0); list.innerHTML = entries.map(([shop, amt]) => `<div class="shop-row"><div class="big">${shop}</div><div>${formatCurrency(amt)}</div><div class="small">${Math.round((amt / totalYear) * 100)} %</div></div>`).join(""); }
+function exportBackup(){ const payload = { version: 17.1, exportedAt: new Date().toISOString(), budget: localStorage.getItem(BUDGET_KEY) || "", startDay: localStorage.getItem(STARTDAY_KEY) || "20", periodMode: getPeriodMode(), periodLength: getPeriodLength(), language: getLang(), currency: getCurrency(), lastStore: getLastStore(), setupDone: isSetupDone(), expenses }; const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }); const url = URL.createObjectURL(blob); const a = document.createElement("a"); const today = new Date().toISOString().slice(0,10); a.href = url; a.download = `matbudsjett-backup-${today}.json`; a.click(); URL.revokeObjectURL(url); showToast(tr().export_ok, "good"); }
+function importBackupFromFile(file){ const reader = new FileReader(); reader.onload = function(e){ try{ const data = JSON.parse(e.target.result); if (!data || !Array.isArray(data.expenses)){ alert(tr().invalid_backup); return; } expenses = data.expenses; localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); localStorage.setItem(BUDGET_KEY, data.budget || ""); localStorage.setItem(STARTDAY_KEY, data.startDay || "20"); localStorage.setItem(PERIOD_MODE_KEY, data.periodMode || "months"); localStorage.setItem(PERIOD_LENGTH_KEY, String(data.periodLength || 1)); localStorage.setItem(LANG_KEY, data.language || "no"); localStorage.setItem(CURRENCY_KEY, data.currency || "NOK"); localStorage.setItem(LAST_STORE_KEY, data.lastStore || "Rema 1000"); localStorage.setItem(SETUP_DONE_KEY, data.setupDone ? "1" : "0"); syncSettingsInputsFromStorage(); applyUIStrings(); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; setFormForAdd(); updateAll(); if (shouldShowSetupScreen()) showSetupScreen(); else showMainApp(); showToast(tr().import_ok, "good"); } catch(err){ alert(tr().import_failed); } }; reader.readAsText(file); }
+function resetAllData(){ if (!confirm(tr().reset_confirm)) return; expenses = []; localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(BUDGET_KEY); localStorage.removeItem(STARTDAY_KEY); localStorage.removeItem(PERIOD_MODE_KEY); localStorage.removeItem(PERIOD_LENGTH_KEY); localStorage.removeItem(LANG_KEY); localStorage.removeItem(CURRENCY_KEY); localStorage.removeItem(LAST_STORE_KEY); localStorage.removeItem(SETUP_DONE_KEY); localStorage.removeItem(PWA_BAR_DISMISSED_KEY); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; editingId = null; syncSettingsInputsFromStorage(); applyUIStrings(); showSetupScreen(); showToast(tr().reset_done, "danger"); }
+function setActiveTab(tabId){ document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active")); document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active")); document.getElementById(tabId).classList.add("active"); const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`); if (activeBtn) activeBtn.classList.add("active"); if (tabId === "historyTab") renderHistoryTab(); if (tabId === "shopsTab") renderShopTab(); if (tabId === "overviewTab") focusAmountField(); window.scrollTo({ top:0, behavior:"smooth" }); }
+function renderOverviewOnly(){ ensureSelectedDate(); updateSummaryOnly(); renderDateStrip(); renderDaySection(); renderOverviewCharts(); }
+function updateAll(){ syncSettingsInputsFromStorage(); applyUIStrings(); renderOverviewOnly(); renderHistoryTab(); renderShopTab(); }
+function saveSetupAndStart(useExisting = false){ if (!useExisting){ const setupBudget = document.getElementById("setupBudget").value; if (!setupBudget || Number(setupBudget) <= 0){ alert(tr().setupNeedsBudget); return; } localStorage.setItem(BUDGET_KEY, setupBudget); localStorage.setItem(STARTDAY_KEY, document.getElementById("setupStartDay").value || "20"); localStorage.setItem(PERIOD_MODE_KEY, document.getElementById("setupPeriodMode").value || "months"); localStorage.setItem(PERIOD_LENGTH_KEY, document.getElementById("setupPeriodLength").value || "1"); localStorage.setItem(LANG_KEY, document.getElementById("setupLanguage").value || "no"); localStorage.setItem(CURRENCY_KEY, document.getElementById("setupCurrency").value || "NOK"); } else { if (!localStorage.getItem(BUDGET_KEY)){ alert(tr().setupNeedsBudget); return; } } setSetupDone(true); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; showMainApp(); }
+function applyQuickAmount(amountToAdd){ const input = document.getElementById("expense"); const current = Number(input.value || 0); input.value = current + amountToAdd; input.focus(); input.setSelectionRange(String(input.value).length, String(input.value).length); vibrateSoft(); }
+async function installApp(){ if (!deferredInstallPrompt) return; deferredInstallPrompt.prompt(); await deferredInstallPrompt.userChoice; deferredInstallPrompt = null; updatePwaBar(); }
+async function registerServiceWorker(){ if (!("serviceWorker" in navigator)) return; if (location.protocol !== "https:" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") return; try{ const reg = await navigator.serviceWorker.register("./sw.js"); swRegistered = !!reg; updatePwaBar(); if (reg.waiting) reg.waiting.postMessage({ type:"SKIP_WAITING" }); navigator.serviceWorker.addEventListener("message", (event) => { if (event.data?.type === "SW_ACTIVE"){ swRegistered = true; updatePwaBar(); } }); } catch(err){ console.error("Service worker registration failed:", err); } }
+function createSharedBudgetPlaceholder(){
+  if (!supabaseClient) {
+    alert("Supabase ikke koblet");
+    return;
   }
 
-  function generateShareCode() {
-    return Math.random().toString(36).slice(2, 8).toUpperCase();
-  }
+  alert("Klar til å opprette delt budsjett");
+}
 
-  async function createSharedBudget() {
-    if (!supabaseClient) {
-      alert("Supabase ikke koblet");
-      return;
-    }
-
-    const budgetValue = Number(document.getElementById("budget")?.value || 0);
-    const startDayValue = Number(document.getElementById("startDay")?.value || 20);
-    const periodModeValue = document.getElementById("periodMode")?.value || "months";
-    const periodLengthValue = Number(document.getElementById("periodLength")?.value || 1);
-    const currencyValue = document.getElementById("currency")?.value || "NOK";
-
-    if (!budgetValue || budgetValue <= 0) {
-      alert("Legg inn et gyldig budsjett først.");
-      return;
-    }
-
-    const code = generateShareCode();
-
-    const { error } = await supabaseClient
-      .from("shared_budgets")
-      .insert([
-        {
-          share_code: code,
-          budget_amount: budgetValue,
-          start_day: startDayValue,
-          period_mode: periodModeValue,
-          period_length: periodLengthValue,
-          currency: currencyValue
-        }
-      ]);
-
-    if (error) {
-      console.error("Kunne ikke opprette delt budsjett:", error);
-      alert("Kunne ikke opprette delt budsjett: " + error.message);
-      return;
-    }
-
-    alert("Delt budsjett opprettet. Kode: " + code);
-  }
-
-  const createSharedBtn = document.getElementById("createSharedBtn");
-  if (createSharedBtn) {
-    createSharedBtn.addEventListener("click", createSharedBudget);
-  }
+document.getElementById("saveBtn").addEventListener("click", addOrUpdateExpense);
+document.getElementById("cancelEditBtn").addEventListener("click", () => { setFormForAdd(); focusAmountField(); });
+document.getElementById("budget").addEventListener("input", () => { saveBudget(); updateAll(); });
+document.getElementById("startDay").addEventListener("change", () => { saveStartDay(); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); setFormForAdd(); });
+document.getElementById("periodMode").addEventListener("change", (e) => { setPeriodMode(e.target.value); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); });
+document.getElementById("periodLength").addEventListener("change", (e) => { setPeriodLength(e.target.value); selectedDate = ""; selectedHistoryPeriod = ""; selectedHistoryYear = ""; selectedShopYear = ""; updateAll(); });
+document.getElementById("selectedDate").addEventListener("change", (e) => { selectedDate = e.target.value; renderOverviewOnly(); focusAmountField(); });
+document.getElementById("category").addEventListener("change", (e) => { setLastStore(e.target.value); });
+document.getElementById("historyYear").addEventListener("change", (e) => { selectedHistoryYear = e.target.value; fillHistorySelectors(); renderHistoryTab(); });
+document.getElementById("historyPeriod").addEventListener("change", (e) => { selectedHistoryPeriod = e.target.value; renderHistoryTab(); });
+document.getElementById("shopYear").addEventListener("change", (e) => { selectedShopYear = e.target.value; renderShopTab(); });
+document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => setActiveTab(btn.dataset.tab)));
+document.getElementById("exportBtn").addEventListener("click", exportBackup);
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("createSharedBtn").addEventListener("click", createSharedBudgetPlaceholder);
+document.getElementById("importFile").addEventListener("change", (e) => { const file = e.target.files[0]; if (file) importBackupFromFile(file); e.target.value = ""; });
+document.getElementById("resetBtn").addEventListener("click", resetAllData);
+document.getElementById("language").addEventListener("change", (e) => { setLang(e.target.value); updateAll(); });
+document.getElementById("currency").addEventListener("change", (e) => { setCurrency(e.target.value); updateAll(); });
+document.getElementById("showSetupAgainBtn").addEventListener("click", showSetupScreen);
+document.getElementById("startUsingAppBtn").addEventListener("click", () => saveSetupAndStart(false));
+document.getElementById("setupUseExistingBtn").addEventListener("click", () => saveSetupAndStart(true));
+document.querySelectorAll("[data-quick-amount]").forEach(btn => btn.addEventListener("click", () => applyQuickAmount(Number(btn.dataset.quickAmount))));
+document.getElementById("expense").addEventListener("keydown", (e) => { if (e.key === "Enter") addOrUpdateExpense(); });
+document.getElementById("setupLanguage").addEventListener("change", (e) => { setLang(e.target.value); applyUIStrings(); });
+document.getElementById("setupCurrency").addEventListener("change", (e) => { setCurrency(e.target.value); applyUIStrings(); });
+document.getElementById("setupPeriodMode").addEventListener("change", (e) => { setPeriodMode(e.target.value); applyUIStrings(); });
+document.getElementById("setupPeriodLength").addEventListener("change", (e) => { setPeriodLength(e.target.value); applyUIStrings(); });
+document.getElementById("setupStartDay").addEventListener("change", (e) => { localStorage.setItem(STARTDAY_KEY, e.target.value || "20"); });
+document.getElementById("installBtn").addEventListener("click", installApp);
+document.getElementById("dismissPwaBarBtn").addEventListener("click", () => { localStorage.setItem(PWA_BAR_DISMISSED_KEY, "1"); updatePwaBar(); });
+window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferredInstallPrompt = e; localStorage.removeItem(PWA_BAR_DISMISSED_KEY); updatePwaBar(); });
+window.addEventListener("appinstalled", () => { deferredInstallPrompt = null; localStorage.removeItem(PWA_BAR_DISMISSED_KEY); updatePwaBar(); });
+window.addEventListener("online", updatePwaBar);
+window.addEventListener("offline", updatePwaBar);
+function boot(){ syncSettingsInputsFromStorage(); applyUIStrings(); populateStartDaySelect("setupStartDay", getStartDay()); applySetupSelectors(); updatePwaBar(); registerServiceWorker(); if (shouldShowSetupScreen()) showSetupScreen(); else showMainApp(); }
+boot();
 </script>
-
 </body>
 </html>
